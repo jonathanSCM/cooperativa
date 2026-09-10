@@ -1,0 +1,839 @@
+<meta charset="UTF-8">
+<title>Veta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F8F8; --surface:#FFFFFF; --surface-2:#F0F2F3; --border:#E2E5E8; --border-strong:#CBD1D6;
+  --ink:#14181C; --ink-dim:#5B636B; --ink-faint:#8B929A;
+  --accent:#0D6E73; --accent-ink:#FFFFFF; --accent-soft:#E0EFEE; --accent-line:#0D6E7333;
+  --ok:#2F7D53; --ok-soft:#E6F1EA; --warn:#A9711E; --warn-soft:#F5ECD9; --bad:#B14434; --bad-soft:#F5E3DF;
+  --muted:#8B8F84; --muted-soft:#EEEFEA;
+  --shadow: 0 1px 2px rgba(20,24,28,0.04);
+  --shadow-lg: 0 18px 40px -20px rgba(20,24,28,0.22);
+  --r-sm:6px; --r-md:9px; --r-lg:13px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101315; --surface:#171B1E; --surface-2:#1E2326; --border:#2A3033; --border-strong:#3B4247;
+    --ink:#EEF1F2; --ink-dim:#A6AEB3; --ink-faint:#767E83;
+    --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
+    --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
+    --muted:#8B9089; --muted-soft:#1C1F1B;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101315; --surface:#171B1E; --surface-2:#1E2326; --border:#2A3033; --border-strong:#3B4247;
+  --ink:#EEF1F2; --ink-dim:#A6AEB3; --ink-faint:#767E83;
+  --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
+  --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
+  --muted:#8B9089; --muted-soft:#1C1F1B;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Archivo",-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5; min-height:100vh;
+}
+h1,h2,h3,.num-display{font-family:"Archivo",-apple-system,"Segoe UI",sans-serif; text-wrap:balance; font-weight:600; letter-spacing:-.01em;}
+.mono{font-family:"Archivo",-apple-system,"Segoe UI",sans-serif; font-variant-numeric:tabular-nums; font-weight:500;}
+button{font-family:inherit; cursor:pointer;}
+svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
+
+/* ---------- top nav ---------- */
+.topnav{position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--border);}
+.tn-row1{display:flex; align-items:center; gap:22px; padding:13px 32px; max-width:1240px; margin:0 auto;}
+.brand{display:flex; align-items:center; gap:8px;}
+.brand-mark{width:19px;height:19px;flex:none; color:var(--accent);}
+.brand-word{font-family:"Archivo",sans-serif; font-weight:700; font-size:15.5px;}
+
+.tn-nav{display:flex; align-items:center; gap:2px;}
+.navitem{
+  display:flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid transparent;
+  color:var(--ink-dim); background:transparent; border-radius:7px; font-size:13px; font-weight:500;
+}
+.navitem svg{width:14px;height:14px;}
+.navitem:hover{color:var(--ink); background:var(--surface-2);}
+.navitem.active{color:var(--ink); background:var(--surface-2); font-weight:600;}
+.navitem .soon{margin-left:1px; font-size:9px; letter-spacing:.04em; color:var(--ink-faint); border:1px solid var(--border); padding:1px 5px; border-radius:20px;}
+
+.search{
+  display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid transparent;
+  border-radius:8px; padding:7px 11px; width:220px; color:var(--ink-faint); margin-left:auto;
+}
+.search input{border:none; outline:none; background:transparent; color:var(--ink); font-size:13px; width:100%; font-family:inherit;}
+.demo-badge{
+  display:none;
+}
+.iconbtn{
+  width:30px;height:30px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim);
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.iconbtn:hover{color:var(--ink); background:var(--surface-2);}
+.dot-badge{position:absolute; top:5px; right:5px; width:6px; height:6px; border-radius:50%; background:var(--bad); border:1.5px solid var(--bg);}
+.userchip{display:flex; align-items:center; gap:7px; padding-left:8px; margin-left:2px; border-left:1px solid var(--border);}
+.avatar{width:26px;height:26px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; flex:none;}
+.userchip .who{font-size:12px; font-weight:600; line-height:1.2;}
+.userchip .role{font-size:10px; color:var(--ink-faint); line-height:1.2;}
+
+main.content{max-width:1240px; margin:0 auto; padding:0 32px 70px;}
+.page-head{padding:26px 0 18px;}
+.page-head .eyebrow{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px;}
+.page-head h1{font-size:24px; font-weight:520; margin:0;}
+
+.view{display:none;}
+.view.active{display:block; animation:rise .32s ease both;}
+@keyframes rise{from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);}}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; border-radius:8px;
+  padding:9px 14px; border:1px solid var(--border); background:var(--surface); color:var(--ink);
+  transition:border-color .15s, background .15s;
+}
+.btn:hover{border-color:var(--border-strong); background:var(--surface-2);}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.btn-primary:hover{filter:brightness(1.07); background:var(--accent);}
+.btn-sm{padding:6px 10px; font-size:12px; border-radius:7px;}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+
+/* ---------- KPI row ---------- */
+.kpi-row{display:flex; border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; background:var(--surface);}
+.kpi{flex:1; padding:18px 22px; border-right:1px solid var(--border);}
+.kpi:last-child{border-right:none;}
+.kpi-label{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:6px;}
+.kpi-num{font-size:27px; font-weight:500; margin-top:9px; letter-spacing:-.01em;}
+.kpi-num.accent-num{color:var(--accent);}
+.kpi-sub{font-size:11.5px; color:var(--ink-faint); margin-top:4px;}
+
+/* ---------- panels/cards ---------- */
+.panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow);}
+.panel-head{display:flex; align-items:center; gap:10px; padding:15px 20px; border-bottom:1px solid var(--border);}
+.panel-head h2{font-size:15px; font-weight:560; margin:0;}
+.panel-head .hint{font-size:11.5px; color:var(--ink-faint); margin-left:auto;}
+.grid-2{display:grid; grid-template-columns:1.5fr 1fr; gap:16px; align-items:start;}
+
+.trend-svg{width:100%; height:112px; display:block;}
+
+/* table */
+table{width:100%; border-collapse:collapse;}
+th{text-align:left; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; padding:9px 20px; border-bottom:1px solid var(--border);}
+td{padding:12px 20px; border-bottom:1px solid var(--border); font-size:13.5px; vertical-align:middle;}
+tbody tr{cursor:pointer; transition:background .12s;}
+tbody tr:hover{background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+.who-cell{display:flex; align-items:center; gap:10px;}
+.who-name{font-weight:600;}
+.who-ci{font-size:11.5px; color:var(--ink-faint);}
+.status{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;}
+.status .dot{width:6px;height:6px;border-radius:50%; flex:none;}
+.status.vigente{color:var(--ok);} .status.vigente .dot{background:var(--ok);}
+.status.proximo{color:var(--warn);} .status.proximo .dot{background:var(--warn);}
+.status.urgente{color:var(--bad);} .status.urgente .dot{background:var(--bad);}
+.status.cancelado{color:var(--muted);} .status.cancelado .dot{background:var(--muted);}
+.amount{font-family:"Archivo",sans-serif; font-variant-numeric:tabular-nums; font-weight:500;}
+
+/* alerts rail */
+.alert-item{display:flex; gap:10px; padding:12px 20px; border-bottom:1px solid var(--border);}
+.alert-item:last-child{border-bottom:none;}
+.alert-ic{width:28px;height:28px;border-radius:7px; display:flex; align-items:center; justify-content:center; flex:none;}
+.alert-ic.urgente{background:var(--bad-soft); color:var(--bad);}
+.alert-ic.proximo{background:var(--warn-soft); color:var(--warn);}
+.alert-title{font-size:12.5px; font-weight:600;}
+.alert-sub{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+
+/* drawer */
+.overlay{position:fixed; inset:0; background:rgba(15,18,20,.38); opacity:0; pointer-events:none; transition:opacity .2s; z-index:50;}
+.overlay.show{opacity:1; pointer-events:auto;}
+.drawer{
+  position:fixed; top:0; right:0; height:100%; width:440px; max-width:92vw; background:var(--bg);
+  border-left:1px solid var(--border); box-shadow:var(--shadow-lg);
+  transform:translateX(100%); transition:transform .26s cubic-bezier(.2,.8,.2,1); z-index:51; overflow-y:auto;
+}
+.drawer.show{transform:translateX(0);}
+.drawer-head{padding:22px 22px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:2;}
+.drawer-close{position:absolute; top:18px; right:18px;}
+.drawer-avatar{width:46px;height:46px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:600; font-size:17px;}
+.drawer-body{padding:20px 22px 40px; display:flex; flex-direction:column; gap:18px;}
+.field-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px 16px;}
+.field-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:3px;}
+.field-val{font-size:13px; font-weight:500;}
+.loan-card{border:1px solid var(--border); border-radius:var(--r-md); padding:16px 18px; background:var(--surface);}
+.loan-row{display:flex; justify-content:space-between; align-items:baseline; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px;}
+.loan-row:last-child{border-bottom:none;}
+.loan-row .l{color:var(--ink-dim);}
+.progress{height:5px; border-radius:20px; background:var(--surface-2); overflow:hidden; margin-top:12px;}
+.progress > div{height:100%; background:var(--accent); border-radius:20px;}
+.timeline{display:flex; flex-direction:column;}
+.tl-item{display:flex; gap:12px; padding:10px 0; position:relative;}
+.tl-dot{width:8px;height:8px;border-radius:50%; background:var(--accent); margin-top:5px; flex:none; position:relative; z-index:1;}
+.tl-item::before{content:""; position:absolute; left:3.5px; top:15px; bottom:-4px; width:1px; background:var(--border);}
+.tl-item:last-child::before{display:none;}
+.tl-title{font-size:12.5px; font-weight:600;}
+.tl-sub{font-size:11.5px; color:var(--ink-faint);}
+.doc-chip{display:flex; align-items:center; gap:9px; padding:9px 11px; border:1px solid var(--border); border-radius:9px; font-size:12px; background:var(--surface);}
+.doc-chip .ic{width:24px;height:24px;border-radius:6px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; color:var(--ink-dim);}
+
+/* modal */
+.modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:60; opacity:0; pointer-events:none; transition:opacity .18s;}
+.modal.show{opacity:1; pointer-events:auto;}
+.modal-card{
+  width:420px; max-width:92vw; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg); transform:translateY(8px); transition:transform .2s; max-height:88vh; overflow-y:auto;
+}
+.modal.show .modal-card{transform:translateY(0);}
+.modal-head{display:flex; align-items:center; gap:10px; padding:18px 20px; border-bottom:1px solid var(--border); color:var(--accent);}
+.modal-head h3{margin:0; font-size:16px; font-weight:560; color:var(--ink);}
+.modal-body{padding:18px 20px; display:flex; flex-direction:column; gap:14px;}
+.modal-foot{padding:14px 20px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); margin-top:2px; padding-top:16px;}
+label.fl{display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--ink-dim); font-weight:600;}
+input.fi, select.fi{
+  border:1px solid var(--border); background:var(--surface); color:var(--ink); border-radius:8px; padding:9px 11px;
+  font-size:13.5px; font-family:inherit; outline:none;
+}
+input.fi:focus, select.fi:focus{border-color:var(--accent);}
+.seg{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+.seg button{flex:1; padding:9px 6px; font-size:12px; font-weight:600; background:var(--surface); color:var(--ink-dim); border:none; border-right:1px solid var(--border);}
+.seg button:last-child{border-right:none;}
+.seg button.active{background:var(--accent-soft); color:var(--accent);}
+
+/* reports */
+.report-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+.report-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);}
+.report-ic{width:34px;height:34px;border-radius:8px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
+.report-card h3{font-size:15px; margin:0; font-weight:560;}
+.report-card p{font-size:12.5px; color:var(--ink-dim); margin:0; flex:1;}
+.report-actions{display:flex; gap:8px;}
+.locked{opacity:.6;}
+.phase-tag{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--warn); background:var(--warn-soft); padding:3px 8px; border-radius:20px; width:fit-content;}
+
+/* teaser */
+.teaser{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:64px 30px; border:1px dashed var(--border-strong); border-radius:var(--r-lg); background:var(--surface);}
+.teaser .ic-big{width:46px;height:46px;border-radius:12px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
+
+/* toast */
+.toast-wrap{position:fixed; bottom:22px; right:22px; display:flex; flex-direction:column; gap:8px; z-index:80;}
+.toast{
+  display:flex; align-items:center; gap:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border);
+  padding:11px 15px; border-radius:9px; font-size:12.5px; font-weight:500; box-shadow:var(--shadow-lg);
+  transform:translateY(8px); opacity:0; transition:all .22s ease; min-width:240px;
+}
+.toast.show{transform:translateY(0); opacity:1;}
+.toast .tic{color:var(--ok);}
+.toast .tic.bad{color:var(--bad);}
+
+/* preview sheet */
+.sheet{background:var(--surface); color:var(--ink); border-radius:8px; padding:22px 24px; font-family:"Archivo",sans-serif; font-size:12px; border:1px solid var(--border);}
+.sheet h4{font-family:"Archivo",sans-serif; font-size:16px; margin:0 0 2px; font-weight:560;}
+.sheet .muted2{color:var(--ink-faint); font-size:10.5px;}
+.sheet table{margin-top:12px;}
+.sheet th,.sheet td{padding:6px 4px; font-size:11px; border-bottom:1px solid var(--border);}
+
+::selection{background:var(--accent-soft); color:var(--accent);}
+@media (max-width:980px){
+  .tn-row1{padding:12px 18px;} .tn-row2{padding:0 18px;} main.content{padding:0 18px 60px;}
+  .search{display:none;}
+  .kpi-row{flex-wrap:wrap;} .kpi{flex:1 1 50%; border-bottom:1px solid var(--border);}
+  .grid-2{grid-template-columns:1fr;}
+  .report-grid{grid-template-columns:1fr;}
+}
+</style>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.4"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.4"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.4"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.5-5.6 5.5-5.6S14 16.7 14 20"/><circle cx="17" cy="9" r="2.6"/><path d="M15.2 14.6c2.6.2 4.3 2.3 4.3 5.4"/></symbol>
+<symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="5.5" ry="3"/><path d="M3.5 7v5c0 1.66 2.46 3 5.5 3s5.5-1.34 5.5-3V7"/><path d="M3.5 12v5c0 1.66 2.46 3 5.5 3s5.5-1.34 5.5-3v-5"/><path d="M14.5 9c2.6.3 4 1.5 4 2.8s-1.4 2.5-4 2.8"/><path d="M14.5 14.6c2.6.3 4 1.5 4 2.8s-1.4 2.5-4 2.8"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14 3.5V8h4.5"/><path d="M8.5 13h7M8.5 16.3h5" /></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10.5 20V4M17 20v-7"/><path d="M3 20.5h18"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 17 19H6a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M15.5 12.3h3.2v2.4h-3.2a1.2 1.2 0 0 1 0-2.4z"/><path d="M3.5 9h16"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 1 1 12 0c0 4 1.5 5.4 1.5 5.4H4.5S6 14 6 10z"/><path d="M9.7 18.4a2.3 2.3 0 0 0 4.6 0"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4.5v15M4.5 12h15"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-10.5"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5 21 19.5H3z"/><path d="M12 9.5v5"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="1.6"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-file-img" viewBox="0 0 24 24"><path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><circle cx="9.3" cy="12.3" r="1.3"/><path d="M8 17l2.6-3 2.4 2.6L15.5 13l2 4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v12M7.5 11l4.5 4.5L16.5 11"/><path d="M4.5 19.5h15"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-gem" viewBox="0 0 24 24"><path d="M4 9l4-5.5h8L20 9l-8 11.5z"/><path d="M4 9h16M9.5 3.5 8 9l4 11.5M14.5 3.5 16 9l-4 11.5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 19 6.3v5.8c0 4.5-3 7.4-7 8.9-4-1.5-7-4.4-7-8.9V6.3z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></symbol>
+</defs>
+</svg>
+
+<div class="topnav">
+  <div class="tn-row1">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><use href="#i-gem"/></svg>
+      <span class="brand-word">Veta</span>
+    </div>
+    <nav class="tn-nav">
+      <button class="navitem active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
+      <button class="navitem" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg>Acreedores</button>
+      <button class="navitem" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg>Reportes</button>
+      <button class="navitem" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg>Tesorería<span class="soon">Fase 2</span></button>
+      <button class="navitem" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg>Auditoría<span class="soon">Fase 2</span></button>
+    </nav>
+    <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
+    <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
+    <div class="userchip">
+      <div class="avatar">MG</div>
+      <div>
+        <div class="who">Marisol Guzmán</div>
+        <div class="role">Presidencia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="content">
+  <div class="page-head">
+    <p class="eyebrow" id="topEyebrow">Panel general</p>
+    <h1 id="topTitle">Buenas tardes, Marisol</h1>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="view active" id="view-dashboard">
+    <div class="kpi-row" id="kpiStrip"></div>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Obligaciones con acreedores</h2>
+          <span class="hint">Ordenado por vencimiento</span>
+        </div>
+        <table>
+          <thead><tr><th>Acreedor</th><th>Saldo capital</th><th>Interés</th><th>Vence</th><th>Estado</th></tr></thead>
+          <tbody id="dashTableBody"></tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="panel">
+          <div class="panel-head"><h2 style="font-size:14px;">Evolución de la deuda</h2><span class="hint">6 meses</span></div>
+          <div style="padding:12px 18px 16px;">
+            <svg class="trend-svg" viewBox="0 0 320 112" preserveAspectRatio="none" id="trendSvg"></svg>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2 style="font-size:14px;">Alertas de vencimiento</h2></div>
+          <div id="alertList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACREEDORES -->
+  <section class="view" id="view-acreedores">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Acreedores</h2>
+        <span class="hint" id="acreedoresCount"></span>
+        <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openModal('acreedor')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo acreedor</button>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Capital inicial</th><th>Saldo actual</th><th>Interés</th><th>Vence</th><th>Estado</th></tr></thead>
+        <tbody id="acreedoresTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REPORTES -->
+  <section class="view" id="view-reportes">
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-doc"/></svg></div>
+        <h3>Reporte mensual</h3>
+        <p>Situación financiera consolidada: total adeudado, capital e intereses pendientes, préstamos vigentes y vencidos.</p>
+        <div class="report-actions">
+          <button class="btn btn-sm" onclick="previewReport('mensual')"><svg class="icon" style="width:13px;height:13px"><use href="#i-eye"/></svg>Vista previa</button>
+          <button class="btn btn-sm btn-primary" onclick="fakeExport('Reporte mensual')"><svg class="icon" style="width:13px;height:13px"><use href="#i-download"/></svg>Exportar</button>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-chart"/></svg></div>
+        <h3>Historial de pagos</h3>
+        <p>Todos los abonos registrados por acreedor, con fecha, monto y destino (capital / interés).</p>
+        <div class="report-actions">
+          <button class="btn btn-sm" onclick="previewReport('pagos')"><svg class="icon" style="width:13px;height:13px"><use href="#i-eye"/></svg>Vista previa</button>
+          <button class="btn btn-sm btn-primary" onclick="fakeExport('Historial de pagos')"><svg class="icon" style="width:13px;height:13px"><use href="#i-download"/></svg>Exportar</button>
+        </div>
+      </div>
+      <div class="report-card locked">
+        <span class="phase-tag">Fase 2</span>
+        <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-wallet"/></svg></div>
+        <h3>Balance de tesorería</h3>
+        <p>Ingresos, egresos y saldo disponible, vinculado automáticamente a los pagos a acreedores.</p>
+        <div class="report-actions">
+          <button class="btn btn-sm" disabled><svg class="icon" style="width:13px;height:13px"><use href="#i-lock"/></svg>Disponible en Fase 2</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESORERIA teaser -->
+  <section class="view" id="view-tesoreria">
+    <div class="teaser">
+      <div class="ic-big"><svg class="icon" style="width:22px;height:22px"><use href="#i-wallet"/></svg></div>
+      <h2 style="margin:0; font-size:18px;">Tesorería llega en la Fase 2</h2>
+      <p style="max-width:420px; color:var(--ink-dim); font-size:13px; margin:0;">Ingresos, egresos y saldo disponible — con cada egreso vinculado automáticamente al pago de un acreedor. Se construye sobre esta misma base de datos, sin retrabajo.</p>
+    </div>
+  </section>
+  <section class="view" id="view-auditoria">
+    <div class="teaser">
+      <div class="ic-big"><svg class="icon" style="width:22px;height:22px"><use href="#i-shield"/></svg></div>
+      <h2 style="margin:0; font-size:18px;">Auditoría e historial — Fase 2</h2>
+      <p style="max-width:420px; color:var(--ink-dim); font-size:13px; margin:0;">Trazabilidad completa: quién modificó qué préstamo y cuándo, con roles avanzados para el Consejo de Vigilancia.</p>
+    </div>
+  </section>
+</main>
+
+<!-- DRAWER -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="drawer" id="drawer"></div>
+
+<!-- MODALS -->
+<div class="modal" id="modal-acreedor">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-users"/></svg><h3>Nuevo acreedor</h3></div>
+    <div class="modal-body">
+      <label class="fl">Nombre completo<input class="fi" id="f-nombre" placeholder="Ej. Rosa Fernández"></label>
+      <div class="field-grid">
+        <label class="fl">CI / NIT<input class="fi" id="f-ci" placeholder="1234567 LP"></label>
+        <label class="fl">Teléfono<input class="fi" id="f-tel" placeholder="+591 700 00000"></label>
+      </div>
+      <label class="fl">Datos bancarios<input class="fi" id="f-banco" placeholder="Banco · Nº de cuenta"></label>
+      <label class="fl">Observaciones<input class="fi" id="f-obs" placeholder="Opcional"></label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearAcreedor()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Registrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-prestamo">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-coins"/></svg><h3>Nuevo préstamo</h3></div>
+    <div class="modal-body">
+      <div class="field-grid">
+        <label class="fl">Monto prestado (Bs)<input class="fi" id="p-monto" type="number" placeholder="50000"></label>
+        <label class="fl">Interés mensual (%)<input class="fi" id="p-tasa" type="number" placeholder="3"></label>
+      </div>
+      <div class="field-grid">
+        <label class="fl">Plazo (meses)<input class="fi" id="p-plazo" type="number" placeholder="6"></label>
+        <label class="fl">Forma de pago
+          <select class="fi" id="p-forma"><option>Capital + intereses</option><option>Solo intereses</option><option>Cuota fija</option></select>
+        </label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearPrestamo()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Calcular y registrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-pago">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-wallet"/></svg><h3>Registrar pago</h3></div>
+    <div class="modal-body">
+      <div class="loan-row"><span class="l">Saldo capital pendiente</span><span class="mono" id="pago-saldo-cap">—</span></div>
+      <div class="loan-row"><span class="l">Interés pendiente</span><span class="mono" id="pago-saldo-int">—</span></div>
+      <label class="fl">Monto del pago (Bs)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
+      <label class="fl">¿Este pago corresponde a?
+        <div class="seg" id="pg-destino">
+          <button class="active" data-v="capital">Capital</button>
+          <button data-v="interes">Intereses</button>
+          <button data-v="ambos">Capital + interés</button>
+        </div>
+      </label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="registrarPago()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Confirmar pago</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-preview">
+  <div class="modal-card" style="width:480px;">
+    <div class="modal-head"><svg class="icon"><use href="#i-eye"/></svg><h3 id="prev-title">Vista previa</h3></div>
+    <div class="modal-body"><div class="sheet" id="prev-body"></div></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cerrar</button>
+      <button class="btn btn-primary" onclick="fakeExport(document.getElementById('prev-title').textContent)"><svg class="icon" style="width:14px;height:14px"><use href="#i-download"/></svg>Exportar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ---------------- demo state ---------------- */
+const fmt = n => 'Bs ' + Math.round(n).toLocaleString('es-BO');
+const HOY = new Date(2026,8,10); // 10 sep 2026
+const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function fechaTxt(d){ return d.getDate()+' '+MESES[d.getMonth()]+' '+d.getFullYear(); }
+function addMonths(d,n){ const r=new Date(d); r.setMonth(r.getMonth()+n); return r; }
+function diasHasta(d){ return Math.round((d-HOY)/86400000); }
+
+let uid = 100;
+const state = {
+  acreedores: [
+    {id:1, nombre:"Juan Pérez", ci:"4521178 LP", tel:"+591 700 12345", banco:"Banco Unión · Cta 220-4471", dir:"Zona Sur, La Paz", obs:"Prefiere pago por transferencia.",
+      prestamo:{monto:50000, tasa:3, fecha:new Date(2026,5,1), plazo:6, vence:new Date(2026,8,30), saldoCap:35000, interesPend:3150, capPagado:15000, intPagado:4500},
+      pagos:[{fecha:new Date(2026,6,1), monto:8000, destino:"Capital"},{fecha:new Date(2026,7,1), monto:7000, destino:"Capital"}],
+      docs:[{n:"contrato_juan_perez.pdf",t:"pdf"},{n:"recibo_ago.jpg",t:"img"}]},
+    {id:2, nombre:"María López", ci:"3387765 LP", tel:"+591 701 55210", banco:"BCP · Cta 550-1180", dir:"Achocalla", obs:"",
+      prestamo:{monto:80000, tasa:2.5, fecha:new Date(2026,4,15), plazo:8, vence:new Date(2026,9,15), saldoCap:80000, interesPend:2000, capPagado:0, intPagado:0},
+      pagos:[], docs:[{n:"contrato_maria_lopez.pdf",t:"pdf"}]},
+    {id:3, nombre:"Carlos Rojas", ci:"5120044 LP", tel:"+591 762 90031", banco:"Banco Unión · Cta 110-2290", dir:"El Alto", obs:"Historial de atraso, dar seguimiento.",
+      prestamo:{monto:25000, tasa:3, fecha:new Date(2026,2,10), plazo:6, vence:new Date(2026,8,10), saldoCap:5000, interesPend:900, capPagado:20000, intPagado:2250},
+      pagos:[{fecha:new Date(2026,4,10), monto:10000, destino:"Capital"},{fecha:new Date(2026,6,10), monto:10000, destino:"Capital"}],
+      docs:[{n:"contrato_carlos_rojas.pdf",t:"pdf"},{n:"transferencia_jun.jpg",t:"img"}]},
+    {id:4, nombre:"Esteban Quispe", ci:"6603312 OR", tel:"+591 655 40218", banco:"Banco Fassil · Cta 900-771", dir:"Oruro", obs:"",
+      prestamo:{monto:60000, tasa:3, fecha:new Date(2026,7,1), plazo:10, vence:new Date(2027,4,1), saldoCap:60000, interesPend:1800, capPagado:0, intPagado:0},
+      pagos:[], docs:[{n:"contrato_esteban_quispe.pdf",t:"pdf"}]},
+    {id:5, nombre:"Rosa Fernández", ci:"2298871 LP", tel:"+591 700 88112", banco:"BCP · Cta 220-908", dir:"Viacha", obs:"Préstamo cancelado en su totalidad.",
+      prestamo:{monto:15000, tasa:2.5, fecha:new Date(2026,0,5), plazo:5, vence:new Date(2026,5,5), saldoCap:0, interesPend:0, capPagado:15000, intPagado:1875},
+      pagos:[{fecha:new Date(2026,3,5), monto:15000, destino:"Capital"}], docs:[{n:"contrato_rosa_fernandez.pdf",t:"pdf"},{n:"comprobante_final.jpg",t:"img"}]},
+  ]
+};
+
+function estadoDe(p){
+  if(!p) return 'sin-prestamo';
+  if(p.saldoCap<=0 && p.interesPend<=0) return 'cancelado';
+  const d = diasHasta(p.vence);
+  if(d < 0) return 'urgente';
+  if(d <= 10) return 'proximo';
+  return 'vigente';
+}
+const ESTADO_LABEL = {vigente:'Vigente', proximo:'Próximo', urgente:'Urgente', cancelado:'Cancelado'};
+
+function kpis(){
+  let capPend=0, intPend=0, activos=0, porVencer=0, pagosProg=0;
+  state.acreedores.forEach(a=>{
+    const p=a.prestamo; if(!p) return;
+    const es = estadoDe(p);
+    if(es!=='cancelado'){ capPend+=p.saldoCap; intPend+=p.interesPend; activos++; }
+    if(es==='proximo'||es==='urgente') porVencer++;
+    if(es!=='cancelado') pagosProg += Math.round(p.saldoCap*0.15 + p.interesPend);
+  });
+  return {deuda:capPend+intPend, capPend, intPend, activos, porVencer, pagosProg};
+}
+
+/* ---------------- render ---------------- */
+function initials(name){ return name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+function renderKPIs(){
+  const k = kpis();
+  const strip = document.getElementById('kpiStrip');
+  strip.innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label"><svg class="icon" style="width:12px;height:12px"><use href="#i-gem"/></svg>Deuda total vigente</div>
+      <div class="kpi-num num-display mono accent-num" id="k-deuda">${fmt(k.deuda)}</div>
+      <div class="kpi-sub">Capital + interés pendiente</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Capital pendiente</div>
+      <div class="kpi-num num-display mono">${fmt(k.capPend)}</div>
+      <div class="kpi-sub">${k.activos} acreedores activos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Intereses pendientes</div>
+      <div class="kpi-num num-display mono">${fmt(k.intPend)}</div>
+      <div class="kpi-sub">Acumulado a la fecha</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Próximos a vencer</div>
+      <div class="kpi-num num-display">${k.porVencer}</div>
+      <div class="kpi-sub">${fmt(k.pagosProg)} programado este mes</div>
+    </div>`;
+}
+
+function statusHTML(es){
+  return `<span class="status ${es}"><span class="dot"></span>${ESTADO_LABEL[es]}</span>`;
+}
+
+function renderDashTable(){
+  const rows = state.acreedores.filter(a=>a.prestamo).slice().sort((a,b)=>a.prestamo.vence-b.prestamo.vence);
+  document.getElementById('dashTableBody').innerHTML = rows.map(a=>{
+    const es = estadoDe(a.prestamo);
+    return `<tr onclick="openDrawer(${a.id})">
+      <td><div class="who-cell"><div class="avatar" style="width:26px;height:26px;font-size:10.5px;">${initials(a.nombre)}</div><div><div class="who-name">${a.nombre}</div><div class="who-ci">${a.ci}</div></div></div></td>
+      <td class="amount">${fmt(a.prestamo.saldoCap)}</td>
+      <td class="amount">${fmt(a.prestamo.interesPend)}</td>
+      <td>${fechaTxt(a.prestamo.vence)}</td>
+      <td>${statusHTML(es)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAcreedoresTable(filter=''){
+  const f = filter.trim().toLowerCase();
+  const rows = state.acreedores.filter(a => !f || a.nombre.toLowerCase().includes(f) || a.ci.toLowerCase().includes(f));
+  document.getElementById('acreedoresCount').textContent = rows.length + ' registrados';
+  document.getElementById('acreedoresTableBody').innerHTML = rows.map(a=>{
+    const p = a.prestamo;
+    const es = estadoDe(p);
+    return `<tr onclick="openDrawer(${a.id})">
+      <td><div class="who-cell"><div class="avatar" style="width:26px;height:26px;font-size:10.5px;">${initials(a.nombre)}</div><div><div class="who-name">${a.nombre}</div><div class="who-ci">${a.ci}</div></div></div></td>
+      <td class="amount">${p?fmt(p.monto):'—'}</td>
+      <td class="amount">${p?fmt(p.saldoCap):'—'}</td>
+      <td class="amount">${p?p.tasa+'% mensual':'—'}</td>
+      <td>${p?fechaTxt(p.vence):'—'}</td>
+      <td>${statusHTML(es)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAlerts(){
+  const items = state.acreedores.filter(a=>a.prestamo && ['urgente','proximo'].includes(estadoDe(a.prestamo)))
+    .sort((a,b)=>a.prestamo.vence-b.prestamo.vence);
+  document.getElementById('alertList').innerHTML = items.map(a=>{
+    const es = estadoDe(a.prestamo); const d = diasHasta(a.prestamo.vence);
+    const venceTxt = d===0 ? 'vence hoy' : (d<0? 'vencido hace '+(-d)+' días' : 'vence en '+d+' días');
+    return `<div class="alert-item">
+      <div class="alert-ic ${es}"><svg class="icon" style="width:14px;height:14px"><use href="#i-alert"/></svg></div>
+      <div>
+        <div class="alert-title">${a.nombre} — ${venceTxt}</div>
+        <div class="alert-sub">Capital ${fmt(a.prestamo.saldoCap)} · Interés ${fmt(a.prestamo.interesPend)}</div>
+      </div>
+    </div>`;
+  }).join('') || `<div class="alert-item"><div class="alert-sub">Sin vencimientos próximos.</div></div>`;
+}
+
+function renderTrend(){
+  const k = kpis();
+  const base = k.deuda;
+  const pts = [base*0.78, base*0.83, base*0.95, base*0.88, base*1.02, base];
+  const max = Math.max(...pts), min = Math.min(...pts)*0.92;
+  const W=320,H=112,pad=8;
+  const x = i => pad + i*((W-pad*2)/(pts.length-1));
+  const y = v => H-18 - ((v-min)/(max-min))*(H-34);
+  const line = pts.map((v,i)=> (i===0?'M':'L')+x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+  const area = line + ` L${x(pts.length-1)},${H-14} L${x(0)},${H-14} Z`;
+  const last = pts.length-1;
+  document.getElementById('trendSvg').innerHTML = `
+    <defs><linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--accent)" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
+    </linearGradient></defs>
+    <line x1="${pad}" y1="${H-14}" x2="${W-pad}" y2="${H-14}" stroke="var(--border)" stroke-width="1"/>
+    <path d="${area}" fill="url(#tg)" stroke="none"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${x(last)}" cy="${y(pts[last])}" r="3.4" fill="var(--accent)"/>
+    <text x="${pad}" y="${H-2}" font-size="8.5" fill="var(--ink-faint)" font-family="Archivo, sans-serif">abr</text>
+    <text x="${W-pad}" y="${H-2}" text-anchor="end" font-size="8.5" fill="var(--ink-faint)" font-family="Archivo, sans-serif">hoy</text>
+  `;
+}
+
+function renderAll(){
+  renderKPIs(); renderDashTable(); renderAlerts(); renderTrend();
+  renderAcreedoresTable(document.getElementById('searchInput').value);
+}
+
+/* ---------------- views/nav ---------------- */
+document.querySelectorAll('.navitem').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const view = btn.dataset.view;
+    document.getElementById('view-'+view).classList.add('active');
+    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], reportes:['Documentación','Reportes'], tesoreria:['Próxima etapa','Tesorería'], auditoria:['Próxima etapa','Auditoría e historial']};
+    document.getElementById('topEyebrow').textContent = titles[view][0];
+    document.getElementById('topTitle').textContent = titles[view][1];
+  });
+});
+document.getElementById('searchInput').addEventListener('input', e=> renderAcreedoresTable(e.target.value));
+
+/* ---------------- drawer ---------------- */
+function openDrawer(id){
+  const a = state.acreedores.find(x=>x.id===id);
+  const p = a.prestamo, es = estadoDe(p);
+  const pct = p ? Math.round((p.capPagado/(p.monto))*100) : 0;
+  document.getElementById('drawer').innerHTML = `
+    <div class="drawer-head">
+      <button class="iconbtn drawer-close" onclick="closeAll()"><svg class="icon"><use href="#i-x"/></svg></button>
+      <div style="display:flex; gap:14px; align-items:center;">
+        <div class="drawer-avatar">${initials(a.nombre)}</div>
+        <div>
+          <h2 style="margin:0; font-size:18px;">${a.nombre}</h2>
+          <div style="display:flex; gap:8px; align-items:center; margin-top:5px;">${statusHTML(es)}<span style="font-size:11.5px; color:var(--ink-faint)">${a.ci}</span></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        ${p ? `<button class="btn btn-primary btn-sm" onclick="openModal('pago',${a.id})"><svg class="icon" style="width:13px;height:13px"><use href="#i-wallet"/></svg>Registrar pago</button>` : `<button class="btn btn-primary btn-sm" onclick="openModal('prestamo',${a.id})"><svg class="icon" style="width:13px;height:13px"><use href="#i-plus"/></svg>Nuevo préstamo</button>`}
+      </div>
+    </div>
+    <div class="drawer-body">
+      <div>
+        <div class="field-label" style="margin-bottom:8px;">Datos de contacto</div>
+        <div class="field-grid">
+          <div><div class="field-label">Teléfono</div><div class="field-val">${a.tel}</div></div>
+          <div><div class="field-label">Dirección</div><div class="field-val">${a.dir}</div></div>
+          <div style="grid-column:1/-1"><div class="field-label">Datos bancarios</div><div class="field-val">${a.banco}</div></div>
+          ${a.obs?`<div style="grid-column:1/-1"><div class="field-label">Observaciones</div><div class="field-val">${a.obs}</div></div>`:''}
+        </div>
+      </div>
+
+      ${p ? `<div>
+        <div class="field-label" style="margin-bottom:8px;">Préstamo activo</div>
+        <div class="loan-card">
+          <div class="loan-row"><span class="l">Capital inicial</span><span class="mono">${fmt(p.monto)}</span></div>
+          <div class="loan-row"><span class="l">Interés</span><span class="mono">${p.tasa}% mensual</span></div>
+          <div class="loan-row"><span class="l">Fecha de inicio</span><span class="mono">${fechaTxt(p.fecha)}</span></div>
+          <div class="loan-row"><span class="l">Vencimiento</span><span class="mono">${fechaTxt(p.vence)}</span></div>
+          <div class="loan-row"><span class="l">Saldo capital</span><span class="mono">${fmt(p.saldoCap)}</span></div>
+          <div class="loan-row"><span class="l">Interés pendiente</span><span class="mono">${fmt(p.interesPend)}</span></div>
+          <div class="progress"><div style="width:${pct}%"></div></div>
+          <div style="font-size:11px; color:var(--ink-faint); margin-top:6px;">${pct}% del capital pagado</div>
+        </div>
+      </div>` : `<div class="loan-card" style="text-align:center; color:var(--ink-faint); font-size:12.5px;">Sin préstamos registrados todavía.</div>`}
+
+      ${a.pagos.length ? `<div>
+        <div class="field-label" style="margin-bottom:8px;">Historial de pagos</div>
+        <div class="timeline">
+          ${a.pagos.slice().reverse().map(pg=>`
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div><div class="tl-title">${fmt(pg.monto)} · ${pg.destino}</div><div class="tl-sub">${fechaTxt(pg.fecha)}</div></div>
+            </div>`).join('')}
+        </div>
+      </div>`:''}
+
+      <div>
+        <div class="field-label" style="margin-bottom:8px;">Documentos</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          ${a.docs.map(d=>`<div class="doc-chip"><div class="ic"><svg class="icon" style="width:14px;height:14px"><use href="#${d.t==='pdf'?'i-doc':'i-file-img'}"/></svg></div>${d.n}</div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('show');
+}
+
+/* ---------------- modals ---------------- */
+let modalCtx = null;
+function openModal(name, id){
+  modalCtx = id;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal-'+name).classList.add('show');
+  if(name==='pago'){
+    const a = state.acreedores.find(x=>x.id===id);
+    document.getElementById('pago-saldo-cap').textContent = fmt(a.prestamo.saldoCap);
+    document.getElementById('pago-saldo-int').textContent = fmt(a.prestamo.interesPend);
+    document.getElementById('pg-monto').value='';
+  }
+  if(name==='acreedor'){ ['f-nombre','f-ci','f-tel','f-banco','f-obs'].forEach(id=>document.getElementById(id).value=''); }
+  if(name==='prestamo'){ ['p-monto','p-tasa','p-plazo'].forEach(id=>document.getElementById(id).value=''); }
+}
+function closeAll(){
+  document.getElementById('overlay').classList.remove('show');
+  document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));
+  document.getElementById('drawer').classList.remove('show');
+}
+document.getElementById('pg-destino').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#pg-destino button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+});
+
+function crearAcreedor(){
+  const nombre = document.getElementById('f-nombre').value.trim();
+  if(!nombre){ toast('Ingresá un nombre para continuar', 'bad'); return; }
+  uid++;
+  state.acreedores.push({id:uid, nombre, ci:document.getElementById('f-ci').value||'—', tel:document.getElementById('f-tel').value||'—',
+    banco:document.getElementById('f-banco').value||'—', dir:'—', obs:document.getElementById('f-obs').value||'', prestamo:null, pagos:[], docs:[]});
+  closeAll(); renderAll(); toast(nombre+' fue registrado como acreedor');
+}
+
+function crearPrestamo(){
+  const a = state.acreedores.find(x=>x.id===modalCtx);
+  const monto = parseFloat(document.getElementById('p-monto').value);
+  const tasa = parseFloat(document.getElementById('p-tasa').value);
+  const plazo = parseInt(document.getElementById('p-plazo').value);
+  if(!monto || !tasa || !plazo){ toast('Completá monto, interés y plazo', 'bad'); return; }
+  a.prestamo = {monto, tasa, fecha:new Date(HOY), plazo, vence:addMonths(HOY,plazo), saldoCap:monto, interesPend:Math.round(monto*tasa/100), capPagado:0, intPagado:0};
+  a.pagos = [];
+  closeAll(); renderAll(); openDrawer(a.id);
+  toast('Préstamo registrado — el sistema calculó el interés y el vencimiento');
+}
+
+function registrarPago(){
+  const a = state.acreedores.find(x=>x.id===modalCtx);
+  const p = a.prestamo;
+  let monto = parseFloat(document.getElementById('pg-monto').value);
+  if(!monto || monto<=0){ toast('Ingresá un monto válido', 'bad'); return; }
+  const destino = document.getElementById('pg-destino').querySelector('.active').dataset.v;
+  let restante = monto;
+  if(destino==='interes'){
+    const aplicado = Math.min(restante, p.interesPend); p.interesPend -= aplicado; p.intPagado += aplicado;
+  } else if(destino==='capital'){
+    const aplicado = Math.min(restante, p.saldoCap); p.saldoCap -= aplicado; p.capPagado += aplicado;
+  } else {
+    const aInt = Math.min(restante, p.interesPend); p.interesPend -= aInt; p.intPagado += aInt; restante -= aInt;
+    const aCap = Math.min(restante, p.saldoCap); p.saldoCap -= aCap; p.capPagado += aCap;
+  }
+  a.pagos.push({fecha:new Date(HOY), monto, destino: destino==='capital'?'Capital':destino==='interes'?'Intereses':'Capital + interés'});
+  closeAll(); renderAll(); openDrawer(a.id);
+  toast('Pago de '+fmt(monto)+' registrado y asociado a '+a.nombre);
+}
+
+/* ---------------- reports ---------------- */
+function previewReport(kind){
+  const k = kpis();
+  const body = document.getElementById('prev-body');
+  document.getElementById('prev-title').textContent = kind==='mensual' ? 'Reporte mensual' : 'Historial de pagos';
+  if(kind==='mensual'){
+    body.innerHTML = `<h4>Situación financiera — septiembre 2026</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)}</div>
+      <table style="width:100%"><tbody>
+        <tr><td>Total adeudado</td><td style="text-align:right">${fmt(k.deuda)}</td></tr>
+        <tr><td>Capital pendiente</td><td style="text-align:right">${fmt(k.capPend)}</td></tr>
+        <tr><td>Intereses pendientes</td><td style="text-align:right">${fmt(k.intPend)}</td></tr>
+        <tr><td>Préstamos activos</td><td style="text-align:right">${k.activos}</td></tr>
+        <tr><td>Próximos a vencer</td><td style="text-align:right">${k.porVencer}</td></tr>
+      </tbody></table>`;
+  } else {
+    const rows = state.acreedores.flatMap(a=>a.pagos.map(pg=>`<tr><td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}</td><td style="text-align:right">${fmt(pg.monto)}</td></tr>`)).join('');
+    body.innerHTML = `<h4>Historial de pagos</h4><div class="muted2">Todos los acreedores · a la fecha</div>
+      <table style="width:100%"><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th style="text-align:right">Monto</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin pagos registrados</td></tr>'}</tbody></table>`;
+  }
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('modal-preview').classList.add('show');
+}
+function fakeExport(name){
+  closeAll();
+  toast(name+' generado (simulado) — la exportación real llega con el backend');
+}
+
+/* ---------------- toast ---------------- */
+function toast(msg, kind='ok'){
+  const el = document.createElement('div');
+  el.className='toast';
+  el.innerHTML = `<svg class="icon tic ${kind==='bad'?'bad':''}" style="width:15px;height:15px"><use href="#${kind==='bad'?'i-alert':'i-check'}"/></svg><span>${msg}</span>`;
+  document.getElementById('toastWrap').appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),300); }, 3600);
+}
+
+document.getElementById('bellBtn').addEventListener('click', ()=>{
+  document.querySelector('[data-view="dashboard"]').click();
+  toast(kpis().porVencer+' préstamos requieren atención próximamente');
+});
+
+renderAll();
+</script>
