@@ -138,6 +138,29 @@ tbody tr:last-child td{border-bottom:none;}
 .status.urgente{color:var(--bad);} .status.urgente .dot{background:var(--bad);}
 .status.cancelado{color:var(--muted);} .status.cancelado .dot{background:var(--muted);}
 .amount{font-family:"Archivo",sans-serif; font-variant-numeric:tabular-nums; font-weight:500;}
+.pct-cell{display:flex; align-items:center; gap:8px;}
+.pct-track{width:52px; height:5px; border-radius:20px; background:var(--surface-2); overflow:hidden; flex:none;}
+.pct-track > div{height:100%; background:var(--accent); border-radius:20px;}
+.pct-txt{font-size:11.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums; width:30px;}
+.flow{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;}
+.flow .dot{width:6px;height:6px;border-radius:50%;}
+.flow.ingreso{color:var(--ok);} .flow.ingreso .dot{background:var(--ok);}
+.flow.egreso{color:var(--bad);} .flow.egreso .dot{background:var(--bad);}
+.amount.pos{color:var(--ok);} .amount.neg{color:var(--bad);}
+.bar-row{display:flex; flex-direction:column; gap:5px;}
+.bar-row-top{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-dim);}
+.bar-track{height:8px; border-radius:20px; background:var(--surface-2); overflow:hidden;}
+.bar-track > div{height:100%; border-radius:20px;}
+.cat-item{display:flex; align-items:center; justify-content:space-between; padding:9px 20px; border-bottom:1px solid var(--border); font-size:12.5px;}
+.cat-item:last-child{border-bottom:none;}
+.cat-item .l{display:flex; align-items:center; gap:8px; color:var(--ink-dim);}
+.cat-item .l .dot{width:6px;height:6px;border-radius:50%; background:var(--accent);}
+tr.audit-new{animation:auditFlash 1.6s ease;}
+@keyframes auditFlash{ 0%{background:var(--accent-soft);} 100%{background:transparent;} }
+.audit-user{font-weight:600;}
+.audit-role{font-size:11px; color:var(--ink-faint);}
+.days-txt{font-size:11.5px; color:var(--ink-faint);}
+.days-txt.late{color:var(--bad); font-weight:600;}
 
 /* alerts rail */
 .alert-item{display:flex; gap:10px; padding:12px 20px; border-bottom:1px solid var(--border);}
@@ -204,7 +227,7 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 .seg button.active{background:var(--accent-soft); color:var(--accent);}
 
 /* reports */
-.report-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+.report-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
 .report-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);}
 .report-ic{width:34px;height:34px;border-radius:8px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
 .report-card h3{font-size:15px; margin:0; font-weight:560;}
@@ -281,8 +304,8 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
       <button class="navitem active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
       <button class="navitem" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg>Acreedores</button>
       <button class="navitem" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg>Reportes</button>
-      <button class="navitem" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg>Tesorería<span class="soon">Fase 2</span></button>
-      <button class="navitem" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg>Auditoría<span class="soon">Fase 2</span></button>
+      <button class="navitem" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg>Tesorería</button>
+      <button class="navitem" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg>Auditoría</button>
     </nav>
     <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
     <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
@@ -313,7 +336,7 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
           <span class="hint">Ordenado por vencimiento</span>
         </div>
         <table>
-          <thead><tr><th>Acreedor</th><th>Saldo capital</th><th>Interés</th><th>Vence</th><th>Estado</th></tr></thead>
+          <thead><tr><th>Acreedor</th><th>Saldo capital</th><th>Interés</th><th>Vence</th><th>Plazo</th><th>Estado</th></tr></thead>
           <tbody id="dashTableBody"></tbody>
         </table>
       </div>
@@ -342,7 +365,7 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
         <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openModal('acreedor')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo acreedor</button>
       </div>
       <table>
-        <thead><tr><th>Nombre</th><th>Capital inicial</th><th>Saldo actual</th><th>Interés</th><th>Vence</th><th>Estado</th></tr></thead>
+        <thead><tr><th>Nombre</th><th>Capital inicial</th><th>Saldo actual</th><th>Pagado</th><th>Interés</th><th>Vence</th><th>Estado</th></tr></thead>
         <tbody id="acreedoresTableBody"></tbody>
       </table>
     </div>
@@ -369,31 +392,66 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
           <button class="btn btn-sm btn-primary" onclick="fakeExport('Historial de pagos')"><svg class="icon" style="width:13px;height:13px"><use href="#i-download"/></svg>Exportar</button>
         </div>
       </div>
-      <div class="report-card locked">
-        <span class="phase-tag">Fase 2</span>
+      <div class="report-card">
         <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-wallet"/></svg></div>
         <h3>Balance de tesorería</h3>
         <p>Ingresos, egresos y saldo disponible, vinculado automáticamente a los pagos a acreedores.</p>
         <div class="report-actions">
-          <button class="btn btn-sm" disabled><svg class="icon" style="width:13px;height:13px"><use href="#i-lock"/></svg>Disponible en Fase 2</button>
+          <button class="btn btn-sm" onclick="previewReport('tesoreria')"><svg class="icon" style="width:13px;height:13px"><use href="#i-eye"/></svg>Vista previa</button>
+          <button class="btn btn-sm btn-primary" onclick="fakeExport('Balance de tesorería')"><svg class="icon" style="width:13px;height:13px"><use href="#i-download"/></svg>Exportar</button>
+        </div>
+      </div>
+      <div class="report-card">
+        <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-shield"/></svg></div>
+        <h3>Registro de auditoría</h3>
+        <p>Historial completo de quién hizo qué y cuándo: préstamos, pagos y movimientos de caja.</p>
+        <div class="report-actions">
+          <button class="btn btn-sm" onclick="previewReport('auditoria')"><svg class="icon" style="width:13px;height:13px"><use href="#i-eye"/></svg>Vista previa</button>
+          <button class="btn btn-sm btn-primary" onclick="fakeExport('Registro de auditoría')"><svg class="icon" style="width:13px;height:13px"><use href="#i-download"/></svg>Exportar</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TESORERIA teaser -->
+  <!-- TESORERIA -->
   <section class="view" id="view-tesoreria">
-    <div class="teaser">
-      <div class="ic-big"><svg class="icon" style="width:22px;height:22px"><use href="#i-wallet"/></svg></div>
-      <h2 style="margin:0; font-size:18px;">Tesorería llega en la Fase 2</h2>
-      <p style="max-width:420px; color:var(--ink-dim); font-size:13px; margin:0;">Ingresos, egresos y saldo disponible — con cada egreso vinculado automáticamente al pago de un acreedor. Se construye sobre esta misma base de datos, sin retrabajo.</p>
+    <div class="kpi-row" id="tesoKpiStrip"></div>
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Movimientos de caja</h2>
+          <span class="hint" id="tesoCount"></span>
+          <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openModal('movimiento')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo movimiento</button>
+        </div>
+        <table>
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Monto</th></tr></thead>
+          <tbody id="tesoTableBody"></tbody>
+        </table>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="panel">
+          <div class="panel-head"><h2 style="font-size:14px;">Ingresos vs. egresos</h2><span class="hint">Periodo actual</span></div>
+          <div id="flowBars" style="padding:16px 20px 18px; display:flex; flex-direction:column; gap:12px;"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2 style="font-size:14px;">Por categoría</h2></div>
+          <div id="catList"></div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <!-- AUDITORIA -->
   <section class="view" id="view-auditoria">
-    <div class="teaser">
-      <div class="ic-big"><svg class="icon" style="width:22px;height:22px"><use href="#i-shield"/></svg></div>
-      <h2 style="margin:0; font-size:18px;">Auditoría e historial — Fase 2</h2>
-      <p style="max-width:420px; color:var(--ink-dim); font-size:13px; margin:0;">Trazabilidad completa: quién modificó qué préstamo y cuándo, con roles avanzados para el Consejo de Vigilancia.</p>
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Registro de auditoría</h2>
+        <span class="hint" id="auditCount"></span>
+      </div>
+      <table>
+        <thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Rol</th><th>Acción</th><th>Detalle</th></tr></thead>
+        <tbody id="auditTableBody"></tbody>
+      </table>
     </div>
   </section>
 </main>
@@ -466,6 +524,41 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
   </div>
 </div>
 
+<div class="modal" id="modal-movimiento">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-wallet"/></svg><h3>Nuevo movimiento</h3></div>
+    <div class="modal-body">
+      <label class="fl">Tipo de movimiento
+        <div class="seg" id="mv-tipo">
+          <button class="active" data-v="ingreso">Ingreso</button>
+          <button data-v="egreso">Egreso</button>
+        </div>
+      </label>
+      <label class="fl">Categoría
+        <select class="fi" id="mv-categoria">
+          <option>Venta de mineral</option>
+          <option>Aporte extraordinario</option>
+          <option>Otros ingresos</option>
+          <option>Combustible</option>
+          <option>Personal</option>
+          <option>Maquinaria</option>
+          <option>Proveedores</option>
+          <option>Otros gastos</option>
+        </select>
+      </label>
+      <div class="field-grid">
+        <label class="fl">Monto (Bs)<input class="fi" id="mv-monto" type="number" placeholder="15000"></label>
+        <label class="fl">Fecha<input class="fi" id="mv-fecha" type="date"></label>
+      </div>
+      <label class="fl">Descripción<input class="fi" id="mv-desc" placeholder="Opcional"></label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearMovimiento()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Registrar movimiento</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modal-preview">
   <div class="modal-card" style="width:480px;">
     <div class="modal-head"><svg class="icon"><use href="#i-eye"/></svg><h3 id="prev-title">Vista previa</h3></div>
@@ -508,8 +601,36 @@ const state = {
     {id:5, nombre:"Rosa Fernández", ci:"2298871 LP", tel:"+591 700 88112", banco:"BCP · Cta 220-908", dir:"Viacha", obs:"Préstamo cancelado en su totalidad.",
       prestamo:{monto:15000, tasa:2.5, fecha:new Date(2026,0,5), plazo:5, vence:new Date(2026,5,5), saldoCap:0, interesPend:0, capPagado:15000, intPagado:1875},
       pagos:[{fecha:new Date(2026,3,5), monto:15000, destino:"Capital"}], docs:[{n:"contrato_rosa_fernandez.pdf",t:"pdf"},{n:"comprobante_final.jpg",t:"img"}]},
+  ],
+  tesoreria:{
+    saldoInicial: 42000,
+    movimientos:[
+      {id:1, fecha:new Date(2026,5,2), tipo:'egreso', categoria:'Maquinaria', desc:'Mantenimiento de compresora', monto:30000},
+      {id:2, fecha:new Date(2026,6,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:8000, acreedorId:1},
+      {id:3, fecha:new Date(2026,6,10), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Carlos Rojas', monto:10000, acreedorId:3},
+      {id:4, fecha:new Date(2026,6,20), tipo:'ingreso', categoria:'Aporte extraordinario', desc:'Cuota extraordinaria de socios', monto:8000},
+      {id:5, fecha:new Date(2026,7,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:7000, acreedorId:1},
+      {id:6, fecha:new Date(2026,7,5), tipo:'ingreso', categoria:'Venta de mineral', desc:'Lote de concentrado — comprador Huanuni', monto:120000},
+      {id:7, fecha:new Date(2026,7,10), tipo:'egreso', categoria:'Combustible', desc:'Diésel para maquinaria', monto:15000},
+      {id:8, fecha:new Date(2026,7,15), tipo:'egreso', categoria:'Personal', desc:'Planilla de socios operativos', monto:22000},
+      {id:9, fecha:new Date(2026,7,20), tipo:'egreso', categoria:'Proveedores', desc:'Insumos de perforación', monto:9500},
+    ]
+  },
+  auditLog:[
+    {ts:new Date(2026,7,1,9,14), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Pago registrado', detalle:'Bs 8.000 · Capital · Juan Pérez'},
+    {ts:new Date(2026,7,1,9,15), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso Bs 8.000 · Pago a acreedor'},
+    {ts:new Date(2026,7,5,11,2), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Ingreso registrado', detalle:'Bs 120.000 · Venta de mineral'},
+    {ts:new Date(2026,7,15,16,40), usuario:'Ana Ticona', rol:'Administrador', accion:'Préstamo modificado', detalle:'Esteban Quispe · plazo ajustado a 10 meses'},
+    {ts:new Date(2026,7,20,10,5), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso Bs 9.500 · Proveedores'},
+    {ts:new Date(2026,8,1,8,30), usuario:'Marisol Guzmán', rol:'Presidencia', accion:'Reporte consultado', detalle:'Reporte mensual — agosto 2026'},
   ]
 };
+
+function logAudit(accion, detalle){
+  const now = new Date();
+  const ts = new Date(HOY.getFullYear(), HOY.getMonth(), HOY.getDate(), now.getHours(), now.getMinutes());
+  state.auditLog.unshift({ts, usuario:'Marisol Guzmán', rol:'Presidencia', accion, detalle, isNew:true});
+}
 
 function estadoDe(p){
   if(!p) return 'sin-prestamo';
@@ -566,6 +687,13 @@ function statusHTML(es){
   return `<span class="status ${es}"><span class="dot"></span>${ESTADO_LABEL[es]}</span>`;
 }
 
+function diasTxt(p){
+  const d = diasHasta(p.vence);
+  if(d<0) return `<span class="days-txt late">${-d} días de atraso</span>`;
+  if(d===0) return `<span class="days-txt late">vence hoy</span>`;
+  return `<span class="days-txt">en ${d} días</span>`;
+}
+
 function renderDashTable(){
   const rows = state.acreedores.filter(a=>a.prestamo).slice().sort((a,b)=>a.prestamo.vence-b.prestamo.vence);
   document.getElementById('dashTableBody').innerHTML = rows.map(a=>{
@@ -575,6 +703,7 @@ function renderDashTable(){
       <td class="amount">${fmt(a.prestamo.saldoCap)}</td>
       <td class="amount">${fmt(a.prestamo.interesPend)}</td>
       <td>${fechaTxt(a.prestamo.vence)}</td>
+      <td>${diasTxt(a.prestamo)}</td>
       <td>${statusHTML(es)}</td>
     </tr>`;
   }).join('');
@@ -587,10 +716,12 @@ function renderAcreedoresTable(filter=''){
   document.getElementById('acreedoresTableBody').innerHTML = rows.map(a=>{
     const p = a.prestamo;
     const es = estadoDe(p);
+    const pct = p ? Math.round((p.capPagado/p.monto)*100) : 0;
     return `<tr onclick="openDrawer(${a.id})">
       <td><div class="who-cell"><div class="avatar" style="width:26px;height:26px;font-size:10.5px;">${initials(a.nombre)}</div><div><div class="who-name">${a.nombre}</div><div class="who-ci">${a.ci}</div></div></div></td>
       <td class="amount">${p?fmt(p.monto):'—'}</td>
       <td class="amount">${p?fmt(p.saldoCap):'—'}</td>
+      <td>${p?`<div class="pct-cell"><div class="pct-track"><div style="width:${pct}%"></div></div><span class="pct-txt">${pct}%</span></div>`:'—'}</td>
       <td class="amount">${p?p.tasa+'% mensual':'—'}</td>
       <td>${p?fechaTxt(p.vence):'—'}</td>
       <td>${statusHTML(es)}</td>
@@ -639,9 +770,87 @@ function renderTrend(){
   `;
 }
 
+function tesoTotales(){
+  const t = state.tesoreria;
+  let ing=0, egr=0; const porCat={};
+  t.movimientos.forEach(m=>{
+    if(m.tipo==='ingreso') ing+=m.monto; else egr+=m.monto;
+    porCat[m.categoria] = (porCat[m.categoria]||0) + m.monto;
+  });
+  return {ing, egr, saldo:t.saldoInicial+ing-egr, porCat};
+}
+
+function renderTesoreria(){
+  const t = state.tesoreria, tt = tesoTotales();
+  document.getElementById('tesoKpiStrip').innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label">Saldo inicial</div>
+      <div class="kpi-num num-display mono">${fmt(t.saldoInicial)}</div>
+      <div class="kpi-sub">Al inicio del periodo</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ingresos</div>
+      <div class="kpi-num num-display mono" style="color:var(--ok)">${fmt(tt.ing)}</div>
+      <div class="kpi-sub">${t.movimientos.filter(m=>m.tipo==='ingreso').length} movimientos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Egresos</div>
+      <div class="kpi-num num-display mono" style="color:var(--bad)">${fmt(tt.egr)}</div>
+      <div class="kpi-sub">${t.movimientos.filter(m=>m.tipo==='egreso').length} movimientos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Saldo disponible</div>
+      <div class="kpi-num num-display mono accent-num">${fmt(tt.saldo)}</div>
+      <div class="kpi-sub">Ingresos − egresos + saldo inicial</div>
+    </div>`;
+
+  document.getElementById('tesoCount').textContent = t.movimientos.length + ' movimientos';
+  const rows = t.movimientos.slice().sort((a,b)=>b.fecha-a.fecha);
+  document.getElementById('tesoTableBody').innerHTML = rows.map(m=>`
+    <tr>
+      <td>${fechaTxt(m.fecha)}</td>
+      <td><span class="flow ${m.tipo}"><span class="dot"></span>${m.tipo==='ingreso'?'Ingreso':'Egreso'}</span></td>
+      <td>${m.categoria}</td>
+      <td>${m.desc}</td>
+      <td class="amount ${m.tipo==='ingreso'?'pos':'neg'}">${m.tipo==='ingreso'?'+':'−'} ${fmt(m.monto)}</td>
+    </tr>`).join('');
+
+  const maxFlow = Math.max(tt.ing, tt.egr, 1);
+  document.getElementById('flowBars').innerHTML = `
+    <div class="bar-row">
+      <div class="bar-row-top"><span>Ingresos</span><span class="amount">${fmt(tt.ing)}</span></div>
+      <div class="bar-track"><div style="width:${(tt.ing/maxFlow)*100}%; background:var(--ok);"></div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-row-top"><span>Egresos</span><span class="amount">${fmt(tt.egr)}</span></div>
+      <div class="bar-track"><div style="width:${(tt.egr/maxFlow)*100}%; background:var(--bad);"></div></div>
+    </div>`;
+
+  const cats = Object.entries(tt.porCat).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('catList').innerHTML = cats.map(([cat,val])=>`
+    <div class="cat-item"><span class="l"><span class="dot"></span>${cat}</span><span class="amount">${fmt(val)}</span></div>
+  `).join('');
+}
+
+function renderAuditoria(){
+  document.getElementById('auditCount').textContent = state.auditLog.length + ' registros';
+  document.getElementById('auditTableBody').innerHTML = state.auditLog.map((e,i)=>{
+    const hh = String(e.ts.getHours()).padStart(2,'0'), mm = String(e.ts.getMinutes()).padStart(2,'0');
+    return `<tr class="${e.isNew?'audit-new':''}">
+      <td class="amount">${fechaTxt(e.ts)} · ${hh}:${mm}</td>
+      <td class="audit-user">${e.usuario}</td>
+      <td class="audit-role">${e.rol}</td>
+      <td>${e.accion}</td>
+      <td style="color:var(--ink-dim)">${e.detalle}</td>
+    </tr>`;
+  }).join('');
+  state.auditLog.forEach(e=> e.isNew=false);
+}
+
 function renderAll(){
   renderKPIs(); renderDashTable(); renderAlerts(); renderTrend();
   renderAcreedoresTable(document.getElementById('searchInput').value);
+  renderTesoreria(); renderAuditoria();
 }
 
 /* ---------------- views/nav ---------------- */
@@ -652,7 +861,7 @@ document.querySelectorAll('.navitem').forEach(btn=>{
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     const view = btn.dataset.view;
     document.getElementById('view-'+view).classList.add('active');
-    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], reportes:['Documentación','Reportes'], tesoreria:['Próxima etapa','Tesorería'], auditoria:['Próxima etapa','Auditoría e historial']};
+    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], reportes:['Documentación','Reportes'], tesoreria:['Caja y movimientos','Tesorería'], auditoria:['Trazabilidad','Auditoría e historial']};
     document.getElementById('topEyebrow').textContent = titles[view][0];
     document.getElementById('topTitle').textContent = titles[view][1];
   });
@@ -740,6 +949,13 @@ function openModal(name, id){
   }
   if(name==='acreedor'){ ['f-nombre','f-ci','f-tel','f-banco','f-obs'].forEach(id=>document.getElementById(id).value=''); }
   if(name==='prestamo'){ ['p-monto','p-tasa','p-plazo'].forEach(id=>document.getElementById(id).value=''); }
+  if(name==='movimiento'){
+    document.getElementById('mv-monto').value='';
+    document.getElementById('mv-desc').value='';
+    document.getElementById('mv-fecha').value = HOY.toISOString().slice(0,10);
+    document.querySelectorAll('#mv-tipo button').forEach(x=>x.classList.remove('active'));
+    document.querySelector('#mv-tipo button[data-v="ingreso"]').classList.add('active');
+  }
 }
 function closeAll(){
   document.getElementById('overlay').classList.remove('show');
@@ -751,6 +967,11 @@ document.getElementById('pg-destino').addEventListener('click', e=>{
   document.querySelectorAll('#pg-destino button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
 });
+document.getElementById('mv-tipo').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#mv-tipo button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+});
 
 function crearAcreedor(){
   const nombre = document.getElementById('f-nombre').value.trim();
@@ -758,6 +979,7 @@ function crearAcreedor(){
   uid++;
   state.acreedores.push({id:uid, nombre, ci:document.getElementById('f-ci').value||'—', tel:document.getElementById('f-tel').value||'—',
     banco:document.getElementById('f-banco').value||'—', dir:'—', obs:document.getElementById('f-obs').value||'', prestamo:null, pagos:[], docs:[]});
+  logAudit('Acreedor registrado', nombre+' · CI '+(document.getElementById('f-ci').value||'—'));
   closeAll(); renderAll(); toast(nombre+' fue registrado como acreedor');
 }
 
@@ -769,6 +991,7 @@ function crearPrestamo(){
   if(!monto || !tasa || !plazo){ toast('Completá monto, interés y plazo', 'bad'); return; }
   a.prestamo = {monto, tasa, fecha:new Date(HOY), plazo, vence:addMonths(HOY,plazo), saldoCap:monto, interesPend:Math.round(monto*tasa/100), capPagado:0, intPagado:0};
   a.pagos = [];
+  logAudit('Préstamo registrado', a.nombre+' · '+fmt(monto)+' · '+tasa+'% mensual · '+plazo+' meses');
   closeAll(); renderAll(); openDrawer(a.id);
   toast('Préstamo registrado — el sistema calculó el interés y el vencimiento');
 }
@@ -788,16 +1011,39 @@ function registrarPago(){
     const aInt = Math.min(restante, p.interesPend); p.interesPend -= aInt; p.intPagado += aInt; restante -= aInt;
     const aCap = Math.min(restante, p.saldoCap); p.saldoCap -= aCap; p.capPagado += aCap;
   }
-  a.pagos.push({fecha:new Date(HOY), monto, destino: destino==='capital'?'Capital':destino==='interes'?'Intereses':'Capital + interés'});
+  const destinoTxt = destino==='capital'?'Capital':destino==='interes'?'Intereses':'Capital + interés';
+  a.pagos.push({fecha:new Date(HOY), monto, destino: destinoTxt});
+
+  state.tesoreria.movimientos.push({id:Date.now(), fecha:new Date(HOY), tipo:'egreso', categoria:'Pago a acreedor',
+    desc:'Pago préstamo — '+a.nombre, monto, acreedorId:a.id});
+
+  logAudit('Pago registrado', fmt(monto)+' · '+destinoTxt+' · '+a.nombre);
+  logAudit('Movimiento de caja', 'Egreso '+fmt(monto)+' · Pago a acreedor · '+a.nombre);
+
   closeAll(); renderAll(); openDrawer(a.id);
   toast('Pago de '+fmt(monto)+' registrado y asociado a '+a.nombre);
+}
+
+function crearMovimiento(){
+  const tipo = document.getElementById('mv-tipo').querySelector('.active').dataset.v;
+  const categoria = document.getElementById('mv-categoria').value;
+  const monto = parseFloat(document.getElementById('mv-monto').value);
+  const fechaVal = document.getElementById('mv-fecha').value;
+  const desc = document.getElementById('mv-desc').value || categoria;
+  if(!monto || monto<=0){ toast('Ingresá un monto válido', 'bad'); return; }
+  const fecha = fechaVal ? new Date(fechaVal+'T00:00:00') : new Date(HOY);
+  state.tesoreria.movimientos.push({id:Date.now(), fecha, tipo, categoria, desc, monto});
+  logAudit('Movimiento de caja', (tipo==='ingreso'?'Ingreso ':'Egreso ')+fmt(monto)+' · '+categoria);
+  closeAll(); renderAll();
+  toast((tipo==='ingreso'?'Ingreso':'Egreso')+' de '+fmt(monto)+' registrado en tesorería');
 }
 
 /* ---------------- reports ---------------- */
 function previewReport(kind){
   const k = kpis();
   const body = document.getElementById('prev-body');
-  document.getElementById('prev-title').textContent = kind==='mensual' ? 'Reporte mensual' : 'Historial de pagos';
+  const titles = {mensual:'Reporte mensual', pagos:'Historial de pagos', tesoreria:'Balance de tesorería', auditoria:'Registro de auditoría'};
+  document.getElementById('prev-title').textContent = titles[kind];
   if(kind==='mensual'){
     body.innerHTML = `<h4>Situación financiera — septiembre 2026</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)}</div>
       <table style="width:100%"><tbody>
@@ -807,10 +1053,23 @@ function previewReport(kind){
         <tr><td>Préstamos activos</td><td style="text-align:right">${k.activos}</td></tr>
         <tr><td>Próximos a vencer</td><td style="text-align:right">${k.porVencer}</td></tr>
       </tbody></table>`;
-  } else {
+  } else if(kind==='pagos'){
     const rows = state.acreedores.flatMap(a=>a.pagos.map(pg=>`<tr><td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}</td><td style="text-align:right">${fmt(pg.monto)}</td></tr>`)).join('');
     body.innerHTML = `<h4>Historial de pagos</h4><div class="muted2">Todos los acreedores · a la fecha</div>
       <table style="width:100%"><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th style="text-align:right">Monto</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin pagos registrados</td></tr>'}</tbody></table>`;
+  } else if(kind==='tesoreria'){
+    const tt = tesoTotales();
+    body.innerHTML = `<h4>Balance de tesorería</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)}</div>
+      <table style="width:100%"><tbody>
+        <tr><td>Saldo inicial</td><td style="text-align:right">${fmt(state.tesoreria.saldoInicial)}</td></tr>
+        <tr><td>Ingresos</td><td style="text-align:right">${fmt(tt.ing)}</td></tr>
+        <tr><td>Egresos</td><td style="text-align:right">${fmt(tt.egr)}</td></tr>
+        <tr><td><b>Saldo disponible</b></td><td style="text-align:right"><b>${fmt(tt.saldo)}</b></td></tr>
+      </tbody></table>`;
+  } else {
+    const rows = state.auditLog.slice(0,10).map(e=>`<tr><td>${fechaTxt(e.ts)}</td><td>${e.usuario}</td><td>${e.accion}</td><td>${e.detalle}</td></tr>`).join('');
+    body.innerHTML = `<h4>Registro de auditoría</h4><div class="muted2">Últimos 10 eventos</div>
+      <table style="width:100%"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
   document.getElementById('overlay').classList.add('show');
   document.getElementById('modal-preview').classList.add('show');
