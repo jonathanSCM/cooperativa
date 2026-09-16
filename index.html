@@ -317,6 +317,11 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 .sheet .muted2{color:var(--ink-faint); font-size:10.5px;}
 .sheet table{margin-top:12px;}
 .sheet th,.sheet td{padding:6px 4px; font-size:11px; border-bottom:1px solid var(--border);}
+.sheet h5{font-size:11px; font-weight:700; margin:20px 0 2px; color:var(--ink); text-transform:uppercase; letter-spacing:.05em;}
+.sheet .sec-sub{font-size:10.5px; color:var(--ink-faint); margin:0 0 6px;}
+.sheet .totalrow td{font-weight:700; border-top:1.5px solid var(--border-strong); border-bottom:none;}
+.sheet .pos{color:var(--ok);} .sheet .neg{color:var(--bad);}
+.sheet table{width:100%; table-layout:auto;}
 
 ::selection{background:var(--accent-soft); color:var(--accent);}
 @media (max-width:980px){
@@ -836,7 +841,7 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 </div>
 
 <div class="modal" id="modal-preview">
-  <div class="modal-card" style="width:480px;">
+  <div class="modal-card" style="width:860px; max-height:86vh;">
     <div class="modal-head"><svg class="icon"><use href="#i-eye"/></svg><h3 id="prev-title">Vista previa</h3></div>
     <div class="modal-body"><div class="sheet" id="prev-body"></div></div>
     <div class="modal-foot">
@@ -1718,36 +1723,136 @@ function previewReport(kind){
   const body = document.getElementById('prev-body');
   const titles = {mensual:'Reporte mensual', pagos:'Historial de pagos', tesoreria:'Balance de tesorería', auditoria:'Registro de auditoría'};
   document.getElementById('prev-title').textContent = titles[kind];
+
   if(kind==='mensual'){
-    body.innerHTML = `<h4>Situación financiera — septiembre 2026</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)} · ${rangoTxt}</div>
-      <table style="width:100%"><tbody>
+    const filaAcreedor = a=>{
+      const p=a.prestamo; if(!p) return '';
+      const es = estadoDe(p); const pct = Math.round((p.capPagado/p.monto)*100);
+      return `<tr>
+        <td>${a.nombre}</td><td>${a.ci}</td>
+        <td style="text-align:right">${fmt(p.monto)}</td>
+        <td style="text-align:right">${fmt(p.saldoCap)}</td>
+        <td style="text-align:right">${fmt(p.interesPend)}</td>
+        <td style="text-align:right">${pct}%</td>
+        <td>${fechaTxt(p.vence)}</td>
+        <td>${ESTADO_LABEL[es]}</td>
+      </tr>`;
+    };
+    const filasAcreedores = state.acreedores.filter(a=>a.prestamo).map(filaAcreedor).join('');
+    const movs = state.tesoreria.movimientos.filter(m=>enRango(m.fecha,r)).slice().sort((a,b)=>a.fecha-b.fecha);
+    const filasMovs = movs.map(m=>`<tr>
+        <td>${fechaTxt(m.fecha)}</td><td>${m.tipo==='ingreso'?'Ingreso':'Egreso'}</td><td>${m.categoria}</td><td>${m.desc}</td>
+        <td style="text-align:right" class="${m.tipo==='ingreso'?'pos':'neg'}">${m.tipo==='ingreso'?'+':'−'} ${fmt(m.monto)}</td>
+      </tr>`).join('');
+    const prod = state.produccion.filter(p=>enRango(p.fecha,r));
+    const filasProd = prod.map(p=>`<tr><td>${fechaTxt(p.fecha)}</td><td style="text-align:right">${fmtG(p.gramos)}</td><td style="text-align:right">${fmt(p.valorGramo)}/g</td><td style="text-align:right">${fmt(p.gramos*p.valorGramo)}</td><td>${p.obs||'—'}</td></tr>`).join('');
+
+    body.innerHTML = `<h4>Situación financiera de la cooperativa</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)} · movimientos del periodo: ${rangoTxt}</div>
+
+      <h5>Resumen</h5>
+      <table><tbody>
         <tr><td>Total adeudado</td><td style="text-align:right">${fmt(k.deuda)}</td></tr>
         <tr><td>Capital pendiente</td><td style="text-align:right">${fmt(k.capPend)}</td></tr>
         <tr><td>Intereses pendientes</td><td style="text-align:right">${fmt(k.intPend)}</td></tr>
         <tr><td>Préstamos activos</td><td style="text-align:right">${k.activos}</td></tr>
-        <tr><td>Próximos a vencer</td><td style="text-align:right">${k.porVencer}</td></tr>
-      </tbody></table>`;
+        <tr><td>Próximos a vencer / vencidos</td><td style="text-align:right">${k.porVencer}</td></tr>
+      </tbody></table>
+
+      <h5>Detalle por acreedor — de dónde viene el capital pendiente</h5>
+      <table><thead><tr><th>Acreedor</th><th>CI</th><th style="text-align:right">Capital inicial</th><th style="text-align:right">Saldo capital</th><th style="text-align:right">Interés pend.</th><th style="text-align:right">% pagado</th><th>Vence</th><th>Estado</th></tr></thead>
+      <tbody>${filasAcreedores || '<tr><td colspan="8">Sin acreedores con préstamo activo</td></tr>'}</tbody></table>
+
+      <h5>Movimientos de tesorería en el periodo</h5>
+      <p class="sec-sub">${movs.length} movimientos · ${rangoTxt}</p>
+      <table><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th style="text-align:right">Monto</th></tr></thead>
+      <tbody>${filasMovs || '<tr><td colspan="5">Sin movimientos en este rango</td></tr>'}</tbody></table>
+
+      ${prod.length ? `<h5>Producción de oro en el periodo</h5>
+      <table><thead><tr><th>Fecha</th><th style="text-align:right">Gramos</th><th style="text-align:right">Cotización</th><th style="text-align:right">Valor Bs</th><th>Observación</th></tr></thead>
+      <tbody>${filasProd}</tbody></table>` : ''}
+    `;
+
   } else if(kind==='pagos'){
-    const rows = state.acreedores.flatMap(a=>a.pagos.filter(pg=>enRango(pg.fecha,r)).map(pg=>`<tr><td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}${pg.moneda==='Oro'?' (oro)':''}</td><td style="text-align:right">${fmt(pg.monto)}</td></tr>`)).join('');
-    body.innerHTML = `<h4>Historial de pagos</h4><div class="muted2">${rangoTxt}</div>
-      <table style="width:100%"><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th style="text-align:right">Monto</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin pagos en este rango</td></tr>'}</tbody></table>`;
+    const pagos = state.acreedores.flatMap(a=>a.pagos.filter(pg=>enRango(pg.fecha,r)).map(pg=>({a,pg})))
+      .sort((x,y)=>x.pg.fecha-y.pg.fecha);
+    const rows = pagos.map(({a,pg})=>`<tr>
+        <td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}</td>
+        <td>${pg.moneda==='Oro'?`Oro · ${fmtG(pg.gramos)} a ${fmt(pg.valorGramoUsado)}/g`:'Bolivianos'}</td>
+        <td style="text-align:right">${fmt(pg.monto)}</td>
+      </tr>`).join('');
+    const totalBs = pagos.reduce((s,{pg})=>s+pg.monto,0);
+    const totalOroG = pagos.filter(({pg})=>pg.moneda==='Oro').reduce((s,{pg})=>s+pg.gramos,0);
+    const porAcreedor = {};
+    pagos.forEach(({a,pg})=>{ porAcreedor[a.nombre]=(porAcreedor[a.nombre]||0)+pg.monto; });
+    const filasAc = Object.entries(porAcreedor).sort((a,b)=>b[1]-a[1]).map(([n,v])=>`<tr><td>${n}</td><td style="text-align:right">${fmt(v)}</td></tr>`).join('');
+
+    body.innerHTML = `<h4>Historial de pagos a acreedores</h4><div class="muted2">${rangoTxt} · ${pagos.length} pagos registrados</div>
+
+      <h5>Detalle de pagos</h5>
+      <table><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th>Moneda</th><th style="text-align:right">Monto (Bs)</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="5">Sin pagos en este rango</td></tr>'}</tbody>
+      ${pagos.length?`<tfoot><tr class="totalrow"><td colspan="4">Total pagado${totalOroG?' (incl. '+fmtG(totalOroG)+' de oro)':''}</td><td style="text-align:right">${fmt(totalBs)}</td></tr></tfoot>`:''}
+      </table>
+
+      <h5>Total pagado por acreedor</h5>
+      <table><thead><tr><th>Acreedor</th><th style="text-align:right">Total pagado</th></tr></thead>
+      <tbody>${filasAc || '<tr><td colspan="2">Sin datos</td></tr>'}</tbody></table>
+    `;
+
   } else if(kind==='tesoreria'){
-    const movs = state.tesoreria.movimientos.filter(m=>enRango(m.fecha,r));
+    const movs = state.tesoreria.movimientos.filter(m=>enRango(m.fecha,r)).slice().sort((a,b)=>a.fecha-b.fecha);
     const ing = movs.filter(m=>m.tipo==='ingreso').reduce((s,m)=>s+m.monto,0);
     const egr = movs.filter(m=>m.tipo==='egreso').reduce((s,m)=>s+m.monto,0);
     const oroValorizado = oroStock() * state.cotizacionOro.valorGramo;
+    const porCat = {};
+    movs.forEach(m=>{ const key=(m.tipo==='ingreso'?'+ ':'− ')+m.categoria; porCat[key]=(porCat[key]||0)+m.monto; });
+    const filasCat = Object.entries(porCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<tr><td>${c}</td><td style="text-align:right">${fmt(v)}</td></tr>`).join('');
+    const filasMov = movs.map(m=>`<tr>
+        <td>${fechaTxt(m.fecha)}</td><td>${m.tipo==='ingreso'?'Ingreso':'Egreso'}</td><td>${m.categoria}</td><td>${m.desc}</td>
+        <td>${m.talonario? m.talonario+' / '+(m.recibo||'—') : (m.recibo||'—')}</td>
+        <td style="text-align:right" class="${m.tipo==='ingreso'?'pos':'neg'}">${m.tipo==='ingreso'?'+':'−'} ${fmt(m.monto)}</td>
+      </tr>`).join('');
+
     body.innerHTML = `<h4>Balance de tesorería</h4><div class="muted2">Cooperativa Minera · ${rangoTxt}</div>
-      <table style="width:100%"><tbody>
+
+      <h5>Resumen</h5>
+      <table><tbody>
         <tr><td>Saldo inicial</td><td style="text-align:right">${fmt(state.tesoreria.saldoInicial)}</td></tr>
-        <tr><td>Ingresos del periodo</td><td style="text-align:right">${fmt(ing)}</td></tr>
-        <tr><td>Egresos del periodo</td><td style="text-align:right">${fmt(egr)}</td></tr>
-        <tr><td>Oro en stock valorizado</td><td style="text-align:right">${fmt(oroValorizado)}</td></tr>
-        <tr><td><b>Balance general</b></td><td style="text-align:right"><b>${fmt(state.tesoreria.saldoInicial+ing-egr+oroValorizado)}</b></td></tr>
-      </tbody></table>`;
+        <tr><td>Ingresos del periodo</td><td style="text-align:right" class="pos">+ ${fmt(ing)}</td></tr>
+        <tr><td>Egresos del periodo</td><td style="text-align:right" class="neg">− ${fmt(egr)}</td></tr>
+        <tr><td>Oro en stock valorizado (${fmtG(oroStock())})</td><td style="text-align:right">${fmt(oroValorizado)}</td></tr>
+        <tr class="totalrow"><td>Balance general</td><td style="text-align:right">${fmt(state.tesoreria.saldoInicial+ing-egr+oroValorizado)}</td></tr>
+      </tbody></table>
+
+      <h5>Movimientos por categoría</h5>
+      <table><tbody>${filasCat || '<tr><td colspan="2">Sin movimientos en este rango</td></tr>'}</tbody></table>
+
+      <h5>Detalle de movimientos</h5>
+      <p class="sec-sub">${movs.length} movimientos · ${rangoTxt}</p>
+      <table><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Talonario/recibo</th><th style="text-align:right">Monto</th></tr></thead>
+      <tbody>${filasMov || '<tr><td colspan="6">Sin movimientos en este rango</td></tr>'}</tbody></table>
+    `;
+
   } else {
-    const rows = state.auditLog.filter(e=>enRango(e.ts,r)).slice(0,15).map(e=>`<tr><td>${fechaTxt(e.ts)}</td><td>${e.usuario}</td><td>${e.accion}</td><td>${e.detalle}</td></tr>`).join('');
-    body.innerHTML = `<h4>Registro de auditoría</h4><div class="muted2">${rangoTxt}</div>
-      <table style="width:100%"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin eventos en este rango</td></tr>'}</tbody></table>`;
+    const events = state.auditLog.filter(e=>enRango(e.ts,r));
+    const rows = events.map(e=>{
+      const hh=String(e.ts.getHours()).padStart(2,'0'), mm=String(e.ts.getMinutes()).padStart(2,'0');
+      return `<tr><td>${fechaTxt(e.ts)} ${hh}:${mm}</td><td>${e.usuario}</td><td>${e.rol}</td><td>${e.accion}</td><td>${e.detalle}</td><td>${gestionDe(e.ts).nombre}</td></tr>`;
+    }).join('');
+    const porUsuario = {};
+    events.forEach(e=>{ porUsuario[e.usuario]=(porUsuario[e.usuario]||0)+1; });
+    const filasUsuario = Object.entries(porUsuario).sort((a,b)=>b[1]-a[1]).map(([u,n])=>`<tr><td>${u}</td><td style="text-align:right">${n}</td></tr>`).join('');
+
+    body.innerHTML = `<h4>Registro de auditoría</h4><div class="muted2">${rangoTxt} · ${events.length} eventos</div>
+
+      <h5>Eventos por usuario</h5>
+      <table><thead><tr><th>Usuario</th><th style="text-align:right">Eventos</th></tr></thead>
+      <tbody>${filasUsuario || '<tr><td colspan="2">Sin eventos</td></tr>'}</tbody></table>
+
+      <h5>Detalle cronológico</h5>
+      <table><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Rol</th><th>Acción</th><th>Detalle</th><th>Gestión</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="6">Sin eventos en este rango</td></tr>'}</tbody></table>
+    `;
   }
   document.getElementById('overlay').classList.add('show');
   document.getElementById('modal-preview').classList.add('show');
