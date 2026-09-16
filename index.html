@@ -10,6 +10,7 @@
   --accent:#0D6E73; --accent-ink:#FFFFFF; --accent-soft:#E0EFEE; --accent-line:#0D6E7333;
   --ok:#2F7D53; --ok-soft:#E6F1EA; --warn:#A9711E; --warn-soft:#F5ECD9; --bad:#B14434; --bad-soft:#F5E3DF;
   --muted:#8B8F84; --muted-soft:#EEEFEA;
+  --gold:#9C7A1E; --gold-soft:#F3E9CC;
   --shadow: 0 1px 2px rgba(20,24,28,0.04);
   --shadow-lg: 0 18px 40px -20px rgba(20,24,28,0.22);
   --r-sm:6px; --r-md:9px; --r-lg:13px;
@@ -21,6 +22,7 @@
     --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
     --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
     --muted:#8B9089; --muted-soft:#1C1F1B;
+    --gold:#D9B25C; --gold-soft:#332912;
     --shadow: 0 1px 2px rgba(0,0,0,0.3);
     --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
   }
@@ -31,6 +33,7 @@
   --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
   --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
   --muted:#8B9089; --muted-soft:#1C1F1B;
+  --gold:#D9B25C; --gold-soft:#332912;
   --shadow: 0 1px 2px rgba(0,0,0,0.3);
   --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
 }
@@ -48,15 +51,15 @@ svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;s
 
 /* ---------- top nav ---------- */
 .topnav{position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--border);}
-.tn-row1{display:flex; align-items:center; gap:22px; padding:13px 32px; max-width:1240px; margin:0 auto;}
+.tn-row1{display:flex; align-items:center; gap:16px; padding:13px 24px; max-width:1320px; margin:0 auto;}
 .brand{display:flex; align-items:center; gap:8px;}
 .brand-mark{width:19px;height:19px;flex:none; color:var(--accent);}
 .brand-word{font-family:"Archivo",sans-serif; font-weight:700; font-size:15.5px;}
 
-.tn-nav{display:flex; align-items:center; gap:2px;}
+.tn-nav{display:flex; align-items:center; gap:1px;}
 .navitem{
-  display:flex; align-items:center; gap:6px; padding:7px 10px; border:1px solid transparent;
-  color:var(--ink-dim); background:transparent; border-radius:7px; font-size:13px; font-weight:500;
+  display:flex; align-items:center; gap:5px; padding:7px 8px; border:1px solid transparent; white-space:nowrap;
+  color:var(--ink-dim); background:transparent; border-radius:7px; font-size:12.5px; font-weight:500;
 }
 .navitem svg{width:14px;height:14px;}
 .navitem:hover{color:var(--ink); background:var(--surface-2);}
@@ -65,7 +68,7 @@ svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;s
 
 .search{
   display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid transparent;
-  border-radius:8px; padding:7px 11px; width:220px; color:var(--ink-faint); margin-left:auto;
+  border-radius:8px; padding:7px 11px; width:170px; color:var(--ink-faint); margin-left:auto;
 }
 .search input{border:none; outline:none; background:transparent; color:var(--ink); font-size:13px; width:100%; font-family:inherit;}
 .demo-badge{
@@ -82,7 +85,7 @@ svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;s
 .userchip .who{font-size:12px; font-weight:600; line-height:1.2;}
 .userchip .role{font-size:10px; color:var(--ink-faint); line-height:1.2;}
 
-main.content{max-width:1240px; margin:0 auto; padding:0 32px 70px;}
+main.content{max-width:1320px; margin:0 auto; padding:0 24px 70px;}
 .page-head{padding:26px 0 18px;}
 .page-head .eyebrow{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px;}
 .page-head h1{font-size:24px; font-weight:520; margin:0;}
@@ -236,6 +239,37 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 .locked{opacity:.6;}
 .phase-tag{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--warn); background:var(--warn-soft); padding:3px 8px; border-radius:20px; width:fit-content;}
 
+/* oro */
+.oro-badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--gold); background:var(--gold-soft); padding:3px 8px; border-radius:20px;}
+.subtoggle{display:flex; gap:6px; margin-bottom:10px;}
+.subtoggle button{
+  padding:6px 12px; font-size:12px; font-weight:600; border-radius:20px; border:1px solid var(--border);
+  background:var(--surface); color:var(--ink-dim);
+}
+.subtoggle button.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent-line);}
+.subtoggle button .n{opacity:.7; font-weight:500; margin-left:2px;}
+.quote-card{display:flex; align-items:center; justify-content:space-between; padding:18px 20px; gap:20px; flex-wrap:wrap;}
+.quote-big{display:flex; align-items:baseline; gap:10px;}
+.quote-num{font-size:30px; font-weight:600; letter-spacing:-.01em;}
+.quote-unit{font-size:12.5px; color:var(--ink-faint);}
+.quote-meta{font-size:11.5px; color:var(--ink-faint); text-align:right;}
+
+/* config */
+.switch{position:relative; display:inline-block; width:34px; height:19px; flex:none;}
+.switch input{opacity:0; width:0; height:0;}
+.switch .track{position:absolute; inset:0; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; transition:.15s;}
+.switch .track::before{content:""; position:absolute; width:13px; height:13px; left:2px; top:2px; background:var(--ink-faint); border-radius:50%; transition:.15s;}
+.switch input:checked + .track{background:var(--accent-soft); border-color:var(--accent-line);}
+.switch input:checked + .track::before{transform:translateX(15px); background:var(--accent);}
+.cfg-row{display:flex; align-items:center; gap:12px; padding:10px 20px; border-bottom:1px solid var(--border);}
+.cfg-row:last-child{border-bottom:none;}
+.cfg-row .name{flex:1; font-size:13px; font-weight:500;}
+.cfg-row .name.off{color:var(--ink-faint); text-decoration:line-through;}
+.cfg-add{display:flex; gap:8px; padding:12px 20px; border-top:1px solid var(--border); background:var(--surface-2);}
+.cfg-add input{flex:1;}
+.gestion-banner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 20px; flex-wrap:wrap;}
+.gestion-tag{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ok); background:var(--ok-soft); padding:4px 10px; border-radius:20px;}
+
 /* teaser */
 .teaser{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:64px 30px; border:1px dashed var(--border-strong); border-radius:var(--r-lg); background:var(--surface);}
 .teaser .ic-big{width:46px;height:46px;border-radius:12px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
@@ -291,6 +325,12 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
 <symbol id="i-gem" viewBox="0 0 24 24"><path d="M4 9l4-5.5h8L20 9l-8 11.5z"/><path d="M4 9h16M9.5 3.5 8 9l4 11.5M14.5 3.5 16 9l-4 11.5"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 19 6.3v5.8c0 4.5-3 7.4-7 8.9-4-1.5-7-4.4-7-8.9V6.3z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3"/><circle cx="14" cy="6" r="2"/><path d="M4 12h3M11 12h9"/><circle cx="8" cy="12" r="2"/><path d="M4 18h9M17 18h3"/><circle cx="14" cy="18" r="2"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.2" rx="1"/><path d="M4.5 8.2V19a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V8.2"/><path d="M10 13h4"/></symbol>
+<symbol id="i-pickaxe" viewBox="0 0 24 24"><path d="M5 5c3.5 0 8 2.5 10 6"/><path d="M19 5c-3.5 0-8 2.5-10 6"/><path d="M8.5 13 4.5 19.5"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.6-5.7"/><path d="M20 12a8 8 0 0 1-13.6 5.7"/><path d="M17.5 3.8v3.6h-3.6"/><path d="M6.5 20.2v-3.6h3.6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15.5v-12M7.5 7.5 12 3l4.5 4.5"/><path d="M4.5 19.5h15"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.3"/></symbol>
 </defs>
 </svg>
 
@@ -303,9 +343,11 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
     <nav class="tn-nav">
       <button class="navitem active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
       <button class="navitem" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg>Acreedores</button>
-      <button class="navitem" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg>Reportes</button>
+      <button class="navitem" data-view="produccion"><svg class="icon"><use href="#i-pickaxe"/></svg>Producción</button>
       <button class="navitem" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg>Tesorería</button>
+      <button class="navitem" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg>Reportes</button>
       <button class="navitem" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg>Auditoría</button>
+      <button class="navitem" data-view="configuracion"><svg class="icon"><use href="#i-settings"/></svg>Configuración</button>
     </nav>
     <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
     <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
@@ -371,8 +413,53 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
     </div>
   </section>
 
+  <!-- PRODUCCIÓN -->
+  <section class="view" id="view-produccion">
+    <div class="panel">
+      <div class="quote-card">
+        <div>
+          <div class="kpi-label" style="margin-bottom:6px;"><svg class="icon" style="width:12px;height:12px"><use href="#i-gem"/></svg>Cotización del oro</div>
+          <div class="quote-big"><span class="quote-num mono accent-num" id="quoteVal">—</span><span class="quote-unit">Bs / gramo</span></div>
+        </div>
+        <div class="quote-meta" id="quoteMeta">—</div>
+        <button class="btn btn-sm" onclick="openModal('cotizacion')"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Actualizar cotización</button>
+      </div>
+    </div>
+    <div class="kpi-row" style="margin-top:16px;" id="prodKpiStrip"></div>
+    <div class="panel" style="margin-top:16px;">
+      <div class="panel-head">
+        <h2>Registro de producción</h2>
+        <span class="hint" id="prodCount"></span>
+        <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openModal('produccion')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar producción</button>
+      </div>
+      <table>
+        <thead><tr><th>Fecha</th><th>Gramos</th><th>Cotización usada</th><th>Valor en bolivianos</th><th>Observación</th></tr></thead>
+        <tbody id="prodTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- REPORTES -->
   <section class="view" id="view-reportes">
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="panel-head" style="flex-wrap:wrap; row-gap:10px;">
+        <h2 style="font-size:14px;">Rango de fechas</h2>
+        <div class="subtoggle" id="repRango" style="margin:0 0 0 10px;">
+          <button data-v="semana">Última semana</button>
+          <button class="active" data-v="mes">Último mes</button>
+          <button data-v="6m">Últimos 6 meses</button>
+          <button data-v="anio">Último año</button>
+          <button data-v="todo">Todo</button>
+          <button data-v="custom">Personalizado</button>
+        </div>
+        <div id="repCustomDates" style="display:none; gap:8px; align-items:center; margin-left:10px;">
+          <input class="fi" type="date" id="rep-desde" style="padding:6px 9px; font-size:12px;">
+          <span class="hint" style="margin:0;">a</span>
+          <input class="fi" type="date" id="rep-hasta" style="padding:6px 9px; font-size:12px;">
+        </div>
+        <span class="hint" id="repRangoTxt"></span>
+      </div>
+    </div>
     <div class="report-grid">
       <div class="report-card">
         <div class="report-ic"><svg class="icon" style="width:18px;height:18px"><use href="#i-doc"/></svg></div>
@@ -424,11 +511,15 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
           <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openModal('movimiento')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo movimiento</button>
         </div>
         <table>
-          <thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Monto</th></tr></thead>
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Talonario / recibo</th><th>Gestión</th><th>Monto</th></tr></thead>
           <tbody id="tesoTableBody"></tbody>
         </table>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="panel">
+          <div class="panel-head"><h2 style="font-size:14px;">Balance general</h2><span class="hint">Caja + oro en stock</span></div>
+          <div id="balanceGeneral"></div>
+        </div>
         <div class="panel">
           <div class="panel-head"><h2 style="font-size:14px;">Ingresos vs. egresos</h2><span class="hint">Periodo actual</span></div>
           <div id="flowBars" style="padding:16px 20px 18px; display:flex; flex-direction:column; gap:12px;"></div>
@@ -449,9 +540,70 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
         <span class="hint" id="auditCount"></span>
       </div>
       <table>
-        <thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Rol</th><th>Acción</th><th>Detalle</th></tr></thead>
+        <thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Rol</th><th>Acción</th><th>Detalle</th><th>Gestión</th></tr></thead>
         <tbody id="auditTableBody"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- CONFIGURACIÓN -->
+  <section class="view" id="view-configuracion">
+    <div class="panel">
+      <div class="gestion-banner">
+        <div>
+          <span class="gestion-tag" id="gestionTag"><svg class="icon" style="width:11px;height:11px"><use href="#i-archive"/></svg>—</span>
+          <div style="font-size:15px; font-weight:600; margin-top:8px;" id="gestionNombre">—</div>
+          <div class="hint" style="margin:2px 0 0;" id="gestionRango">—</div>
+        </div>
+        <button class="btn btn-sm" onclick="openModal('gestion')"><svg class="icon" style="width:13px;height:13px"><use href="#i-archive"/></svg>Cerrar gestión actual</button>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:16px;">
+      <div class="panel-head"><h2 style="font-size:14px;">Gestiones anteriores</h2><span class="hint">El historial se conserva íntegro</span></div>
+      <table>
+        <thead><tr><th>Gestión</th><th>Desde</th><th>Hasta</th><th>Estado</th></tr></thead>
+        <tbody id="gestionesTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px; align-items:start;">
+      <div class="panel">
+        <div class="panel-head"><h2 style="font-size:14px;">Categorías de ingresos</h2></div>
+        <div id="catIngresoList"></div>
+        <div class="cfg-add">
+          <input class="fi" id="new-cat-ingreso" placeholder="Nueva categoría de ingreso…">
+          <button class="btn btn-sm btn-primary" onclick="agregarCategoria('ingreso')"><svg class="icon" style="width:13px;height:13px"><use href="#i-plus"/></svg>Agregar</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2 style="font-size:14px;">Categorías de egresos</h2></div>
+        <div id="catEgresoList"></div>
+        <div class="cfg-add">
+          <input class="fi" id="new-cat-egreso" placeholder="Nueva categoría de egreso…">
+          <button class="btn btn-sm btn-primary" onclick="agregarCategoria('egreso')"><svg class="icon" style="width:13px;height:13px"><use href="#i-plus"/></svg>Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px;">
+      <div class="panel-head"><h2 style="font-size:14px;">Notificaciones y alertas</h2><span class="hint">Vencimientos y movimientos relevantes</span></div>
+      <div class="cfg-row">
+        <div class="name">Notificaciones del navegador<div class="hint" style="margin:2px 0 0;">Pide permiso al navegador y avisa localmente, aunque la pestaña esté abierta en segundo plano.</div></div>
+        <label class="switch"><input type="checkbox" id="notif-browser-toggle" onchange="toggleNotifBrowser(this)"><span class="track"></span></label>
+      </div>
+      <div class="cfg-row" style="flex-wrap:wrap; gap:10px;">
+        <div class="name" style="flex-basis:100%;">Notificaciones por correo<div class="hint" style="margin:2px 0 0;">Se envían al Gmail configurado, con la frecuencia elegida.</div></div>
+        <input class="fi" id="notif-email" placeholder="tucorreo@gmail.com" style="flex:1; min-width:180px;">
+        <select class="fi" id="notif-freq" style="width:150px;">
+          <option>Diario</option>
+          <option>Semanal</option>
+          <option>Solo al vencer</option>
+        </select>
+        <button class="btn btn-sm btn-primary" onclick="guardarNotifEmail()"><svg class="icon" style="width:13px;height:13px"><use href="#i-check"/></svg>Guardar</button>
+      </div>
+      <div class="cfg-row" id="notif-status-row" style="display:none;">
+        <span class="hint" id="notif-status-txt" style="margin:0;"></span>
+      </div>
     </div>
   </section>
 </main>
@@ -508,7 +660,17 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
     <div class="modal-body">
       <div class="loan-row"><span class="l">Saldo capital pendiente</span><span class="mono" id="pago-saldo-cap">—</span></div>
       <div class="loan-row"><span class="l">Interés pendiente</span><span class="mono" id="pago-saldo-int">—</span></div>
-      <label class="fl">Monto del pago (Bs)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
+      <label class="fl">Moneda del pago
+        <div class="seg" id="pg-moneda">
+          <button class="active" data-v="Bs">Bolivianos</button>
+          <button data-v="Oro">Oro</button>
+        </div>
+      </label>
+      <label class="fl" id="pg-monto-wrap">Monto del pago (Bs)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
+      <div class="field-grid" id="pg-oro-wrap" style="display:none;">
+        <label class="fl">Cantidad (gramos)<input class="fi" id="pg-gramos" type="number" placeholder="12"></label>
+        <label class="fl">Equivalencia estimada<input class="fi" id="pg-equiv" disabled placeholder="—"></label>
+      </div>
       <label class="fl">¿Este pago corresponde a?
         <div class="seg" id="pg-destino">
           <button class="active" data-v="capital">Capital</button>
@@ -535,26 +697,81 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
         </div>
       </label>
       <label class="fl">Categoría
-        <select class="fi" id="mv-categoria">
-          <option>Venta de mineral</option>
-          <option>Aporte extraordinario</option>
-          <option>Otros ingresos</option>
-          <option>Combustible</option>
-          <option>Personal</option>
-          <option>Maquinaria</option>
-          <option>Proveedores</option>
-          <option>Otros gastos</option>
-        </select>
+        <select class="fi" id="mv-categoria"></select>
       </label>
       <div class="field-grid">
         <label class="fl">Monto (Bs)<input class="fi" id="mv-monto" type="number" placeholder="15000"></label>
         <label class="fl">Fecha<input class="fi" id="mv-fecha" type="date"></label>
+      </div>
+      <div class="field-grid">
+        <label class="fl">Talonario<input class="fi" id="mv-talonario" placeholder="Ej. A-12"></label>
+        <label class="fl">Nº de recibo / hoja<input class="fi" id="mv-recibo" placeholder="Ej. 00214"></label>
       </div>
       <label class="fl">Descripción<input class="fi" id="mv-desc" placeholder="Opcional"></label>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeAll()">Cancelar</button>
       <button class="btn btn-primary" onclick="crearMovimiento()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Registrar movimiento</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-produccion">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-pickaxe"/></svg><h3>Registrar producción</h3></div>
+    <div class="modal-body">
+      <div class="loan-row"><span class="l">Cotización vigente</span><span class="mono" id="prod-cot-ref">—</span></div>
+      <div class="field-grid">
+        <label class="fl">Cantidad (gramos)<input class="fi" id="pr-gramos" type="number" placeholder="45" oninput="calcProdEquiv()"></label>
+        <label class="fl">Fecha<input class="fi" id="pr-fecha" type="date"></label>
+      </div>
+      <label class="fl">Valor equivalente en bolivianos<input class="fi" id="pr-equiv" disabled placeholder="—"></label>
+      <label class="fl">Observación<input class="fi" id="pr-obs" placeholder="Ej. Lote Zona Norte"></label>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearProduccion()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Registrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-cotizacion">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-gem"/></svg><h3>Actualizar cotización del oro</h3></div>
+    <div class="modal-body">
+      <div class="loan-row"><span class="l">Valor actual</span><span class="mono" id="cot-actual">—</span></div>
+      <label class="fl">Nuevo valor (Bs por gramo)<input class="fi" id="ct-valor" type="number" placeholder="655"></label>
+      <label class="fl">Fuente
+        <select class="fi" id="ct-fuente">
+          <option>Manual (referencial)</option>
+          <option>Banco Bisa — mesa de cambios</option>
+          <option>Cotización internacional (oz. troy convertida)</option>
+        </select>
+      </label>
+      <p style="font-size:11.5px; color:var(--ink-faint); margin:0;">Este valor se usa como referencia para calcular producción y pagos en oro. Se puede automatizar más adelante conectando una fuente en línea.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="actualizarCotizacion()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Actualizar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-gestion">
+  <div class="modal-card">
+    <div class="modal-head"><svg class="icon"><use href="#i-archive"/></svg><h3>Cerrar gestión actual</h3></div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--ink-dim); margin:0; line-height:1.6;" id="gestion-confirm-txt">—</p>
+      <div class="loan-card">
+        <div class="loan-row"><span class="l">Acreedores registrados</span><span class="mono" id="gc-acreedores">—</span></div>
+        <div class="loan-row"><span class="l">Movimientos de caja</span><span class="mono" id="gc-movs">—</span></div>
+        <div class="loan-row"><span class="l">Eventos de auditoría</span><span class="mono" id="gc-audit">—</span></div>
+      </div>
+      <p style="font-size:12px; color:var(--ink-faint); margin:0;">Todo este historial queda conservado y consultable — solo se abre una gestión nueva para continuar los registros.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeAll()">Cancelar</button>
+      <button class="btn btn-primary" onclick="cerrarGestion()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg>Confirmar cierre</button>
     </div>
   </div>
 </div>
@@ -569,6 +786,9 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
     </div>
   </div>
 </div>
+
+<input type="file" id="fileUpload" style="display:none" onchange="handleFileAdd(event,'upload')">
+<input type="file" id="fileScan" accept="image/*" capture="environment" style="display:none" onchange="handleFileAdd(event,'scan')">
 
 <div class="toast-wrap" id="toastWrap"></div>
 
@@ -585,8 +805,9 @@ let uid = 100;
 const state = {
   acreedores: [
     {id:1, nombre:"Juan Pérez", ci:"4521178 LP", tel:"+591 700 12345", banco:"Banco Unión · Cta 220-4471", dir:"Zona Sur, La Paz", obs:"Prefiere pago por transferencia.",
-      prestamo:{monto:50000, tasa:3, fecha:new Date(2026,5,1), plazo:6, vence:new Date(2026,8,30), saldoCap:35000, interesPend:3150, capPagado:15000, intPagado:4500},
-      pagos:[{fecha:new Date(2026,6,1), monto:8000, destino:"Capital"},{fecha:new Date(2026,7,1), monto:7000, destino:"Capital"}],
+      prestamo:{monto:50000, tasa:3, fecha:new Date(2026,5,1), plazo:6, vence:new Date(2026,8,30), saldoCap:28500, interesPend:3150, capPagado:21500, intPagado:4500},
+      pagos:[{fecha:new Date(2026,6,1), monto:8000, destino:"Capital", moneda:"Bs"},{fecha:new Date(2026,7,1), monto:7000, destino:"Capital", moneda:"Bs"},
+        {fecha:new Date(2026,7,20), monto:6500, destino:"Capital", moneda:"Oro", gramos:10, valorGramoUsado:650}],
       docs:[{n:"contrato_juan_perez.pdf",t:"pdf"},{n:"recibo_ago.jpg",t:"img"}]},
     {id:2, nombre:"María López", ci:"3387765 LP", tel:"+591 701 55210", banco:"BCP · Cta 550-1180", dir:"Achocalla", obs:"",
       prestamo:{monto:80000, tasa:2.5, fecha:new Date(2026,4,15), plazo:8, vence:new Date(2026,9,15), saldoCap:80000, interesPend:2000, capPagado:0, intPagado:0},
@@ -605,17 +826,35 @@ const state = {
   tesoreria:{
     saldoInicial: 42000,
     movimientos:[
-      {id:1, fecha:new Date(2026,5,2), tipo:'egreso', categoria:'Maquinaria', desc:'Mantenimiento de compresora', monto:30000},
-      {id:2, fecha:new Date(2026,6,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:8000, acreedorId:1},
-      {id:3, fecha:new Date(2026,6,10), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Carlos Rojas', monto:10000, acreedorId:3},
-      {id:4, fecha:new Date(2026,6,20), tipo:'ingreso', categoria:'Aporte extraordinario', desc:'Cuota extraordinaria de socios', monto:8000},
-      {id:5, fecha:new Date(2026,7,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:7000, acreedorId:1},
-      {id:6, fecha:new Date(2026,7,5), tipo:'ingreso', categoria:'Venta de mineral', desc:'Lote de concentrado — comprador Huanuni', monto:120000},
-      {id:7, fecha:new Date(2026,7,10), tipo:'egreso', categoria:'Combustible', desc:'Diésel para maquinaria', monto:15000},
-      {id:8, fecha:new Date(2026,7,15), tipo:'egreso', categoria:'Personal', desc:'Planilla de socios operativos', monto:22000},
-      {id:9, fecha:new Date(2026,7,20), tipo:'egreso', categoria:'Proveedores', desc:'Insumos de perforación', monto:9500},
+      {id:1, fecha:new Date(2026,5,2), tipo:'egreso', categoria:'Maquinaria', desc:'Mantenimiento de compresora', monto:30000, recibo:'00187', talonario:'A-11'},
+      {id:2, fecha:new Date(2026,6,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:8000, acreedorId:1, recibo:'00191', talonario:'A-12'},
+      {id:3, fecha:new Date(2026,6,10), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Carlos Rojas', monto:10000, acreedorId:3, recibo:'00193', talonario:'A-12'},
+      {id:4, fecha:new Date(2026,6,20), tipo:'ingreso', categoria:'Aporte extraordinario', desc:'Cuota extraordinaria de socios', monto:8000, recibo:'00195', talonario:'A-12'},
+      {id:5, fecha:new Date(2026,7,1), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez', monto:7000, acreedorId:1, recibo:'00201', talonario:'A-13'},
+      {id:6, fecha:new Date(2026,7,5), tipo:'ingreso', categoria:'Venta de mineral', desc:'Lote de concentrado — comprador Huanuni', monto:120000, recibo:'00204', talonario:'A-13'},
+      {id:7, fecha:new Date(2026,7,10), tipo:'egreso', categoria:'Combustible', desc:'Diésel para maquinaria', monto:15000, recibo:'00206', talonario:'A-13'},
+      {id:8, fecha:new Date(2026,7,15), tipo:'egreso', categoria:'Personal', desc:'Planilla de socios operativos', monto:22000, recibo:'00209', talonario:'A-13'},
+      {id:9, fecha:new Date(2026,7,20), tipo:'egreso', categoria:'Proveedores', desc:'Insumos de perforación', monto:9500, recibo:'00212', talonario:'A-14'},
+      {id:10, fecha:new Date(2026,7,20), tipo:'egreso', categoria:'Pago a acreedor', desc:'Pago préstamo — Juan Pérez (equiv. 10 g de oro)', monto:6500, acreedorId:1, recibo:'00213', talonario:'A-14'},
     ]
   },
+  cotizacionOro:{ valorGramo:655, fecha:new Date(2026,8,8), fuente:'Manual (referencial)' },
+  produccion:[
+    {id:1, fecha:new Date(2026,6,12), gramos:38, valorGramo:640, obs:'Lote Zona Norte'},
+    {id:2, fecha:new Date(2026,7,3), gramos:52, valorGramo:648, obs:'Lote Veta Central'},
+    {id:3, fecha:new Date(2026,7,28), gramos:29, valorGramo:655, obs:'Producción semanal'},
+  ],
+  categorias:{
+    ingreso:[{n:'Venta de mineral', activo:true},{n:'Aporte extraordinario', activo:true},{n:'Otros ingresos', activo:true}],
+    egreso:[{n:'Pago a acreedor', activo:true},{n:'Combustible', activo:true},{n:'Personal', activo:true},{n:'Maquinaria', activo:true},
+      {n:'Proveedores', activo:true},{n:'Faltas', activo:true},{n:'Sanciones', activo:true},{n:'Otros gastos', activo:true}]
+  },
+  gestiones:[
+    {id:1, nombre:'Gestión 2024', desde:new Date(2024,0,1), hasta:new Date(2024,11,31), activa:false},
+    {id:2, nombre:'Gestión 2025', desde:new Date(2025,0,1), hasta:new Date(2025,11,31), activa:false},
+    {id:3, nombre:'Gestión 2026', desde:new Date(2026,0,1), hasta:null, activa:true},
+  ],
+  notificaciones:{ navegador:false, email:'', frecuencia:'Diario' },
   auditLog:[
     {ts:new Date(2026,7,1,9,14), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Pago registrado', detalle:'Bs 8.000 · Capital · Juan Pérez'},
     {ts:new Date(2026,7,1,9,15), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso Bs 8.000 · Pago a acreedor'},
@@ -630,6 +869,15 @@ function logAudit(accion, detalle){
   const now = new Date();
   const ts = new Date(HOY.getFullYear(), HOY.getMonth(), HOY.getDate(), now.getHours(), now.getMinutes());
   state.auditLog.unshift({ts, usuario:'Marisol Guzmán', rol:'Presidencia', accion, detalle, isNew:true});
+}
+
+function gestionDe(fecha){
+  return state.gestiones.find(g => fecha >= g.desde && (g.hasta===null || fecha <= g.hasta))
+    || state.gestiones.find(g=>g.activa) || state.gestiones[state.gestiones.length-1];
+}
+function gestionTagHTML(fecha){
+  const g = gestionDe(fecha);
+  return `<span class="oro-badge" style="color:var(--ink-dim); background:var(--surface-2);"><svg class="icon" style="width:10px;height:10px"><use href="#i-archive"/></svg>${g.nombre}</span>`;
 }
 
 function estadoDe(p){
@@ -782,6 +1030,8 @@ function tesoTotales(){
 
 function renderTesoreria(){
   const t = state.tesoreria, tt = tesoTotales();
+  const oroValorizado = oroStock() * state.cotizacionOro.valorGramo;
+  const balanceGeneral = tt.saldo + oroValorizado;
   document.getElementById('tesoKpiStrip').innerHTML = `
     <div class="kpi">
       <div class="kpi-label">Saldo inicial</div>
@@ -804,6 +1054,11 @@ function renderTesoreria(){
       <div class="kpi-sub">Ingresos − egresos + saldo inicial</div>
     </div>`;
 
+  document.getElementById('balanceGeneral').innerHTML = `
+    <div class="loan-row"><span class="l">Caja (Bs)</span><span class="mono">${fmt(tt.saldo)}</span></div>
+    <div class="loan-row"><span class="l">Oro en stock (${fmtG(oroStock())})</span><span class="mono">${fmt(oroValorizado)}</span></div>
+    <div class="loan-row"><span class="l"><b>Balance general</b></span><span class="mono accent-num"><b>${fmt(balanceGeneral)}</b></span></div>`;
+
   document.getElementById('tesoCount').textContent = t.movimientos.length + ' movimientos';
   const rows = t.movimientos.slice().sort((a,b)=>b.fecha-a.fecha);
   document.getElementById('tesoTableBody').innerHTML = rows.map(m=>`
@@ -812,6 +1067,8 @@ function renderTesoreria(){
       <td><span class="flow ${m.tipo}"><span class="dot"></span>${m.tipo==='ingreso'?'Ingreso':'Egreso'}</span></td>
       <td>${m.categoria}</td>
       <td>${m.desc}</td>
+      <td class="amount" style="color:var(--ink-faint)">${m.talonario? m.talonario+' / '+(m.recibo||'—') : (m.recibo||'—')}</td>
+      <td>${gestionTagHTML(m.fecha)}</td>
       <td class="amount ${m.tipo==='ingreso'?'pos':'neg'}">${m.tipo==='ingreso'?'+':'−'} ${fmt(m.monto)}</td>
     </tr>`).join('');
 
@@ -842,15 +1099,135 @@ function renderAuditoria(){
       <td class="audit-role">${e.rol}</td>
       <td>${e.accion}</td>
       <td style="color:var(--ink-dim)">${e.detalle}</td>
+      <td>${gestionTagHTML(e.ts)}</td>
     </tr>`;
   }).join('');
   state.auditLog.forEach(e=> e.isNew=false);
 }
 
+const fmtG = g => Math.round(g*10)/10 + ' g';
+
+function oroProducidoTotal(){ return state.produccion.reduce((s,p)=>s+p.gramos,0); }
+function oroPagadoTotal(){
+  let g=0; state.acreedores.forEach(a=> a.pagos.forEach(pg=>{ if(pg.moneda==='Oro') g+=pg.gramos; }));
+  return g;
+}
+function oroStock(){ return Math.max(0, oroProducidoTotal() - oroPagadoTotal()); }
+
+function renderCotizacion(){
+  const c = state.cotizacionOro;
+  document.getElementById('quoteVal').textContent = fmt(c.valorGramo).replace('Bs ','');
+  document.getElementById('quoteMeta').innerHTML = `Actualizado ${fechaTxt(c.fecha)}<br>${c.fuente}`;
+}
+
+function renderProduccion(){
+  renderCotizacion();
+  const total = oroProducidoTotal();
+  const valorTotal = state.produccion.reduce((s,p)=>s+p.gramos*p.valorGramo,0);
+  const promedio = total ? Math.round(valorTotal/total) : 0;
+  document.getElementById('prodKpiStrip').innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label">Producción acumulada</div>
+      <div class="kpi-num num-display mono">${fmtG(total)}</div>
+      <div class="kpi-sub">${state.produccion.length} registros</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Valor producido</div>
+      <div class="kpi-num num-display mono accent-num">${fmt(valorTotal)}</div>
+      <div class="kpi-sub">A la cotización de cada registro</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Cotización promedio</div>
+      <div class="kpi-num num-display mono">${fmt(promedio)}</div>
+      <div class="kpi-sub">Bs por gramo</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Stock disponible</div>
+      <div class="kpi-num num-display mono">${fmtG(oroStock())}</div>
+      <div class="kpi-sub">Producido menos pagado en oro</div>
+    </div>`;
+  document.getElementById('prodCount').textContent = state.produccion.length + ' registros';
+  const rows = state.produccion.slice().sort((a,b)=>b.fecha-a.fecha);
+  document.getElementById('prodTableBody').innerHTML = rows.map(p=>`
+    <tr>
+      <td>${fechaTxt(p.fecha)}</td>
+      <td class="amount">${fmtG(p.gramos)}</td>
+      <td class="amount">${fmt(p.valorGramo)} / g</td>
+      <td class="amount pos">${fmt(p.gramos*p.valorGramo)}</td>
+      <td style="color:var(--ink-dim)">${p.obs||'—'}</td>
+    </tr>`).join('') || `<tr><td colspan="5" style="color:var(--ink-faint)">Sin producción registrada todavía.</td></tr>`;
+}
+
+function renderConfiguracion(){
+  const activa = state.gestiones.find(g=>g.activa);
+  document.getElementById('gestionTag').innerHTML = `<svg class="icon" style="width:11px;height:11px"><use href="#i-archive"/></svg>Gestión activa`;
+  document.getElementById('gestionNombre').textContent = activa.nombre;
+  document.getElementById('gestionRango').textContent = 'Desde ' + fechaTxt(activa.desde) + ' · en curso';
+
+  const cerradas = state.gestiones.filter(g=>!g.activa).slice().sort((a,b)=>b.desde-a.desde);
+  document.getElementById('gestionesTableBody').innerHTML = cerradas.map(g=>`
+    <tr>
+      <td class="who-name">${g.nombre}</td>
+      <td>${fechaTxt(g.desde)}</td>
+      <td>${g.hasta?fechaTxt(g.hasta):'—'}</td>
+      <td><span class="status cancelado"><span class="dot"></span>Cerrada</span></td>
+    </tr>`).join('') || `<tr><td colspan="4" style="color:var(--ink-faint)">Todavía no se cerró ninguna gestión.</td></tr>`;
+
+  const catRow = (cat, tipo) => `
+    <div class="cfg-row">
+      <span class="name ${cat.activo?'':'off'}">${cat.n}</span>
+      <label class="switch"><input type="checkbox" ${cat.activo?'checked':''} onchange="toggleCategoria('${tipo}','${cat.n.replace(/'/g,"\\'")}')"><span class="track"></span></label>
+    </div>`;
+  document.getElementById('catIngresoList').innerHTML = state.categorias.ingreso.map(c=>catRow(c,'ingreso')).join('');
+  document.getElementById('catEgresoList').innerHTML = state.categorias.egreso.map(c=>catRow(c,'egreso')).join('');
+
+  document.getElementById('notif-browser-toggle').checked = state.notificaciones.navegador;
+  document.getElementById('notif-email').value = state.notificaciones.email;
+  document.getElementById('notif-freq').value = state.notificaciones.frecuencia;
+}
+
+function toggleNotifBrowser(el){
+  if(el.checked){
+    if(!('Notification' in window)){
+      toast('Este navegador no soporta notificaciones', 'bad'); el.checked=false; return;
+    }
+    Notification.requestPermission().then(perm=>{
+      if(perm==='granted'){
+        state.notificaciones.navegador = true;
+        logAudit('Notificaciones activadas', 'Alertas del navegador habilitadas por Marisol Guzmán');
+        new Notification('Veta — Alertas activadas', {body:'Vas a recibir avisos de vencimientos y movimientos relevantes.'});
+        toast('Notificaciones del navegador activadas');
+      } else {
+        el.checked=false;
+        toast('El navegador bloqueó el permiso de notificaciones', 'bad');
+      }
+    });
+  } else {
+    state.notificaciones.navegador = false;
+    logAudit('Notificaciones desactivadas', 'Alertas del navegador deshabilitadas');
+    toast('Notificaciones del navegador desactivadas');
+  }
+}
+
+function guardarNotifEmail(){
+  const email = document.getElementById('notif-email').value.trim();
+  const freq = document.getElementById('notif-freq').value;
+  if(email && !email.includes('@')){ toast('Ingresá un correo válido', 'bad'); return; }
+  state.notificaciones.email = email;
+  state.notificaciones.frecuencia = freq;
+  logAudit('Notificaciones por correo configuradas', (email||'sin correo')+' · '+freq);
+  const row = document.getElementById('notif-status-row');
+  row.style.display = 'flex';
+  document.getElementById('notif-status-txt').textContent = email
+    ? `Se enviarán alertas a ${email} con frecuencia: ${freq.toLowerCase()}.`
+    : 'Notificaciones por correo desactivadas.';
+  toast(email ? 'Alertas por correo configuradas para '+email : 'Correo de alertas eliminado');
+}
+
 function renderAll(){
   renderKPIs(); renderDashTable(); renderAlerts(); renderTrend();
   renderAcreedoresTable(document.getElementById('searchInput').value);
-  renderTesoreria(); renderAuditoria();
+  renderTesoreria(); renderAuditoria(); renderProduccion(); renderConfiguracion();
 }
 
 /* ---------------- views/nav ---------------- */
@@ -861,7 +1238,7 @@ document.querySelectorAll('.navitem').forEach(btn=>{
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     const view = btn.dataset.view;
     document.getElementById('view-'+view).classList.add('active');
-    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], reportes:['Documentación','Reportes'], tesoreria:['Caja y movimientos','Tesorería'], auditoria:['Trazabilidad','Auditoría e historial']};
+    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], produccion:['Oro','Producción'], reportes:['Documentación','Reportes'], tesoreria:['Caja y movimientos','Tesorería'], auditoria:['Trazabilidad','Auditoría e historial'], configuracion:['Institucional','Configuración']};
     document.getElementById('topEyebrow').textContent = titles[view][0];
     document.getElementById('topTitle').textContent = titles[view][1];
   });
@@ -869,7 +1246,9 @@ document.querySelectorAll('.navitem').forEach(btn=>{
 document.getElementById('searchInput').addEventListener('input', e=> renderAcreedoresTable(e.target.value));
 
 /* ---------------- drawer ---------------- */
+let drawerAcreedorId = null;
 function openDrawer(id){
+  drawerAcreedorId = id;
   const a = state.acreedores.find(x=>x.id===id);
   const p = a.prestamo, es = estadoDe(p);
   const pct = p ? Math.round((p.capPagado/(p.monto))*100) : 0;
@@ -912,27 +1291,57 @@ function openDrawer(id){
         </div>
       </div>` : `<div class="loan-card" style="text-align:center; color:var(--ink-faint); font-size:12.5px;">Sin préstamos registrados todavía.</div>`}
 
-      ${a.pagos.length ? `<div>
-        <div class="field-label" style="margin-bottom:8px;">Historial de pagos</div>
-        <div class="timeline">
-          ${a.pagos.slice().reverse().map(pg=>`
+      ${a.pagos.length ? (()=>{
+        const pagosBs = a.pagos.filter(pg=>(pg.moneda||'Bs')==='Bs');
+        const pagosOro = a.pagos.filter(pg=>pg.moneda==='Oro');
+        const tl = (list) => list.length ? `<div class="timeline">
+          ${list.slice().reverse().map(pg=>`
             <div class="tl-item">
               <div class="tl-dot"></div>
-              <div><div class="tl-title">${fmt(pg.monto)} · ${pg.destino}</div><div class="tl-sub">${fechaTxt(pg.fecha)}</div></div>
+              <div><div class="tl-title">${fmt(pg.monto)} · ${pg.destino}${pg.moneda==='Oro'?` <span class="oro-badge"><svg class="icon" style="width:10px;height:10px"><use href="#i-gem"/></svg>${fmtG(pg.gramos)}</span>`:''}</div><div class="tl-sub">${fechaTxt(pg.fecha)}${pg.moneda==='Oro'?' · cotización '+fmt(pg.valorGramoUsado)+'/g':''}</div></div>
             </div>`).join('')}
+        </div>` : `<div style="text-align:center; color:var(--ink-faint); font-size:12px; padding:10px 0;">Sin pagos en esta moneda.</div>`;
+        return `<div>
+        <div class="field-label" style="margin-bottom:8px;">Historial de pagos</div>
+        <div class="subtoggle">
+          <button class="active" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tl-bs').style.display=''; document.getElementById('tl-oro').style.display='none';">Bolivianos<span class="n">${pagosBs.length}</span></button>
+          <button onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tl-bs').style.display='none'; document.getElementById('tl-oro').style.display='';">Oro<span class="n">${pagosOro.length}</span></button>
         </div>
-      </div>`:''}
+        <div id="tl-bs">${tl(pagosBs)}</div>
+        <div id="tl-oro" style="display:none;">${tl(pagosOro)}</div>
+      </div>`;
+      })() : ''}
 
       <div>
-        <div class="field-label" style="margin-bottom:8px;">Documentos</div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          ${a.docs.map(d=>`<div class="doc-chip"><div class="ic"><svg class="icon" style="width:14px;height:14px"><use href="#${d.t==='pdf'?'i-doc':'i-file-img'}"/></svg></div>${d.n}</div>`).join('')}
+        <div style="display:flex; align-items:center; margin-bottom:8px;">
+          <div class="field-label" style="margin-bottom:0;">Documentos</div>
+          <div style="display:flex; gap:6px; margin-left:auto;">
+            <button class="btn btn-sm" onclick="document.getElementById('fileUpload').click()"><svg class="icon" style="width:12px;height:12px"><use href="#i-upload"/></svg>Subir</button>
+            <button class="btn btn-sm" onclick="document.getElementById('fileScan').click()"><svg class="icon" style="width:12px;height:12px"><use href="#i-camera"/></svg>Escanear</button>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="docChipList">
+          ${a.docs.map(d=>`<div class="doc-chip"><div class="ic"><svg class="icon" style="width:14px;height:14px"><use href="#${d.t==='pdf'?'i-doc':'i-file-img'}"/></svg></div>${d.n}</div>`).join('') || `<div style="font-size:12px; color:var(--ink-faint);">Sin documentos todavía.</div>`}
         </div>
       </div>
     </div>
   `;
   document.getElementById('overlay').classList.add('show');
   document.getElementById('drawer').classList.add('show');
+}
+
+function handleFileAdd(evt, via){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const a = state.acreedores.find(x=>x.id===drawerAcreedorId);
+  if(!a) return;
+  const esImg = file.type.startsWith('image/');
+  a.docs.push({n:file.name, t: esImg?'img':'pdf'});
+  logAudit('Documento adjuntado', file.name+' · '+a.nombre+(via==='scan'?' · escaneado':' · subido'));
+  evt.target.value = '';
+  openDrawer(a.id);
+  renderAuditoria();
+  toast((via==='scan'?'Documento escaneado':'Archivo')+' "'+file.name+'" adjuntado a '+a.nombre);
 }
 
 /* ---------------- modals ---------------- */
@@ -945,16 +1354,38 @@ function openModal(name, id){
     const a = state.acreedores.find(x=>x.id===id);
     document.getElementById('pago-saldo-cap').textContent = fmt(a.prestamo.saldoCap);
     document.getElementById('pago-saldo-int').textContent = fmt(a.prestamo.interesPend);
-    document.getElementById('pg-monto').value='';
+    document.getElementById('pg-monto').value=''; document.getElementById('pg-gramos').value=''; document.getElementById('pg-equiv').value='';
+    document.querySelectorAll('#pg-moneda button').forEach(x=>x.classList.remove('active'));
+    document.querySelector('#pg-moneda button[data-v="Bs"]').classList.add('active');
+    document.getElementById('pg-monto-wrap').style.display=''; document.getElementById('pg-oro-wrap').style.display='none';
   }
   if(name==='acreedor'){ ['f-nombre','f-ci','f-tel','f-banco','f-obs'].forEach(id=>document.getElementById(id).value=''); }
   if(name==='prestamo'){ ['p-monto','p-tasa','p-plazo'].forEach(id=>document.getElementById(id).value=''); }
   if(name==='movimiento'){
     document.getElementById('mv-monto').value='';
     document.getElementById('mv-desc').value='';
+    document.getElementById('mv-recibo').value='';
+    document.getElementById('mv-talonario').value='';
     document.getElementById('mv-fecha').value = HOY.toISOString().slice(0,10);
     document.querySelectorAll('#mv-tipo button').forEach(x=>x.classList.remove('active'));
     document.querySelector('#mv-tipo button[data-v="ingreso"]').classList.add('active');
+    populateCategoriaSelect();
+  }
+  if(name==='produccion'){
+    document.getElementById('prod-cot-ref').textContent = fmt(state.cotizacionOro.valorGramo)+' / g';
+    document.getElementById('pr-gramos').value=''; document.getElementById('pr-equiv').value=''; document.getElementById('pr-obs').value='';
+    document.getElementById('pr-fecha').value = HOY.toISOString().slice(0,10);
+  }
+  if(name==='cotizacion'){
+    document.getElementById('cot-actual').textContent = fmt(state.cotizacionOro.valorGramo)+' / g · '+state.cotizacionOro.fuente;
+    document.getElementById('ct-valor').value = state.cotizacionOro.valorGramo;
+  }
+  if(name==='gestion'){
+    const activa = state.gestiones.find(g=>g.activa);
+    document.getElementById('gestion-confirm-txt').textContent = `Se cerrará "${activa.nombre}" con fecha de hoy (${fechaTxt(HOY)}) y se abrirá automáticamente una gestión nueva. Todo el historial actual queda intacto y disponible para consulta.`;
+    document.getElementById('gc-acreedores').textContent = state.acreedores.length;
+    document.getElementById('gc-movs').textContent = state.tesoreria.movimientos.length;
+    document.getElementById('gc-audit').textContent = state.auditLog.length;
   }
 }
 function closeAll(){
@@ -967,11 +1398,58 @@ document.getElementById('pg-destino').addEventListener('click', e=>{
   document.querySelectorAll('#pg-destino button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
 });
+function populateCategoriaSelect(){
+  const tipo = document.getElementById('mv-tipo').querySelector('.active').dataset.v;
+  const opts = state.categorias[tipo].filter(c=>c.activo).map(c=>`<option>${c.n}</option>`).join('');
+  document.getElementById('mv-categoria').innerHTML = opts;
+}
 document.getElementById('mv-tipo').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
   document.querySelectorAll('#mv-tipo button').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
+  populateCategoriaSelect();
 });
+
+document.getElementById('pg-moneda').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#pg-moneda button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const esOro = b.dataset.v==='Oro';
+  document.getElementById('pg-monto-wrap').style.display = esOro ? 'none' : '';
+  document.getElementById('pg-oro-wrap').style.display = esOro ? 'grid' : 'none';
+});
+document.getElementById('pg-gramos').addEventListener('input', ()=>{
+  const g = parseFloat(document.getElementById('pg-gramos').value)||0;
+  document.getElementById('pg-equiv').value = g ? fmt(g*state.cotizacionOro.valorGramo) : '';
+});
+
+document.getElementById('repRango').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#repRango button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('repCustomDates').style.display = b.dataset.v==='custom' ? 'flex' : 'none';
+  actualizarRangoTxt();
+});
+function rangoActual(){
+  const tipo = document.getElementById('repRango').querySelector('.active').dataset.v;
+  let desde=null, hasta=new Date(HOY);
+  if(tipo==='semana') desde = new Date(HOY.getTime()-7*86400000);
+  else if(tipo==='mes') desde = addMonths(HOY,-1);
+  else if(tipo==='6m') desde = addMonths(HOY,-6);
+  else if(tipo==='anio') desde = addMonths(HOY,-12);
+  else if(tipo==='custom'){
+    const dv=document.getElementById('rep-desde').value, hv=document.getElementById('rep-hasta').value;
+    desde = dv? new Date(dv+'T00:00:00') : null;
+    hasta = hv? new Date(hv+'T23:59:59') : hasta;
+  }
+  return {tipo, desde, hasta};
+}
+function actualizarRangoTxt(){
+  const r = rangoActual();
+  document.getElementById('repRangoTxt').textContent = r.desde ? `${fechaTxt(r.desde)} – ${fechaTxt(r.hasta)}` : 'Todo el historial';
+}
+document.getElementById('rep-desde').addEventListener('change', actualizarRangoTxt);
+document.getElementById('rep-hasta').addEventListener('change', actualizarRangoTxt);
 
 function crearAcreedor(){
   const nombre = document.getElementById('f-nombre').value.trim();
@@ -999,8 +1477,17 @@ function crearPrestamo(){
 function registrarPago(){
   const a = state.acreedores.find(x=>x.id===modalCtx);
   const p = a.prestamo;
-  let monto = parseFloat(document.getElementById('pg-monto').value);
-  if(!monto || monto<=0){ toast('Ingresá un monto válido', 'bad'); return; }
+  const moneda = document.getElementById('pg-moneda').querySelector('.active').dataset.v;
+  let monto, gramos=null, valorGramoUsado=null;
+  if(moneda==='Oro'){
+    gramos = parseFloat(document.getElementById('pg-gramos').value);
+    if(!gramos || gramos<=0){ toast('Ingresá la cantidad de gramos', 'bad'); return; }
+    valorGramoUsado = state.cotizacionOro.valorGramo;
+    monto = Math.round(gramos*valorGramoUsado);
+  } else {
+    monto = parseFloat(document.getElementById('pg-monto').value);
+    if(!monto || monto<=0){ toast('Ingresá un monto válido', 'bad'); return; }
+  }
   const destino = document.getElementById('pg-destino').querySelector('.active').dataset.v;
   let restante = monto;
   if(destino==='interes'){
@@ -1012,16 +1499,17 @@ function registrarPago(){
     const aCap = Math.min(restante, p.saldoCap); p.saldoCap -= aCap; p.capPagado += aCap;
   }
   const destinoTxt = destino==='capital'?'Capital':destino==='interes'?'Intereses':'Capital + interés';
-  a.pagos.push({fecha:new Date(HOY), monto, destino: destinoTxt});
+  a.pagos.push({fecha:new Date(HOY), monto, destino: destinoTxt, moneda, gramos, valorGramoUsado});
 
+  const oroTxt = moneda==='Oro' ? ` (equiv. ${fmtG(gramos)} de oro)` : '';
   state.tesoreria.movimientos.push({id:Date.now(), fecha:new Date(HOY), tipo:'egreso', categoria:'Pago a acreedor',
-    desc:'Pago préstamo — '+a.nombre, monto, acreedorId:a.id});
+    desc:'Pago préstamo — '+a.nombre+oroTxt, monto, acreedorId:a.id, recibo:''});
 
-  logAudit('Pago registrado', fmt(monto)+' · '+destinoTxt+' · '+a.nombre);
+  logAudit('Pago registrado', fmt(monto)+' · '+destinoTxt+' · '+a.nombre+(moneda==='Oro'?' · pagado en oro ('+fmtG(gramos)+')':''));
   logAudit('Movimiento de caja', 'Egreso '+fmt(monto)+' · Pago a acreedor · '+a.nombre);
 
   closeAll(); renderAll(); openDrawer(a.id);
-  toast('Pago de '+fmt(monto)+' registrado y asociado a '+a.nombre);
+  toast((moneda==='Oro' ? 'Pago en oro ('+fmtG(gramos)+' · '+fmt(monto)+')' : 'Pago de '+fmt(monto))+' registrado y asociado a '+a.nombre);
 }
 
 function crearMovimiento(){
@@ -1029,23 +1517,93 @@ function crearMovimiento(){
   const categoria = document.getElementById('mv-categoria').value;
   const monto = parseFloat(document.getElementById('mv-monto').value);
   const fechaVal = document.getElementById('mv-fecha').value;
+  const recibo = document.getElementById('mv-recibo').value;
+  const talonario = document.getElementById('mv-talonario').value;
   const desc = document.getElementById('mv-desc').value || categoria;
   if(!monto || monto<=0){ toast('Ingresá un monto válido', 'bad'); return; }
   const fecha = fechaVal ? new Date(fechaVal+'T00:00:00') : new Date(HOY);
-  state.tesoreria.movimientos.push({id:Date.now(), fecha, tipo, categoria, desc, monto});
-  logAudit('Movimiento de caja', (tipo==='ingreso'?'Ingreso ':'Egreso ')+fmt(monto)+' · '+categoria);
+  state.tesoreria.movimientos.push({id:Date.now(), fecha, tipo, categoria, desc, monto, recibo, talonario});
+  logAudit('Movimiento de caja', (tipo==='ingreso'?'Ingreso ':'Egreso ')+fmt(monto)+' · '+categoria+(recibo?' · talonario '+talonario+' / recibo '+recibo:''));
   closeAll(); renderAll();
   toast((tipo==='ingreso'?'Ingreso':'Egreso')+' de '+fmt(monto)+' registrado en tesorería');
 }
 
+function calcProdEquiv(){
+  const g = parseFloat(document.getElementById('pr-gramos').value)||0;
+  document.getElementById('pr-equiv').value = g ? fmt(g*state.cotizacionOro.valorGramo) : '';
+}
+
+function crearProduccion(){
+  const gramos = parseFloat(document.getElementById('pr-gramos').value);
+  if(!gramos || gramos<=0){ toast('Ingresá la cantidad de gramos', 'bad'); return; }
+  const fechaVal = document.getElementById('pr-fecha').value;
+  const fecha = fechaVal ? new Date(fechaVal+'T00:00:00') : new Date(HOY);
+  const valorGramo = state.cotizacionOro.valorGramo;
+  const obs = document.getElementById('pr-obs').value;
+  state.produccion.push({id:Date.now(), fecha, gramos, valorGramo, obs});
+  state.tesoreria.movimientos.push({id:Date.now()+1, fecha, tipo:'ingreso', categoria:'Venta de mineral',
+    desc:'Producción de oro registrada'+(obs?' — '+obs:''), monto:Math.round(gramos*valorGramo), recibo:''});
+  logAudit('Producción registrada', fmtG(gramos)+' · '+fmt(gramos*valorGramo)+' a '+fmt(valorGramo)+'/g');
+  closeAll(); renderAll();
+  toast('Producción de '+fmtG(gramos)+' registrada ('+fmt(gramos*valorGramo)+')');
+}
+
+function actualizarCotizacion(){
+  const valor = parseFloat(document.getElementById('ct-valor').value);
+  if(!valor || valor<=0){ toast('Ingresá un valor válido', 'bad'); return; }
+  const fuente = document.getElementById('ct-fuente').value;
+  state.cotizacionOro = { valorGramo: valor, fecha: new Date(HOY), fuente };
+  logAudit('Cotización actualizada', fmt(valor)+' / g · '+fuente);
+  closeAll(); renderAll();
+  toast('Cotización del oro actualizada a '+fmt(valor)+' / g');
+}
+
+function agregarCategoria(tipo){
+  const input = document.getElementById(tipo==='ingreso'?'new-cat-ingreso':'new-cat-egreso');
+  const nombre = input.value.trim();
+  if(!nombre){ toast('Escribí un nombre de categoría', 'bad'); return; }
+  if(state.categorias[tipo].some(c=>c.n.toLowerCase()===nombre.toLowerCase())){ toast('Esa categoría ya existe', 'bad'); return; }
+  state.categorias[tipo].push({n:nombre, activo:true});
+  input.value='';
+  logAudit('Categoría creada', nombre+' · '+(tipo==='ingreso'?'Ingresos':'Egresos'));
+  renderConfiguracion();
+  toast('Categoría "'+nombre+'" agregada');
+}
+
+function toggleCategoria(tipo, nombre){
+  const cat = state.categorias[tipo].find(c=>c.n===nombre);
+  cat.activo = !cat.activo;
+  logAudit('Categoría '+(cat.activo?'activada':'desactivada'), nombre);
+  renderConfiguracion();
+}
+
+function cerrarGestion(){
+  const activa = state.gestiones.find(g=>g.activa);
+  activa.hasta = new Date(HOY);
+  activa.activa = false;
+  const siguienteAnio = HOY.getFullYear()+1;
+  const nueva = {id:Date.now(), nombre:'Gestión '+siguienteAnio, desde:new Date(HOY.getTime()+86400000), hasta:null, activa:true};
+  state.gestiones.push(nueva);
+  logAudit('Gestión cerrada', activa.nombre+' cerrada · se abrió "'+nueva.nombre+'"');
+  closeAll(); renderAll();
+  toast('"'+activa.nombre+'" cerrada — el historial queda disponible. Gestión activa: "'+nueva.nombre+'"');
+}
+
 /* ---------------- reports ---------------- */
+function enRango(fecha, r){
+  if(!r.desde) return true;
+  return fecha >= r.desde && fecha <= r.hasta;
+}
+
 function previewReport(kind){
   const k = kpis();
+  const r = rangoActual();
+  const rangoTxt = r.desde ? `${fechaTxt(r.desde)} – ${fechaTxt(r.hasta)}` : 'todo el historial';
   const body = document.getElementById('prev-body');
   const titles = {mensual:'Reporte mensual', pagos:'Historial de pagos', tesoreria:'Balance de tesorería', auditoria:'Registro de auditoría'};
   document.getElementById('prev-title').textContent = titles[kind];
   if(kind==='mensual'){
-    body.innerHTML = `<h4>Situación financiera — septiembre 2026</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)}</div>
+    body.innerHTML = `<h4>Situación financiera — septiembre 2026</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)} · ${rangoTxt}</div>
       <table style="width:100%"><tbody>
         <tr><td>Total adeudado</td><td style="text-align:right">${fmt(k.deuda)}</td></tr>
         <tr><td>Capital pendiente</td><td style="text-align:right">${fmt(k.capPend)}</td></tr>
@@ -1054,22 +1612,26 @@ function previewReport(kind){
         <tr><td>Próximos a vencer</td><td style="text-align:right">${k.porVencer}</td></tr>
       </tbody></table>`;
   } else if(kind==='pagos'){
-    const rows = state.acreedores.flatMap(a=>a.pagos.map(pg=>`<tr><td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}</td><td style="text-align:right">${fmt(pg.monto)}</td></tr>`)).join('');
-    body.innerHTML = `<h4>Historial de pagos</h4><div class="muted2">Todos los acreedores · a la fecha</div>
-      <table style="width:100%"><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th style="text-align:right">Monto</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin pagos registrados</td></tr>'}</tbody></table>`;
+    const rows = state.acreedores.flatMap(a=>a.pagos.filter(pg=>enRango(pg.fecha,r)).map(pg=>`<tr><td>${a.nombre}</td><td>${fechaTxt(pg.fecha)}</td><td>${pg.destino}${pg.moneda==='Oro'?' (oro)':''}</td><td style="text-align:right">${fmt(pg.monto)}</td></tr>`)).join('');
+    body.innerHTML = `<h4>Historial de pagos</h4><div class="muted2">${rangoTxt}</div>
+      <table style="width:100%"><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th style="text-align:right">Monto</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin pagos en este rango</td></tr>'}</tbody></table>`;
   } else if(kind==='tesoreria'){
-    const tt = tesoTotales();
-    body.innerHTML = `<h4>Balance de tesorería</h4><div class="muted2">Cooperativa Minera · generado ${fechaTxt(HOY)}</div>
+    const movs = state.tesoreria.movimientos.filter(m=>enRango(m.fecha,r));
+    const ing = movs.filter(m=>m.tipo==='ingreso').reduce((s,m)=>s+m.monto,0);
+    const egr = movs.filter(m=>m.tipo==='egreso').reduce((s,m)=>s+m.monto,0);
+    const oroValorizado = oroStock() * state.cotizacionOro.valorGramo;
+    body.innerHTML = `<h4>Balance de tesorería</h4><div class="muted2">Cooperativa Minera · ${rangoTxt}</div>
       <table style="width:100%"><tbody>
         <tr><td>Saldo inicial</td><td style="text-align:right">${fmt(state.tesoreria.saldoInicial)}</td></tr>
-        <tr><td>Ingresos</td><td style="text-align:right">${fmt(tt.ing)}</td></tr>
-        <tr><td>Egresos</td><td style="text-align:right">${fmt(tt.egr)}</td></tr>
-        <tr><td><b>Saldo disponible</b></td><td style="text-align:right"><b>${fmt(tt.saldo)}</b></td></tr>
+        <tr><td>Ingresos del periodo</td><td style="text-align:right">${fmt(ing)}</td></tr>
+        <tr><td>Egresos del periodo</td><td style="text-align:right">${fmt(egr)}</td></tr>
+        <tr><td>Oro en stock valorizado</td><td style="text-align:right">${fmt(oroValorizado)}</td></tr>
+        <tr><td><b>Balance general</b></td><td style="text-align:right"><b>${fmt(state.tesoreria.saldoInicial+ing-egr+oroValorizado)}</b></td></tr>
       </tbody></table>`;
   } else {
-    const rows = state.auditLog.slice(0,10).map(e=>`<tr><td>${fechaTxt(e.ts)}</td><td>${e.usuario}</td><td>${e.accion}</td><td>${e.detalle}</td></tr>`).join('');
-    body.innerHTML = `<h4>Registro de auditoría</h4><div class="muted2">Últimos 10 eventos</div>
-      <table style="width:100%"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${rows}</tbody></table>`;
+    const rows = state.auditLog.filter(e=>enRango(e.ts,r)).slice(0,15).map(e=>`<tr><td>${fechaTxt(e.ts)}</td><td>${e.usuario}</td><td>${e.accion}</td><td>${e.detalle}</td></tr>`).join('');
+    body.innerHTML = `<h4>Registro de auditoría</h4><div class="muted2">${rangoTxt}</div>
+      <table style="width:100%"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${rows||'<tr><td colspan=4>Sin eventos en este rango</td></tr>'}</tbody></table>`;
   }
   document.getElementById('overlay').classList.add('show');
   document.getElementById('modal-preview').classList.add('show');
