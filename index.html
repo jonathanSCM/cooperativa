@@ -341,13 +341,11 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
       <span class="brand-word">Veta</span>
     </div>
     <nav class="tn-nav">
-      <button class="navitem active" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
+      <button class="navitem" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
       <button class="navitem" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg>Acreedores</button>
       <button class="navitem" data-view="produccion"><svg class="icon"><use href="#i-pickaxe"/></svg>Producción</button>
-      <button class="navitem" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg>Tesorería</button>
-      <button class="navitem" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg>Reportes</button>
-      <button class="navitem" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg>Auditoría</button>
-      <button class="navitem" data-view="configuracion"><svg class="icon"><use href="#i-settings"/></svg>Configuración</button>
+      <button class="navitem" data-view="finanzas"><svg class="icon"><use href="#i-wallet"/></svg>Finanzas</button>
+      <button class="navitem" data-view="sistema"><svg class="icon"><use href="#i-settings"/></svg>Sistema</button>
     </nav>
     <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
     <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
@@ -365,6 +363,7 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
   <div class="page-head">
     <p class="eyebrow" id="topEyebrow">Panel general</p>
     <h1 id="topTitle">Buenas tardes, Marisol</h1>
+    <div class="subtoggle" id="subTabs" style="display:none; margin-top:14px;"></div>
   </div>
 
   <!-- DASHBOARD -->
@@ -667,9 +666,13 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
         </div>
       </label>
       <label class="fl" id="pg-monto-wrap">Monto del pago (Bs)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
-      <div class="field-grid" id="pg-oro-wrap" style="display:none;">
-        <label class="fl">Cantidad (gramos)<input class="fi" id="pg-gramos" type="number" placeholder="12"></label>
-        <label class="fl">Equivalencia estimada<input class="fi" id="pg-equiv" disabled placeholder="—"></label>
+      <div id="pg-oro-wrap" style="display:none; flex-direction:column; gap:14px;">
+        <div class="loan-row"><span class="l">Cotización de referencia (hoy)</span><span class="mono" id="pg-ref-val">—</span></div>
+        <div class="field-grid">
+          <label class="fl">Cantidad (gramos)<input class="fi" id="pg-gramos" type="number" placeholder="12" oninput="calcPagoOro()"></label>
+          <label class="fl">Precio acordado (Bs/g)<input class="fi" id="pg-precio" type="number" placeholder="655" oninput="calcPagoOro()"></label>
+        </div>
+        <label class="fl">Total en bolivianos<input class="fi" id="pg-equiv" disabled placeholder="—"></label>
       </div>
       <label class="fl">¿Este pago corresponde a?
         <div class="seg" id="pg-destino">
@@ -720,13 +723,16 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
   <div class="modal-card">
     <div class="modal-head"><svg class="icon"><use href="#i-pickaxe"/></svg><h3>Registrar producción</h3></div>
     <div class="modal-body">
-      <div class="loan-row"><span class="l">Cotización vigente</span><span class="mono" id="prod-cot-ref">—</span></div>
+      <div class="loan-row"><span class="l">Cotización de referencia (hoy)</span><span class="mono" id="prod-cot-ref">—</span></div>
       <div class="field-grid">
         <label class="fl">Cantidad (gramos)<input class="fi" id="pr-gramos" type="number" placeholder="45" oninput="calcProdEquiv()"></label>
-        <label class="fl">Fecha<input class="fi" id="pr-fecha" type="date"></label>
+        <label class="fl">Precio de esta operación (Bs/g)<input class="fi" id="pr-precio" type="number" placeholder="655" oninput="calcProdEquiv()"></label>
       </div>
-      <label class="fl">Valor equivalente en bolivianos<input class="fi" id="pr-equiv" disabled placeholder="—"></label>
-      <label class="fl">Observación<input class="fi" id="pr-obs" placeholder="Ej. Lote Zona Norte"></label>
+      <div class="field-grid">
+        <label class="fl">Fecha<input class="fi" id="pr-fecha" type="date"></label>
+        <label class="fl">Valor total en bolivianos<input class="fi" id="pr-equiv" disabled placeholder="—"></label>
+      </div>
+      <label class="fl">Observación<input class="fi" id="pr-obs" placeholder="Ej. Lote Zona Norte, comprador X"></label>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeAll()">Cancelar</button>
@@ -1231,18 +1237,47 @@ function renderAll(){
 }
 
 /* ---------------- views/nav ---------------- */
+const NAV_TITLES = {
+  dashboard:['Panel general','Buenas tardes, Marisol'],
+  acreedores:['Gestión','Acreedores'],
+  produccion:['Oro','Producción'],
+  tesoreria:['Finanzas','Tesorería'],
+  reportes:['Finanzas','Reportes'],
+  auditoria:['Sistema','Auditoría e historial'],
+  configuracion:['Sistema','Configuración'],
+};
+const NAV_GROUPS = { finanzas:['tesoreria','reportes'], sistema:['auditoria','configuracion'] };
+const NAV_SUBLABEL = { tesoreria:'Tesorería', reportes:'Reportes', auditoria:'Auditoría', configuracion:'Configuración' };
+let lastSub = { finanzas:'tesoreria', sistema:'auditoria' };
+
+function activateView(view){
+  const group = NAV_GROUPS[view] ? view : null;
+  const leaf = group ? lastSub[group] : view;
+  const parentGroup = group || Object.keys(NAV_GROUPS).find(g=>NAV_GROUPS[g].includes(leaf)) || null;
+  if(parentGroup) lastSub[parentGroup] = leaf;
+
+  document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.navitem[data-view="${parentGroup||leaf}"]`)?.classList.add('active');
+
+  const subTabs = document.getElementById('subTabs');
+  if(parentGroup){
+    subTabs.style.display = 'flex';
+    subTabs.innerHTML = NAV_GROUPS[parentGroup].map(v=>
+      `<button class="${v===leaf?'active':''}" onclick="activateView('${v}')">${NAV_SUBLABEL[v]}</button>`).join('');
+  } else {
+    subTabs.style.display = 'none';
+  }
+
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+leaf).classList.add('active');
+  document.getElementById('topEyebrow').textContent = NAV_TITLES[leaf][0];
+  document.getElementById('topTitle').textContent = NAV_TITLES[leaf][1];
+}
+
 document.querySelectorAll('.navitem').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    const view = btn.dataset.view;
-    document.getElementById('view-'+view).classList.add('active');
-    const titles = {dashboard:['Panel general','Buenas tardes, Marisol'], acreedores:['Gestión','Acreedores'], produccion:['Oro','Producción'], reportes:['Documentación','Reportes'], tesoreria:['Caja y movimientos','Tesorería'], auditoria:['Trazabilidad','Auditoría e historial'], configuracion:['Institucional','Configuración']};
-    document.getElementById('topEyebrow').textContent = titles[view][0];
-    document.getElementById('topTitle').textContent = titles[view][1];
-  });
+  btn.addEventListener('click', ()=> activateView(btn.dataset.view));
 });
+activateView('dashboard');
 document.getElementById('searchInput').addEventListener('input', e=> renderAcreedoresTable(e.target.value));
 
 /* ---------------- drawer ---------------- */
@@ -1354,7 +1389,7 @@ function openModal(name, id){
     const a = state.acreedores.find(x=>x.id===id);
     document.getElementById('pago-saldo-cap').textContent = fmt(a.prestamo.saldoCap);
     document.getElementById('pago-saldo-int').textContent = fmt(a.prestamo.interesPend);
-    document.getElementById('pg-monto').value=''; document.getElementById('pg-gramos').value=''; document.getElementById('pg-equiv').value='';
+    document.getElementById('pg-monto').value=''; document.getElementById('pg-gramos').value=''; document.getElementById('pg-equiv').value=''; document.getElementById('pg-precio').value='';
     document.querySelectorAll('#pg-moneda button').forEach(x=>x.classList.remove('active'));
     document.querySelector('#pg-moneda button[data-v="Bs"]').classList.add('active');
     document.getElementById('pg-monto-wrap').style.display=''; document.getElementById('pg-oro-wrap').style.display='none';
@@ -1372,8 +1407,9 @@ function openModal(name, id){
     populateCategoriaSelect();
   }
   if(name==='produccion'){
-    document.getElementById('prod-cot-ref').textContent = fmt(state.cotizacionOro.valorGramo)+' / g';
+    document.getElementById('prod-cot-ref').textContent = fmt(state.cotizacionOro.valorGramo)+' / g · '+state.cotizacionOro.fuente;
     document.getElementById('pr-gramos').value=''; document.getElementById('pr-equiv').value=''; document.getElementById('pr-obs').value='';
+    document.getElementById('pr-precio').value = state.cotizacionOro.valorGramo;
     document.getElementById('pr-fecha').value = HOY.toISOString().slice(0,10);
   }
   if(name==='cotizacion'){
@@ -1416,12 +1452,18 @@ document.getElementById('pg-moneda').addEventListener('click', e=>{
   b.classList.add('active');
   const esOro = b.dataset.v==='Oro';
   document.getElementById('pg-monto-wrap').style.display = esOro ? 'none' : '';
-  document.getElementById('pg-oro-wrap').style.display = esOro ? 'grid' : 'none';
+  document.getElementById('pg-oro-wrap').style.display = esOro ? 'flex' : 'none';
+  if(esOro){
+    document.getElementById('pg-ref-val').textContent = fmt(state.cotizacionOro.valorGramo)+' / g · '+state.cotizacionOro.fuente;
+    if(!document.getElementById('pg-precio').value) document.getElementById('pg-precio').value = state.cotizacionOro.valorGramo;
+    calcPagoOro();
+  }
 });
-document.getElementById('pg-gramos').addEventListener('input', ()=>{
+function calcPagoOro(){
   const g = parseFloat(document.getElementById('pg-gramos').value)||0;
-  document.getElementById('pg-equiv').value = g ? fmt(g*state.cotizacionOro.valorGramo) : '';
-});
+  const precio = parseFloat(document.getElementById('pg-precio').value)||0;
+  document.getElementById('pg-equiv').value = (g && precio) ? fmt(g*precio) : '';
+}
 
 document.getElementById('repRango').addEventListener('click', e=>{
   const b = e.target.closest('button'); if(!b) return;
@@ -1481,8 +1523,9 @@ function registrarPago(){
   let monto, gramos=null, valorGramoUsado=null;
   if(moneda==='Oro'){
     gramos = parseFloat(document.getElementById('pg-gramos').value);
+    valorGramoUsado = parseFloat(document.getElementById('pg-precio').value);
     if(!gramos || gramos<=0){ toast('Ingresá la cantidad de gramos', 'bad'); return; }
-    valorGramoUsado = state.cotizacionOro.valorGramo;
+    if(!valorGramoUsado || valorGramoUsado<=0){ toast('Ingresá el precio acordado por gramo', 'bad'); return; }
     monto = Math.round(gramos*valorGramoUsado);
   } else {
     monto = parseFloat(document.getElementById('pg-monto').value);
@@ -1505,7 +1548,7 @@ function registrarPago(){
   state.tesoreria.movimientos.push({id:Date.now(), fecha:new Date(HOY), tipo:'egreso', categoria:'Pago a acreedor',
     desc:'Pago préstamo — '+a.nombre+oroTxt, monto, acreedorId:a.id, recibo:''});
 
-  logAudit('Pago registrado', fmt(monto)+' · '+destinoTxt+' · '+a.nombre+(moneda==='Oro'?' · pagado en oro ('+fmtG(gramos)+')':''));
+  logAudit('Pago registrado', fmt(monto)+' · '+destinoTxt+' · '+a.nombre+(moneda==='Oro'?' · pagado en oro ('+fmtG(gramos)+' a '+fmt(valorGramoUsado)+'/g)':''));
   logAudit('Movimiento de caja', 'Egreso '+fmt(monto)+' · Pago a acreedor · '+a.nombre);
 
   closeAll(); renderAll(); openDrawer(a.id);
@@ -1530,15 +1573,17 @@ function crearMovimiento(){
 
 function calcProdEquiv(){
   const g = parseFloat(document.getElementById('pr-gramos').value)||0;
-  document.getElementById('pr-equiv').value = g ? fmt(g*state.cotizacionOro.valorGramo) : '';
+  const precio = parseFloat(document.getElementById('pr-precio').value)||0;
+  document.getElementById('pr-equiv').value = (g && precio) ? fmt(g*precio) : '';
 }
 
 function crearProduccion(){
   const gramos = parseFloat(document.getElementById('pr-gramos').value);
+  const valorGramo = parseFloat(document.getElementById('pr-precio').value);
   if(!gramos || gramos<=0){ toast('Ingresá la cantidad de gramos', 'bad'); return; }
+  if(!valorGramo || valorGramo<=0){ toast('Ingresá el precio de esta operación', 'bad'); return; }
   const fechaVal = document.getElementById('pr-fecha').value;
   const fecha = fechaVal ? new Date(fechaVal+'T00:00:00') : new Date(HOY);
-  const valorGramo = state.cotizacionOro.valorGramo;
   const obs = document.getElementById('pr-obs').value;
   state.produccion.push({id:Date.now(), fecha, gramos, valorGramo, obs});
   state.tesoreria.movimientos.push({id:Date.now()+1, fecha, tipo:'ingreso', categoria:'Venta de mineral',
