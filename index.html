@@ -49,46 +49,72 @@ h1,h2,h3,.num-display{font-family:"Archivo",-apple-system,"Segoe UI",sans-serif;
 button{font-family:inherit; cursor:pointer;}
 svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
 
-/* ---------- top nav ---------- */
-.topnav{position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--border);}
-.tn-row1{display:flex; align-items:center; gap:16px; padding:13px 24px; max-width:1320px; margin:0 auto;}
-.brand{display:flex; align-items:center; gap:8px;}
-.brand-mark{width:19px;height:19px;flex:none; color:var(--accent);}
-.brand-word{font-family:"Archivo",sans-serif; font-weight:700; font-size:15.5px;}
-
-.tn-nav{display:flex; align-items:center; gap:1px;}
-.navitem{
-  display:flex; align-items:center; gap:5px; padding:7px 8px; border:1px solid transparent; white-space:nowrap;
-  color:var(--ink-dim); background:transparent; border-radius:7px; font-size:12.5px; font-weight:500;
+/* ---------- shell / sidebar ---------- */
+.app-shell{display:flex; min-height:100vh; align-items:stretch;}
+.sidebar{
+  width:238px; flex:none; background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; transition:width .18s ease; overflow:hidden;
+  position:sticky; top:0; align-self:flex-start; height:100vh;
 }
-.navitem svg{width:14px;height:14px;}
-.navitem:hover{color:var(--ink); background:var(--surface-2);}
-.navitem.active{color:var(--ink); background:var(--surface-2); font-weight:600;}
-.navitem .soon{margin-left:1px; font-size:9px; letter-spacing:.04em; color:var(--ink-faint); border:1px solid var(--border); padding:1px 5px; border-radius:20px;}
+.sidebar.collapsed{width:68px;}
+.sidebar-head{display:flex; align-items:center; gap:10px; padding:19px 20px 15px; white-space:nowrap;}
+.brand-mark{width:20px;height:20px;flex:none; color:var(--accent);}
+.brand-word{font-family:"Archivo",sans-serif; font-weight:700; font-size:16px;}
+.sidebar.collapsed .brand-word, .sidebar.collapsed .side-group-label,
+.sidebar.collapsed .side-item .lbl, .sidebar.collapsed .userchip .who,
+.sidebar.collapsed .userchip .role{display:none;}
+.sidebar.collapsed .sidebar-head{justify-content:center; padding:19px 10px 15px;}
+.sidebar.collapsed .userchip{justify-content:center;}
+.sidebar-nav{flex:1; overflow-y:auto; overflow-x:hidden; padding:2px 14px 14px;}
+.side-group-label{font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:15px 10px 7px;}
+.side-item{
+  display:flex; align-items:center; gap:11px; width:100%; padding:9px 10px; border-radius:9px; border:1px solid transparent;
+  color:var(--ink-dim); background:transparent; font-size:13.5px; font-weight:500; text-align:left; white-space:nowrap;
+}
+.side-item svg{width:17px;height:17px; flex:none;}
+.side-item:hover{background:var(--surface-2); color:var(--ink);}
+.side-item.active{background:var(--accent-soft); color:var(--accent); font-weight:600;}
+.sidebar.collapsed .side-item{justify-content:center; padding:9px;}
+.sidebar-foot{padding:13px 14px; border-top:1px solid var(--border);}
+.userchip{display:flex; align-items:center; gap:9px;}
+.avatar{width:28px;height:28px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; flex:none;}
+.userchip .who{font-size:12.5px; font-weight:600; line-height:1.2; white-space:nowrap;}
+.userchip .role{font-size:10.5px; color:var(--ink-faint); line-height:1.2; white-space:nowrap;}
+
+.main-col{flex:1; min-width:0; display:flex; flex-direction:column;}
+.topbar{
+  display:flex; align-items:center; gap:14px; padding:14px 28px; border-bottom:1px solid var(--border);
+  position:sticky; top:0; background:var(--bg); z-index:20;
+}
+.hamburger{width:32px;height:32px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim); display:flex; align-items:center; justify-content:center; flex:none;}
+.hamburger:hover{background:var(--surface-2); color:var(--ink);}
+.crumb{font-size:13.5px; color:var(--ink-faint); white-space:nowrap;}
+.crumb b{color:var(--ink); font-weight:600;}
 
 .search{
   display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid transparent;
-  border-radius:8px; padding:7px 11px; width:170px; color:var(--ink-faint); margin-left:auto;
+  border-radius:8px; padding:7px 11px; width:190px; color:var(--ink-faint); margin-left:auto;
 }
 .search input{border:none; outline:none; background:transparent; color:var(--ink); font-size:13px; width:100%; font-family:inherit;}
-.demo-badge{
-  display:none;
-}
 .iconbtn{
-  width:30px;height:30px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim);
-  display:flex; align-items:center; justify-content:center; position:relative;
+  width:32px;height:32px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim);
+  display:flex; align-items:center; justify-content:center; position:relative; flex:none;
 }
 .iconbtn:hover{color:var(--ink); background:var(--surface-2);}
-.dot-badge{position:absolute; top:5px; right:5px; width:6px; height:6px; border-radius:50%; background:var(--bad); border:1.5px solid var(--bg);}
-.userchip{display:flex; align-items:center; gap:7px; padding-left:8px; margin-left:2px; border-left:1px solid var(--border);}
-.avatar{width:26px;height:26px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; flex:none;}
-.userchip .who{font-size:12px; font-weight:600; line-height:1.2;}
-.userchip .role{font-size:10px; color:var(--ink-faint); line-height:1.2;}
+.dot-badge{position:absolute; top:6px; right:6px; width:6px; height:6px; border-radius:50%; background:var(--bad); border:1.5px solid var(--bg);}
 
-main.content{max-width:1320px; margin:0 auto; padding:0 24px 70px;}
-.page-head{padding:26px 0 18px;}
+main.content{max-width:1180px; margin:0 auto; padding:22px 28px 70px; width:100%;}
+.banner{
+  display:flex; align-items:center; gap:10px; background:var(--accent); color:var(--accent-ink);
+  padding:10px 16px; border-radius:10px; font-size:12.5px; font-weight:500; margin-bottom:18px;
+}
+.banner a, .banner b{color:inherit;}
+.banner .x{margin-left:auto; background:transparent; border:none; color:inherit; opacity:.8; display:flex; flex:none;}
+.banner .x:hover{opacity:1;}
+.page-head{padding:2px 0 20px;}
 .page-head .eyebrow{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px;}
-.page-head h1{font-size:24px; font-weight:520; margin:0;}
+.page-head h1{font-size:23px; font-weight:560; margin:0;}
+.page-head .desc{font-size:13px; color:var(--ink-dim); margin:7px 0 0; max-width:620px; line-height:1.55;}
 
 .view{display:none;}
 .view.active{display:block; animation:rise .32s ease both;}
@@ -294,7 +320,10 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 
 ::selection{background:var(--accent-soft); color:var(--accent);}
 @media (max-width:980px){
-  .tn-row1{padding:12px 18px;} .tn-row2{padding:0 18px;} main.content{padding:0 18px 60px;}
+  .sidebar{position:fixed; z-index:40; height:100vh; box-shadow:var(--shadow-lg);}
+  .sidebar:not(.collapsed){width:236px;}
+  .sidebar.collapsed{width:0; border-right:none;}
+  .topbar{padding:12px 16px;} main.content{padding:16px 16px 60px;}
   .search{display:none;}
   .kpi-row{flex-wrap:wrap;} .kpi{flex:1 1 50%; border-bottom:1px solid var(--border);}
   .grid-2{grid-template-columns:1fr;}
@@ -331,40 +360,61 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.6-5.7"/><path d="M20 12a8 8 0 0 1-13.6 5.7"/><path d="M17.5 3.8v3.6h-3.6"/><path d="M6.5 20.2v-3.6h3.6"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15.5v-12M7.5 7.5 12 3l4.5 4.5"/><path d="M4.5 19.5h15"/></symbol>
 <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.3"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol>
 </defs>
 </svg>
 
-<div class="topnav">
-  <div class="tn-row1">
-    <div class="brand">
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
       <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><use href="#i-gem"/></svg>
       <span class="brand-word">Veta</span>
     </div>
-    <nav class="tn-nav">
-      <button class="navitem" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg>Dashboard</button>
-      <button class="navitem" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg>Acreedores</button>
-      <button class="navitem" data-view="produccion"><svg class="icon"><use href="#i-pickaxe"/></svg>Producción</button>
-      <button class="navitem" data-view="finanzas"><svg class="icon"><use href="#i-wallet"/></svg>Finanzas</button>
-      <button class="navitem" data-view="sistema"><svg class="icon"><use href="#i-settings"/></svg>Sistema</button>
+    <nav class="sidebar-nav">
+      <div class="side-group-label">General</div>
+      <button class="side-item" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg><span class="lbl">Dashboard</span></button>
+      <button class="side-item" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg><span class="lbl">Acreedores</span></button>
+      <button class="side-item" data-view="produccion"><svg class="icon"><use href="#i-pickaxe"/></svg><span class="lbl">Producción</span></button>
+
+      <div class="side-group-label">Finanzas</div>
+      <button class="side-item" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg><span class="lbl">Tesorería</span></button>
+      <button class="side-item" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg><span class="lbl">Reportes</span></button>
+
+      <div class="side-group-label">Sistema</div>
+      <button class="side-item" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg><span class="lbl">Auditoría</span></button>
+      <button class="side-item" data-view="configuracion"><svg class="icon"><use href="#i-settings"/></svg><span class="lbl">Configuración</span></button>
     </nav>
-    <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
-    <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
-    <div class="userchip">
-      <div class="avatar">MG</div>
-      <div>
-        <div class="who">Marisol Guzmán</div>
-        <div class="role">Presidencia</div>
+    <div class="sidebar-foot">
+      <div class="userchip">
+        <div class="avatar">MG</div>
+        <div>
+          <div class="who">Marisol Guzmán</div>
+          <div class="role">Presidencia</div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </aside>
 
-<main class="content">
-  <div class="page-head">
-    <p class="eyebrow" id="topEyebrow">Panel general</p>
-    <h1 id="topTitle">Buenas tardes, Marisol</h1>
-    <div class="subtoggle" id="subTabs" style="display:none; margin-top:14px;"></div>
-  </div>
+  <div class="main-col">
+    <header class="topbar">
+      <button class="hamburger" id="sidebarToggle"><svg class="icon"><use href="#i-menu"/></svg></button>
+      <span class="crumb" id="crumbTxt">Panel general</span>
+      <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar…"></div>
+      <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
+    </header>
+
+    <main class="content">
+      <div class="banner" id="demoBanner">
+        <svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>
+        <span><b>Vista previa.</b> Estás viendo una demo con datos de ejemplo — sin conexión a una base de datos real.</span>
+        <button class="x" onclick="document.getElementById('demoBanner').style.display='none'"><svg class="icon" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
+      </div>
+
+      <div class="page-head">
+        <p class="eyebrow" id="topEyebrow">Panel general</p>
+        <h1 id="topTitle">Buenas tardes, Marisol</h1>
+        <p class="desc" id="topDesc">Resumen general de la deuda con acreedores, alertas de vencimiento y evolución financiera.</p>
+      </div>
 
   <!-- DASHBOARD -->
   <section class="view active" id="view-dashboard">
@@ -605,7 +655,9 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
       </div>
     </div>
   </section>
-</main>
+    </main>
+  </div>
+</div>
 
 <!-- DRAWER -->
 <div class="overlay" id="overlay" onclick="closeAll()"></div>
@@ -746,15 +798,16 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
     <div class="modal-head"><svg class="icon"><use href="#i-gem"/></svg><h3>Actualizar cotización del oro</h3></div>
     <div class="modal-body">
       <div class="loan-row"><span class="l">Valor actual</span><span class="mono" id="cot-actual">—</span></div>
+      <button class="btn btn-sm" onclick="consultarApiOro()" id="btnApiOro"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Consultar API en tiempo real</button>
       <label class="fl">Nuevo valor (Bs por gramo)<input class="fi" id="ct-valor" type="number" placeholder="655"></label>
       <label class="fl">Fuente
         <select class="fi" id="ct-fuente">
           <option>Manual (referencial)</option>
           <option>Banco Bisa — mesa de cambios</option>
-          <option>Cotización internacional (oz. troy convertida)</option>
+          <option>API en tiempo real (Metalprice API)</option>
         </select>
       </label>
-      <p style="font-size:11.5px; color:var(--ink-faint); margin:0;">Este valor se usa como referencia para calcular producción y pagos en oro. Se puede automatizar más adelante conectando una fuente en línea.</p>
+      <p style="font-size:11.5px; color:var(--ink-faint); margin:0;" id="ct-hint">Este valor se usa como referencia para calcular producción y pagos en oro — al momento de cada operación, quien la registra puede ajustarlo si el precio se negoció distinto.</p>
     </div>
     <div class="modal-foot">
       <button class="btn" onclick="closeAll()">Cancelar</button>
@@ -802,6 +855,9 @@ input.fi:focus, select.fi:focus{border-color:var(--accent);}
 /* ---------------- demo state ---------------- */
 const fmt = n => 'Bs ' + Math.round(n).toLocaleString('es-BO');
 const HOY = new Date(2026,8,10); // 10 sep 2026
+const METALPRICE_API_KEY = 'dd527c9279488e2ad1d4e71994331720'; // demo — reemplazar/rotar antes de un uso real
+const BOB_PER_USD = 6.96; // tipo de cambio oficial referencial
+const GRAMOS_POR_ONZA = 31.1035;
 const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fechaTxt(d){ return d.getDate()+' '+MESES[d.getMonth()]+' '+d.getFullYear(); }
 function addMonths(d,n){ const r=new Date(d); r.setMonth(r.getMonth()+n); return r; }
@@ -1238,45 +1294,38 @@ function renderAll(){
 
 /* ---------------- views/nav ---------------- */
 const NAV_TITLES = {
-  dashboard:['Panel general','Buenas tardes, Marisol'],
-  acreedores:['Gestión','Acreedores'],
-  produccion:['Oro','Producción'],
-  tesoreria:['Finanzas','Tesorería'],
-  reportes:['Finanzas','Reportes'],
-  auditoria:['Sistema','Auditoría e historial'],
-  configuracion:['Sistema','Configuración'],
+  dashboard:['Panel general','Buenas tardes, Marisol','Resumen general de la deuda con acreedores, alertas de vencimiento y evolución financiera.'],
+  acreedores:['General','Acreedores','Registro completo de las personas que prestan dinero a la cooperativa: préstamos, pagos e historial de cada una.'],
+  produccion:['General','Producción','Registro de la producción de oro de la cooperativa y cotización de referencia para valorizar cada movimiento.'],
+  tesoreria:['Finanzas','Tesorería','Ingresos, egresos, balance general de caja y el detalle de cada movimiento con su comprobante.'],
+  reportes:['Finanzas','Reportes','Reportes financieros filtrados por rango de fechas, listos para revisar o exportar.'],
+  auditoria:['Sistema','Auditoría e historial','Quién hizo qué y cuándo — incluida la gestión institucional a la que pertenece cada evento.'],
+  configuracion:['Sistema','Configuración','Categorías de tesorería, cierre de gestión y notificaciones — la administración general del sistema.'],
 };
-const NAV_GROUPS = { finanzas:['tesoreria','reportes'], sistema:['auditoria','configuracion'] };
-const NAV_SUBLABEL = { tesoreria:'Tesorería', reportes:'Reportes', auditoria:'Auditoría', configuracion:'Configuración' };
-let lastSub = { finanzas:'tesoreria', sistema:'auditoria' };
 
 function activateView(view){
-  const group = NAV_GROUPS[view] ? view : null;
-  const leaf = group ? lastSub[group] : view;
-  const parentGroup = group || Object.keys(NAV_GROUPS).find(g=>NAV_GROUPS[g].includes(leaf)) || null;
-  if(parentGroup) lastSub[parentGroup] = leaf;
-
-  document.querySelectorAll('.navitem').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.navitem[data-view="${parentGroup||leaf}"]`)?.classList.add('active');
-
-  const subTabs = document.getElementById('subTabs');
-  if(parentGroup){
-    subTabs.style.display = 'flex';
-    subTabs.innerHTML = NAV_GROUPS[parentGroup].map(v=>
-      `<button class="${v===leaf?'active':''}" onclick="activateView('${v}')">${NAV_SUBLABEL[v]}</button>`).join('');
-  } else {
-    subTabs.style.display = 'none';
-  }
+  document.querySelectorAll('.side-item').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.side-item[data-view="${view}"]`)?.classList.add('active');
 
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('view-'+leaf).classList.add('active');
-  document.getElementById('topEyebrow').textContent = NAV_TITLES[leaf][0];
-  document.getElementById('topTitle').textContent = NAV_TITLES[leaf][1];
+  document.getElementById('view-'+view).classList.add('active');
+
+  const t = NAV_TITLES[view];
+  document.getElementById('topEyebrow').textContent = t[0];
+  document.getElementById('topTitle').textContent = t[1];
+  document.getElementById('topDesc').textContent = t[2];
+  document.getElementById('crumbTxt').textContent = t[1];
+
+  if(window.innerWidth <= 980) document.getElementById('sidebar').classList.add('collapsed');
 }
 
-document.querySelectorAll('.navitem').forEach(btn=>{
+document.querySelectorAll('.side-item').forEach(btn=>{
   btn.addEventListener('click', ()=> activateView(btn.dataset.view));
 });
+document.getElementById('sidebarToggle').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+if(window.innerWidth <= 980) document.getElementById('sidebar').classList.add('collapsed');
 activateView('dashboard');
 document.getElementById('searchInput').addEventListener('input', e=> renderAcreedoresTable(e.target.value));
 
@@ -1591,6 +1640,28 @@ function crearProduccion(){
   logAudit('Producción registrada', fmtG(gramos)+' · '+fmt(gramos*valorGramo)+' a '+fmt(valorGramo)+'/g');
   closeAll(); renderAll();
   toast('Producción de '+fmtG(gramos)+' registrada ('+fmt(gramos*valorGramo)+')');
+}
+
+async function consultarApiOro(){
+  const btn = document.getElementById('btnApiOro');
+  const original = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Consultando…';
+  try{
+    const res = await fetch(`https://api.metalpriceapi.com/v1/latest?api_key=${METALPRICE_API_KEY}&base=USD&currencies=XAU`);
+    const data = await res.json();
+    if(!data.success) throw new Error('API respondió sin éxito');
+    const usdPorOnza = data.rates.USDXAU;
+    const bsPorGramo = (usdPorOnza * BOB_PER_USD) / GRAMOS_POR_ONZA;
+    document.getElementById('ct-valor').value = Math.round(bsPorGramo);
+    document.getElementById('ct-fuente').value = 'API en tiempo real (Metalprice API)';
+    toast('Cotización obtenida: '+fmt(usdPorOnza)+' USD/oz → '+fmt(bsPorGramo)+'/g (tipo de cambio Bs '+BOB_PER_USD+')');
+  } catch(err){
+    toast('No se pudo consultar la API ahora mismo — ingresá el valor manualmente', 'bad');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
 }
 
 function actualizarCotizacion(){
