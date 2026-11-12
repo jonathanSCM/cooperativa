@@ -559,7 +559,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
     <main class="content">
       <div class="banner" id="demoBanner">
         <svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>
-        <span><b>Demo de gestión administrativa y tesorería</b> · Sociedad Minera Virgen de Copacabana S.A. · RUC 20455717427 · datos ficticios</span>
+        <span><b>Demo de gestión administrativa y tesorería</b> · Sociedad Minera Virgen de Copacabana S.A. · RUC 20455717427 · Responsable de la propuesta: ProShop · datos ficticios</span>
         <button class="btn btn-sm" style="margin-left:auto; background:rgba(255,255,255,.16); color:#fff; border-color:rgba(255,255,255,.4);" onclick="startTour()">Hacer el recorrido</button>
         <button class="x" onclick="document.getElementById('demoBanner').style.display='none'"><svg class="icon" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
       </div>
@@ -2178,6 +2178,7 @@ function seed(){
   const abono=(c,fecha,caja,monto,docNum)=>{const a=s.terceros.find(t=>t.id===c.accionistaId); mov({fecha, tipo:'ingreso', unidad:a.unidad, categoria:'Cuota de accionista', terceroId:a.id, razonId:a.razones[0], moneda:c.moneda, cajaId:caja, monto, docTipo:'Recibo', docNum, obs:'Abono de cuota', origen:{tipo:'cuota', id:c.id}});};
   const q1=cuota('a1','PEN',12000); abono(q1,D(-1,12),'c1',4000,'R-0040'); abono(q1,D(0,4),'c1',2000,'R-0052');
   cuota('a2','PEN',9000);
+  const q2=cuota('a2','USD',1800); abono(q2,D(0,6),'c3',600,'R-0055');
   const q3=cuota('a3','PEN',15000); abono(q3,D(-1,9),'c2',15000,'R-0043');
   const q4=cuota('a4','PEN',8000); abono(q4,D(0,2),'c1',3000,'R-0050');
   const q5=cuota('a5','USD',2500); abono(q5,D(-1,25),'c3',1000,'R-0047');
@@ -2195,7 +2196,7 @@ function xml(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 function sampleDocURL(d){
   const m=d.movId?S.movs.find(x=>x.id===d.movId):null, v=d.ventaId?S.ventas.find(x=>x.id===d.ventaId):null;
   let tipo='Documento', num='', fecha='', quien='', concepto='', unidad='', monto='';
-  if(m){ const t=terceroDe(m.terceroId); tipo=m.docTipo; num=m.docNum||'s/n'; fecha=fechaTxt(m.fecha); quien=t?(t.alias||t.nombre):'—'; concepto=m.categoria+(m.obs?' · '+m.obs:''); unidad=UNIDADES[m.unidad]; monto=money(m.monto,m.moneda); }
+  if(m){ const t=terceroDe(m.terceroId); tipo=m.docTipo; num=m.docNum||'s/n'; fecha=fechaTxt(m.fecha); quien=t?(t.alias||t.nombre):'—'; concepto=m.categoria+(conc(m)?' · '+conc(m):''); unidad=UNIDADES[m.unidad]; monto=money(m.monto,m.moneda); }
   else if(v){ const p=terceroDe(v.plantaId); tipo=v.docTipo; num=v.docNum; fecha=fechaTxt(v.fecha); quien=p.nombre; concepto='Carga '+(v.carga||'—')+' · '+terceroDe(v.accionistaId).alias; unidad=UNIDADES[v.unidad]; monto=money(v.monto,v.moneda); }
   const row=(y,l,val)=>`<text x="40" y="${y}" font-size="15" fill="#5B636B">${xml(l)}</text><text x="200" y="${y}" font-size="16" fill="#14181C">${xml(String(val).slice(0,44))}</text><line x1="40" y1="${y+12}" x2="560" y2="${y+12}" stroke="#E2E5E8"/>`;
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="520" viewBox="0 0 600 520" font-family="Arial,Helvetica,sans-serif"><rect width="600" height="520" fill="#fff"/><rect width="600" height="12" fill="#0D6E73"/><text x="40" y="62" font-size="26" font-weight="700" fill="#14181C">${xml(tipo)} ${xml(num)}</text><text x="40" y="86" font-size="13" fill="#8B929A">Sociedad Minera Virgen de Copacabana S.A. · documento de ejemplo</text>${row(140,'Fecha',fecha)}${row(186,'Emisor / tercero',quien)}${row(232,'Concepto',concepto)}${row(278,'Unidad',unidad)}${row(324,'Monto',monto)}<text x="300" y="450" font-size="44" font-weight="700" fill="#0D6E73" opacity=".14" text-anchor="middle" transform="rotate(-12 300 450)">EJEMPLO · FICTICIO</text></svg>`;
@@ -2205,6 +2206,7 @@ const docURL=d=>d.ejemplo?sampleDocURL(d):(FILES[d.id]||'');
 const docRef=d=>({m:d.movId?S.movs.find(x=>x.id===d.movId):null, v:d.ventaId?S.ventas.find(x=>x.id===d.ventaId):null});
 const docFecha=d=>{const r=docRef(d); return (r.m||r.v||d).fecha;};
 const docUnidad=d=>{const r=docRef(d); return (r.m||r.v||{}).unidad||null;};
+const conc=m=>m.concepto||m.obs||'';
 const clipBadge=id=>{const n=S.docs.filter(d=>d.movId===id).length; return n?`<span class="clip"><svg class="icon"><use href="#i-clip"/></svg>${n}</span>`:'';};
 function selDocs(f){
   const q=norm(f.q||'');
@@ -2218,7 +2220,7 @@ function selDocs(f){
 }
 
 /* ================= estado y persistencia ================= */
-const KEY='virgen-copacabana-demo-v2';
+const KEY='virgen-copacabana-demo-v3';
 let S, LASTNEW=null, DR=[], DETSTACK=[], FORM=null, DRAWER_ID=null;
 const F={periodo:'todo', unidad:'todas', moneda:'PEN', caja:'todas', tab:'accionistas'};
 let FILES={}; const FKEY=KEY+'-files';
@@ -2297,7 +2299,7 @@ function metric(name,m,periodo,u){
   }
 }
 const dr=spec=>{DR.push(spec); return DR.length-1;};
-const lk=(met,m,extra)=>`<span class="lnk amount ${extra||''}" onclick="drill(${dr(met.spec)})">${money(met.val,m)}</span>`;
+const lk=(met,m,extra)=>`<span class="lnk amount ${extra||''}" onclick="event.stopPropagation();drill(${dr(met.spec)})">${money(met.val,m)}</span>`;
 const unidadTag=u=>`<span class="utag ${u}">${UNIDADES[u]}</span>`;
 const emptyRow=(n,t)=>`<tr><td colspan="${n}" class="empty">${t||'Sin registros con este filtro.'}</td></tr>`;
 
@@ -2322,7 +2324,7 @@ function renderFiltros(){
     <div class="vf-g"><span class="vf-l">Unidad operativa</span>${pill('unidad',[['todas','Todas'],['cortada','Cortada'],['nivel0','Nivel 0']])}</div>
     <div class="vf-g"><span class="vf-l">Moneda</span>${pill('moneda',[['PEN','Soles'],['USD','Dólares'],['ambas','Ambas']])}</div>
     <button class="btn btn-sm" onclick="limpiarFiltros()">Limpiar filtros</button></div>
-  <div class="vf-sum">Mostrando: <b>${(!a&&!b)?'Todo el periodo':mesLabel(a+'..'+b)}</b> · <b>${uni}</b> · <b>${mon}</b></div>`;
+  <div class="vf-sum">Mostrando: <b>${(!a&&!b)?'Todo el periodo':mesLabel(a+'..'+b)}</b> · <b>${uni}</b> · <b>${mon}</b> <span style="color:var(--ink-faint)">· Soles y dólares nunca se suman: consolidarlos requiere un tipo de cambio definido (por confirmar).</span></div>`;
 }
 function limpiarFiltros(){ F.periodo='todo'; F.unidad='todas'; F.moneda='PEN'; F.caja='todas'; F.dq=''; vmRenderAll(); }
 function setPeriodo(v){
@@ -2421,7 +2423,7 @@ function movRow(m, opts={}){
   const t=terceroDe(m.terceroId), r=razonDe(m.razonId), c=cajaDe(m.cajaId);
   return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})">
     <td class="dt">${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td>
-    <td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${ORIGEN_LBL[m.origen.tipo]}${m.obs?' · '+esc(m.obs):''}</div></td>
+    <td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${ORIGEN_LBL[m.origen.tipo]}${conc(m)?' · '+esc(conc(m)):''}</div></td>
     <td>${t?esc(t.alias||t.nombre):'—'}${r?`<div class="who-ci">${esc(r.nombre)}</div>`:''}</td>
     <td>${esc(m.docTipo)}${clipBadge(m.id)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td>
     <td>${esc(c.nombre)}</td>
@@ -2542,7 +2544,7 @@ function renderCompras(){
     <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('compra')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar compra o gasto</button></div>
     <table><thead><tr><th>Fecha</th><th>Unidad</th><th>Categoría · concepto</th><th>Proveedor</th><th>Documento</th><th>Caja</th><th class="num">Monto</th></tr></thead><tbody>
     ${rows.length?rows.map(m=>{const t=terceroDe(m.terceroId),c=cajaDe(m.cajaId);
-      return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})"><td class="dt">${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td><td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${esc(m.obs)}</div></td><td>${t?esc(t.nombre):'<span class="who-ci">Planilla interna</span>'}</td><td>${esc(m.docTipo)}${clipBadge(m.id)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td><td>${esc(c.nombre)}</td><td class="num amount neg">${money(m.monto,m.moneda)}</td></tr>`;}).join(''):emptyRow(7)}
+      return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})"><td class="dt">${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td><td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${esc(conc(m))}</div></td><td>${t?esc(t.nombre):'<span class="who-ci">Planilla interna</span>'}</td><td>${esc(m.docTipo)}${clipBadge(m.id)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td><td>${esc(c.nombre)}</td><td class="num amount neg">${money(m.monto,m.moneda)}</td></tr>`;}).join(''):emptyRow(7)}
     </tbody></table></div>`;
   $('view-vm_compras').innerHTML=h;
 }
@@ -2579,6 +2581,7 @@ function renderTerceros(){
   const per=F.periodo, u=F.unidad, hasta=perFin(per);
   const monTxt=fn=>monedasSel().map(m=>({m,v:fn(m)})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
   const okMon=x=>F.moneda==='ambas'||x.moneda===F.moneda;
+  const monLk=(valFn,specFn)=>monedasSel().map(m=>({m,v:valFn(m)})).filter(x=>x.v>0).map(x=>`<span class="lnk amount" onclick="event.stopPropagation();drill(${dr(specFn(x.m))})">${money(x.v,x.m)}</span>`).join(' · ')||'—';
   let h=filterBar({note:'Los totales de cada tercero respetan las fechas, la unidad operativa y la moneda elegidas.'});
   h+=`<div class="subtoggle">${tabs.map(([k,l])=>`<button class="${F.tab===k?'active':''}" onclick="setTab('${k}')">${l}</button>`).join('')}</div>`;
   let head, rows;
@@ -2587,8 +2590,8 @@ function renderTerceros(){
     head='<tr><th>Alias</th><th>Unidad</th><th>Razones sociales vinculadas</th><th>Ventas</th><th class="num">Vendido</th><th class="num">Cuota pendiente</th></tr>';
     rows=accs.map(a=>{
       const vs=selVentas({accionistaId:a.id,periodo:per}).filter(okMon);
-      const vend=monTxt(m=>sm(vs.filter(v=>v.moneda===m)));
-      const pend=monTxt(m=>r2(selCuotas({accionistaId:a.id,moneda:m}).reduce((s,c)=>s+saldoCuotaH(c,hasta),0)));
+      const vend=monLk(m=>sm(vs.filter(v=>v.moneda===m)),m=>({kind:'ventas',f:{accionistaId:a.id,periodo:per,moneda:m},campo:'monto',moneda:m,title:`Ventas de ${a.alias} · ${MONEDAS[m].nombre}`}));
+      const pend=monLk(m=>r2(selCuotas({accionistaId:a.id,moneda:m}).reduce((s,c)=>s+saldoCuotaH(c,hasta),0)),m=>({kind:'cuotas',f:{accionistaId:a.id,moneda:m,pendiente:true,hasta},campo:'saldo',moneda:m,title:`Cuota pendiente de ${a.alias} · ${MONEDAS[m].nombre}`}));
       return `<tr onclick="openAccionista('${a.id}')"><td><div class="who-cell"><div class="avatar">${esc(a.alias.replace(/\./g,'').slice(0,2))}</div><div><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(a.nombre)}</div></div></div></td><td>${unidadTag(a.unidad)}</td><td>${a.razones.map(id=>`<span class="chip">${esc(razonDe(id).nombre)}</span>`).join('')}</td><td>${vs.length}</td><td class="num amount">${vend}</td><td class="num amount">${pend}</td></tr>`;}).join('');
   } else if(F.tab==='razones'){
     head='<tr><th>Razón social</th><th>RUC (ficticio)</th><th>Accionistas vinculados</th></tr>';
@@ -2597,12 +2600,12 @@ function renderTerceros(){
     head='<tr><th>Proveedor</th><th>Categoría habitual</th><th>Movimientos</th><th class="num">Total pagado</th></tr>';
     rows=S.terceros.filter(t=>t.tipo==='proveedor').map(p=>{
       const ms=selMovs({terceroId:p.id,periodo:per,unidad:u}).filter(okMon);
-      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td><span class="chip">${esc(p.habitual||'—')}</span></td><td>${ms.length}</td><td class="num amount">${monTxt(m=>sm(ms.filter(x=>x.moneda===m)))}</td></tr>`;}).join('');
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td><span class="chip">${esc(p.habitual||'—')}</span></td><td>${ms.length}</td><td class="num amount">${monLk(m=>sm(ms.filter(x=>x.moneda===m)),m=>({kind:'movs',f:{terceroId:p.id,periodo:per,unidad:u,moneda:m},moneda:m,title:`Pagos a ${p.nombre} · ${MONEDAS[m].nombre}`}))}</td></tr>`;}).join('');
   } else {
     head='<tr><th>Planta compradora</th><th>Ventas</th><th class="num">Total vendido</th><th class="num">Pendiente de cobro</th></tr>';
     rows=S.terceros.filter(t=>t.tipo==='planta').map(p=>{
       const vs=selVentas({plantaId:p.id,periodo:per,unidad:u}).filter(okMon);
-      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td>${vs.length}</td><td class="num amount">${monTxt(m=>sm(vs.filter(v=>v.moneda===m)))}</td><td class="num amount">${monTxt(m=>r2(vs.filter(v=>v.moneda===m).reduce((s,v)=>s+pendiente(v),0)))}</td></tr>`;}).join('');
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td>${vs.length}</td><td class="num amount">${monLk(m=>sm(vs.filter(v=>v.moneda===m)),m=>({kind:'ventas',f:{plantaId:p.id,periodo:per,unidad:u,moneda:m},campo:'monto',moneda:m,title:`Ventas a ${p.nombre} · ${MONEDAS[m].nombre}`}))}</td><td class="num amount">${monLk(m=>r2(vs.filter(v=>v.moneda===m).reduce((s,v)=>s+pendiente(v),0)),m=>({kind:'ventas',f:{plantaId:p.id,periodo:per,unidad:u,moneda:m,pendiente:true},campo:'pendiente',moneda:m,title:`Pendiente de cobro · ${p.nombre} · ${MONEDAS[m].nombre}`}))}</td></tr>`;}).join('');
   }
   h+=`<div class="panel tour-main"><div class="panel-head"><h2>${tabs.find(t=>t[0]===F.tab)[1]}</h2><span class="hint">Datos ficticios identificados</span>
     <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('tercero')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo tercero</button></div>
@@ -2611,7 +2614,7 @@ function renderTerceros(){
 }
 
 function openAccionista(id){
-  DRAWER_ID=id; paintDrawer(); $('overlay').classList.add('show'); $('drawer').classList.add('show');
+  DRAWER_ID=id; $('overlay').classList.add('show'); $('drawer').classList.add('show'); paintDrawer();
 }
 function paintDrawer(){
   if(!DRAWER_ID||!$('drawer').classList.contains('show')) return;
@@ -2663,7 +2666,7 @@ function renderReportes(){
       return `<tr style="cursor:default"><td>${esc(c.nombre)}</td><td class="num">${money(antes,m)}</td><td class="num">${lk({val:ing,spec:sp('ingreso','Ingresos')},m,'pos')}</td><td class="num">${lk({val:eg,spec:sp('egreso','Egresos')},m,'neg')}</td><td class="num"><b>${lk({val:saldoCaja(c,hasta),spec:{kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'}},m)}</b></td></tr>`;}).join('');
     /* 5 cuotas pendientes */
     const cq=selCuotas({moneda:m,unidad:F.unidad}).map(c=>{const a=terceroDe(c.accionistaId), ab=abonadoH(c,hasta), sd=saldoCuotaH(c,hasta);
-      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:c.monto,spec:{kind:'cuotas',f:{accionistaId:a.id,moneda:m},moneda:m,title:`Cuota asignada · ${a.alias}`}},m)}</td><td class="num">${lk({val:ab,spec:{kind:'movs',f:{moneda:m,origen:'cuota',origenId:c.id,hasta},moneda:m,title:`Abonos · ${a.alias}`}},m,'pos')}</td><td class="num">${sd>0?`<b class="amount neg">${money(sd,m)}</b>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join('');
+      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:c.monto,spec:{kind:'cuotas',f:{accionistaId:a.id,moneda:m},moneda:m,title:`Cuota asignada · ${a.alias}`}},m)}</td><td class="num">${lk({val:ab,spec:{kind:'movs',f:{moneda:m,origen:'cuota',origenId:c.id,hasta},moneda:m,title:`Abonos · ${a.alias}`}},m,'pos')}</td><td class="num">${sd>0?lk({val:sd,spec:{kind:'cuotas',f:{accionistaId:a.id,moneda:m,pendiente:true,hasta},campo:'saldo',moneda:m,title:`Cuota pendiente · ${a.alias} · ${MONEDAS[m].nombre}`}},m,'neg'):'<span class="stag ok">Al día</span>'}</td></tr>`;}).join('');
     h+=`<div class="grid-eq tour-main">
       <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Ingresos y egresos por unidad</h2></div>
         <table><thead><tr><th>Unidad</th><th class="num">Ingresos</th><th class="num">Egresos</th><th class="num">Resultado de caja</th></tr></thead><tbody>${us}
@@ -2733,7 +2736,7 @@ function docMov(id){
   $('vmDocTitle').textContent=m.docTipo+' '+(m.docNum||'s/n');
   $('vmDocBody').innerHTML=`<div class="sheet" style="margin-bottom:14px;"><table><tbody>
       ${fila('Fecha',fechaTxt(m.fecha))}${fila(m.tipo==='ingreso'?'Pagador':'Proveedor / tercero',t?esc(t.alias||t.nombre):'—')}${fila('Razón social',r?esc(r.nombre):'—')}
-      ${fila('Concepto',esc(m.categoria+(m.obs?' · '+m.obs:'')))}${fila('Unidad operativa',UNIDADES[m.unidad])}${fila('Caja',esc(c.nombre))}
+      ${fila('Concepto',esc(m.categoria+(conc(m)?' · '+conc(m):'')))}${fila('Unidad operativa',UNIDADES[m.unidad])}${fila('Caja',esc(c.nombre))}
       <tr class="totalrow" style="cursor:default"><td>Monto</td><td>${m.tipo==='ingreso'?'+':'−'}${money(m.monto,m.moneda)}</td></tr></tbody></table></div>
     <div class="field-label" style="margin-bottom:8px;">${ds.length?'Comprobantes adjuntos':'Documento de ejemplo (ilustrativo)'}</div>
     ${ds.length?`<div class="doc-grid" style="padding:0">${ds.map(docCardHTML).join('')}</div>`:`<div class="doc-view"><img src="${ej}" alt="Documento de ejemplo"></div>`}
@@ -2869,7 +2872,8 @@ function openForm(mode, ctx={}){
       ${fl('Fecha',inp('vmf-fecha','date',hoy))}
       ${mode==='mov'?fl('Tipo de operación',selx('vmf-tipo',`<option value="ingreso" ${tipo==='ingreso'?'selected':''}>Ingreso</option><option value="egreso" ${tipo==='egreso'?'selected':''}>Egreso</option>`)):fl('Tipo de operación','<input class="fi" value="Egreso (compra o gasto)" disabled>')}
       ${fl('Unidad operativa',selx('vmf-unidad',optsUni(u0||'cortada')))}
-      ${fl('Categoría o concepto',selx('vmf-cat',optsCat(tipo)))}
+      ${fl('Categoría',selx('vmf-cat',optsCat(tipo)))}
+      ${fl('Concepto (qué se compró o pagó)',inp('vmf-concepto','text','','placeholder="Ej. Diésel para compresora"'))}
       ${fl(mode==='compra'?'Proveedor':'Accionista, proveedor o comprador',selx('vmf-ter',optsTercero(mode)))}
       ${fl('Razón social relacionada',selx('vmf-rs',optsRazonTercero('')))}
       ${fl('Moneda',selx('vmf-mon',optsMon(mon0)))}
@@ -2885,6 +2889,7 @@ function openForm(mode, ctx={}){
     body=`<div class="hint-block">Registrar la venta <b>no aumenta la caja</b>: el dinero entra cuando se registra el cobro. Si el cobro es inmediato, márcalo abajo y se resuelve desde este mismo formulario.</div>
     <div class="field-grid">
       ${fl('Fecha de la venta',inp('vmf-fecha','date',hoy))}
+      ${fl('Tipo de operación','<input class="fi" value="Venta de mineral (no mueve la caja)" disabled>')}
       ${fl('Unidad operativa',selx('vmf-unidad',optsUni(u)))}
       ${fl('Accionista',selx('vmf-acc',optsAcc(u)))}
       ${fl('Razón social',selx('vmf-rs',a0?optsRazonAcc(a0.id):''))}
@@ -2896,7 +2901,7 @@ function openForm(mode, ctx={}){
       ${fl('Monto de la venta',inp('vmf-monto','number','','min="0" step="0.01" placeholder="0.00" oninput="syncCobro()"'))}
       ${fl('Observaciones',inp('vmf-obs','text','','placeholder="Opcional"'),'style="grid-column:1/-1"')}
     </div>
-    ${attachHTML()}
+    ${attachHTML()}${docBtn}
     <label class="chk"><input type="checkbox" id="vmf-inm" onchange="formChanged(this.id)"> El cobro es inmediato: registrar también el dinero recibido</label>
     <div class="cobro-box" id="vmCobroBox">
       ${fl('Fecha del cobro',inp('vmf-cfecha','date',hoy))}
@@ -2913,6 +2918,7 @@ function openForm(mode, ctx={}){
     <div class="hint-block" id="vmHint">${hintCobro(v)}</div>
     <div class="field-grid">
       ${fl('Fecha del cobro',inp('vmf-fecha','date',hoy))}
+      ${fl('Tipo de operación','<input class="fi" value="Cobro de venta (ingreso)" disabled>')}
       ${fl('Caja que recibe',selx('vmf-caja',optsCaja(v.moneda)))}
       ${fl('Monto cobrado',inp('vmf-monto','number',p,`min="0" step="0.01" max="${p}"`))}
       ${fl('Tipo de documento',selx('vmf-doct',optsDoc('Transferencia')))}
@@ -2928,6 +2934,7 @@ function openForm(mode, ctx={}){
     <div class="hint-block" id="vmHint">${hintAbono(c)}</div>
     <div class="field-grid">
       ${fl('Fecha del abono',inp('vmf-fecha','date',hoy))}
+      ${fl('Tipo de operación','<input class="fi" value="Abono de cuota (ingreso)" disabled>')}
       ${fl('Caja que recibe',selx('vmf-caja',optsCaja(c.moneda)))}
       ${fl('Monto del abono',inp('vmf-monto','number',sd,`min="0" step="0.01" max="${sd}"`))}
       ${fl('Tipo de documento',selx('vmf-doct',optsDoc('Recibo')))}
@@ -2981,9 +2988,10 @@ function docDesdeForm(){
   if(mode==='documento'||mode==='inicio'||mode==='tercero') return;
   if(mode==='cobro'){const ve=S.ventas.find(x=>x.id===ctx.ventaId); mon=ve.moneda; t=terceroDe(ve.plantaId).nombre; r=razonDe(ve.razonId).nombre; u=UNIDADES[ve.unidad]; flujo='ingreso';}
   else if(mode==='abono'){const c=S.cuotas.find(x=>x.id===ctx.cuotaId), a=terceroDe(c.accionistaId); mon=c.moneda; t=a.alias; r=razonDe(a.razones[0]).nombre; u=UNIDADES[a.unidad]; flujo='ingreso';}
+  else if(mode==='venta'){ mon=v('vmf-mon'); const pl=terceroDe(v('vmf-pl')); t=pl?pl.nombre:'—'; r=razonDe(v('vmf-rs'))?razonDe(v('vmf-rs')).nombre:'—'; u=UNIDADES[v('vmf-unidad')]; flujo='ingreso'; }
   else { mon=v('vmf-mon'); const tt=terceroDe(v('vmf-ter')); t=tt?(tt.alias||tt.nombre):'—'; r=razonDe(v('vmf-rs'))?razonDe(v('vmf-rs')).nombre:'—'; u=UNIDADES[v('vmf-unidad')]; flujo=mode==='compra'?'egreso':v('vmf-tipo'); }
-  const caja=cajaDe(v('vmf-caja'));
-  docSample({tipo:v('vmf-doct'), num:v('vmf-docn'), fecha:v('vmf-fecha'), tercero:t, razon:r, concepto:(v('vmf-cat')||'Operación')+(v('vmf-obs')?' · '+v('vmf-obs'):''), unidad:u, caja:caja?caja.nombre:'—', monto:money(parseFloat(v('vmf-monto'))||0,mon), flujo});
+  const caja=cajaDe(v('vmf-caja')||v('vmf-ccaja'));
+  docSample({tipo:v('vmf-doct'), num:v('vmf-docn'), fecha:v('vmf-fecha'), tercero:t, razon:r, concepto:(v('vmf-cat')||'Venta de mineral')+(v('vmf-concepto')?' · '+v('vmf-concepto'):'')+(v('vmf-obs')?' · '+v('vmf-obs'):''), unidad:u, caja:caja?caja.nombre:'—', monto:money(parseFloat(v('vmf-monto'))||0,mon), flujo});
 }
 function addMov(o){ const m={id:S.nextId++, obs:'', docTipo:'Recibo', docNum:'', ...o}; S.movs.push(m); LASTNEW=m.id; return m; }
 const cierra=msg=>{ save(); closeModal('vm-form'); vmRenderAll(); paintDrawer(); vmToast(msg); };
@@ -3019,7 +3027,8 @@ function guardarForm(){
   if(mode==='mov'||mode==='compra'){
     const tipo=mode==='compra'?'egreso':g('vmf-tipo'), mon=g('vmf-mon'), u=g('vmf-unidad'), cat=g('vmf-cat'), caja=cajaDe(g('vmf-caja'));
     const sb=saldoCaja(caja), gb=sm(selMovs({unidad:u,moneda:mon,tipo:'egreso',categoria:cat}));
-    const mv=addMov({fecha:g('vmf-fecha'), tipo, unidad:u, categoria:cat, terceroId:g('vmf-ter')||null, razonId:g('vmf-rs')||null, moneda:mon, cajaId:caja.id, monto, docTipo:g('vmf-doct'), docNum:g('vmf-docn'), obs:g('vmf-obs'), origen:{tipo:mode==='compra'?'compra':'manual'}});
+    if(mode==='compra'&&!g('vmf-concepto')) return bad('Escribe el concepto de la compra (ej. Diésel para compresora)');
+    const mv=addMov({fecha:g('vmf-fecha'), tipo, unidad:u, categoria:cat, concepto:g('vmf-concepto'), terceroId:g('vmf-ter')||null, razonId:g('vmf-rs')||null, moneda:mon, cajaId:caja.id, monto, docTipo:g('vmf-doct'), docNum:g('vmf-docn'), obs:g('vmf-obs'), origen:{tipo:mode==='compra'?'compra':'manual'}});
     const n=guardarAdjuntos({movId:mv.id, etiqueta:g('vmf-doct')});
     const sa=saldoCaja(caja);
     let msg=`${tipo==='egreso'?'Gasto':'Ingreso'} guardado · ${caja.nombre}: ${money(sb,mon)} → ${money(sa,mon)}`;
@@ -3098,7 +3107,7 @@ vmRenderAll();
 function buscar(q){
   const n=norm(q); if(n.length<2) return null;
   const has=(...a)=>a.some(x=>norm(x).includes(n));
-  const movs=S.movs.filter(m=>{const t=terceroDe(m.terceroId), r=razonDe(m.razonId); return has(m.categoria,m.obs,m.docTipo,m.docNum,t&&(t.alias||t.nombre),r&&r.nombre,cajaDe(m.cajaId).nombre,fmtN(m.monto),String(m.monto));}).sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,5);
+  const movs=S.movs.filter(m=>{const t=terceroDe(m.terceroId), r=razonDe(m.razonId); return has(m.categoria,m.obs,m.concepto,m.docTipo,m.docNum,t&&(t.alias||t.nombre),r&&r.nombre,cajaDe(m.cajaId).nombre,fmtN(m.monto),String(m.monto));}).sort((a,b)=>b.fecha.localeCompare(a.fecha)).slice(0,5);
   const ventas=S.ventas.filter(v=>{const a=terceroDe(v.accionistaId), r=razonDe(v.razonId), p=terceroDe(v.plantaId); return has(v.docNum,v.carga,v.docTipo,a.alias,r.nombre,p.nombre,fmtN(v.monto),String(v.monto));}).slice(0,5);
   const terc=S.terceros.filter(t=>has(t.nombre,t.alias)).slice(0,5);
   const raz=S.razones.filter(r=>has(r.nombre,r.ruc)).slice(0,4);
