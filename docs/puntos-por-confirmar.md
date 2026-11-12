@@ -15,3 +15,4 @@
 13. Documentos: en la demo las fotos y PDF se guardan solo en el navegador (con límite de tamaño). Definir dónde se almacenarán, cuánto tiempo y quién puede verlos.
 14. Inteligencia comercial: confirmar qué indicadores necesita Yuri (hoy: ranking de plantas, plazo medio de cobro, antigüedad de pendientes, participación por accionista).
 15. Punto de partida: fecha de inicio y saldos iniciales reales de cada caja.
+16. Moneda: la demo arranca en soles. Los dólares quedan como opción de filtro porque el PDF pide ambas monedas; confirmar si el cliente necesita dólares o solo soles.

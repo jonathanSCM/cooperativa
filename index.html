@@ -371,6 +371,18 @@ section[id^="view-vm_"] td:first-child, section[id^="view-vm_"] th:first-child{p
 section[id^="view-vm_"] td:last-child, section[id^="view-vm_"] th:last-child{padding-right:20px;}
 section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 
+
+/* ---------- barra global de filtros ---------- */
+.vm-filters{position:sticky; top:60px; z-index:15; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:10px 16px 8px; margin:0 0 16px; box-shadow:var(--shadow);}
+.vf-row{display:flex; flex-wrap:wrap; gap:8px 22px; align-items:center;}
+.vf-g{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.vf-l{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+.vf-sep{font-size:12px; color:var(--ink-faint);}
+.vm-filters input.fi, .vm-filters select.fi{padding:5px 8px; font-size:12px;}
+.vf-sum{font-size:11.5px; color:var(--ink-dim); margin-top:6px;} .vf-sum b{color:var(--accent);}
+.vm-subbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 14px;}
+.hint-note{font-size:12px; color:var(--ink-dim); display:flex; gap:6px; align-items:center; flex:1; min-width:220px;}
+@media (max-width:980px){ .vm-filters{position:static;} .vf-row{gap:10px 14px;} }
 /* ---------- marca, búsqueda, recorrido, documentos ---------- */
 .brand-mono{display:none; width:30px; height:30px; border-radius:8px; background:var(--accent); color:var(--accent-ink); align-items:center; justify-content:center; font-weight:700; font-size:12px; flex:none;}
 .sidebar.collapsed .brand-mono{display:flex;}
@@ -558,6 +570,8 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
         <p class="desc" id="topDesc">Resumen general de la deuda con acreedores, alertas de vencimiento y evolución financiera.</p>
       </div>
 
+  <div id="vmGlobalFilters" class="vm-filters" style="display:none"></div>
+
   <!-- DASHBOARD -->
   <section class="view active" id="view-dashboard">
     <div class="kpi-row" id="kpiStrip"></div>
@@ -610,7 +624,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
       <div class="quote-card">
         <div>
           <div class="kpi-label" style="margin-bottom:6px;"><svg class="icon" style="width:12px;height:12px"><use href="#i-gem"/></svg>Cotización del oro</div>
-          <div class="quote-big"><span class="quote-num mono accent-num" id="quoteVal">—</span><span class="quote-unit">Bs / gramo</span></div>
+          <div class="quote-big"><span class="quote-num mono accent-num" id="quoteVal">—</span><span class="quote-unit">S/ por gramo</span></div>
         </div>
         <div class="quote-meta" id="quoteMeta">—</div>
         <button class="btn btn-sm" onclick="openModal('cotizacion')"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Actualizar cotización</button>
@@ -838,7 +852,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
     <div class="modal-head"><svg class="icon"><use href="#i-coins"/></svg><h3>Nuevo préstamo</h3></div>
     <div class="modal-body">
       <div class="field-grid">
-        <label class="fl">Monto prestado (Bs)<input class="fi" id="p-monto" type="number" placeholder="50000"></label>
+        <label class="fl">Monto prestado (S/)<input class="fi" id="p-monto" type="number" placeholder="50000"></label>
         <label class="fl">Interés mensual (%)<input class="fi" id="p-tasa" type="number" placeholder="3"></label>
       </div>
       <div class="field-grid">
@@ -863,16 +877,16 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
       <div class="loan-row"><span class="l">Interés pendiente</span><span class="mono" id="pago-saldo-int">—</span></div>
       <label class="fl">Moneda del pago
         <div class="seg" id="pg-moneda">
-          <button class="active" data-v="Bs">Bolivianos</button>
+          <button class="active" data-v="Bs">Soles</button>
           <button data-v="Oro">Oro</button>
         </div>
       </label>
-      <label class="fl" id="pg-monto-wrap">Monto del pago (Bs)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
+      <label class="fl" id="pg-monto-wrap">Monto del pago (S/)<input class="fi" id="pg-monto" type="number" placeholder="10000"></label>
       <div id="pg-oro-wrap" style="display:none; flex-direction:column; gap:14px;">
         <div class="loan-row"><span class="l">Cotización de referencia (hoy)</span><span class="mono" id="pg-ref-val">—</span></div>
         <div class="field-grid">
           <label class="fl">Cantidad (gramos)<input class="fi" id="pg-gramos" type="number" placeholder="12" oninput="calcPagoOro()"></label>
-          <label class="fl">Precio acordado (Bs/g)<input class="fi" id="pg-precio" type="number" placeholder="655" oninput="calcPagoOro()"></label>
+          <label class="fl">Precio acordado (S/ por g)<input class="fi" id="pg-precio" type="number" placeholder="655" oninput="calcPagoOro()"></label>
         </div>
         <label class="fl">Total en bolivianos<input class="fi" id="pg-equiv" disabled placeholder="—"></label>
       </div>
@@ -905,7 +919,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
         <select class="fi" id="mv-categoria"></select>
       </label>
       <div class="field-grid">
-        <label class="fl">Monto (Bs)<input class="fi" id="mv-monto" type="number" placeholder="15000"></label>
+        <label class="fl">Monto (S/)<input class="fi" id="mv-monto" type="number" placeholder="15000"></label>
         <label class="fl">Fecha<input class="fi" id="mv-fecha" type="date"></label>
       </div>
       <div class="field-grid">
@@ -928,7 +942,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
       <div class="loan-row"><span class="l">Cotización de referencia (hoy)</span><span class="mono" id="prod-cot-ref">—</span></div>
       <div class="field-grid">
         <label class="fl">Cantidad (gramos)<input class="fi" id="pr-gramos" type="number" placeholder="45" oninput="calcProdEquiv()"></label>
-        <label class="fl">Precio de esta operación (Bs/g)<input class="fi" id="pr-precio" type="number" placeholder="655" oninput="calcProdEquiv()"></label>
+        <label class="fl">Precio de esta operación (S/ por g)<input class="fi" id="pr-precio" type="number" placeholder="655" oninput="calcProdEquiv()"></label>
       </div>
       <div class="field-grid">
         <label class="fl">Fecha<input class="fi" id="pr-fecha" type="date"></label>
@@ -949,7 +963,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
     <div class="modal-body">
       <div class="loan-row"><span class="l">Valor actual</span><span class="mono" id="cot-actual">—</span></div>
       <button class="btn btn-sm" onclick="consultarApiOro()" id="btnApiOro"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Consultar API en tiempo real</button>
-      <label class="fl">Nuevo valor (Bs por gramo)<input class="fi" id="ct-valor" type="number" placeholder="655"></label>
+      <label class="fl">Nuevo valor (S/ por gramo)<input class="fi" id="ct-valor" type="number" placeholder="655"></label>
       <label class="fl">Fuente
         <select class="fi" id="ct-fuente">
           <option>Manual (referencial)</option>
@@ -1034,10 +1048,10 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 
 <script>
 /* ---------------- demo state ---------------- */
-const fmt = n => 'Bs ' + Math.round(n).toLocaleString('es-BO');
+const fmt = n => 'S/ ' + Math.round(n).toLocaleString('es-PE');
 const HOY = new Date(2026,8,10); // 10 sep 2026
 const METALPRICE_API_KEY = 'dd527c9279488e2ad1d4e71994331720'; // demo — reemplazar/rotar antes de un uso real
-const BOB_PER_USD = 6.96; // tipo de cambio oficial referencial
+const BOB_PER_USD = 3.75; // tipo de cambio referencial soles por dólar (demo)
 const GRAMOS_POR_ONZA = 31.1035;
 const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function fechaTxt(d){ return d.getDate()+' '+MESES[d.getMonth()]+' '+d.getFullYear(); }
@@ -1099,11 +1113,11 @@ const state = {
   ],
   notificaciones:{ navegador:false, email:'', frecuencia:'Diario' },
   auditLog:[
-    {ts:new Date(2026,7,1,9,14), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Pago registrado', detalle:'Bs 8.000 · Capital · Juan Pérez'},
-    {ts:new Date(2026,7,1,9,15), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso Bs 8.000 · Pago a acreedor'},
-    {ts:new Date(2026,7,5,11,2), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Ingreso registrado', detalle:'Bs 120.000 · Venta de mineral'},
+    {ts:new Date(2026,7,1,9,14), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Pago registrado', detalle:'S/ 8.000 · Capital · Juan Pérez'},
+    {ts:new Date(2026,7,1,9,15), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso S/ 8.000 · Pago a acreedor'},
+    {ts:new Date(2026,7,5,11,2), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Ingreso registrado', detalle:'S/ 120.000 · Venta de mineral'},
     {ts:new Date(2026,7,15,16,40), usuario:'Ana Ticona', rol:'Administrador', accion:'Préstamo modificado', detalle:'Esteban Quispe · plazo ajustado a 10 meses'},
-    {ts:new Date(2026,7,20,10,5), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso Bs 9.500 · Proveedores'},
+    {ts:new Date(2026,7,20,10,5), usuario:'Ramiro Choque', rol:'Tesorero', accion:'Movimiento de caja', detalle:'Egreso S/ 9.500 · Proveedores'},
     {ts:new Date(2026,8,1,8,30), usuario:'Marisol Guzmán', rol:'Presidencia', accion:'Reporte consultado', detalle:'Reporte mensual — agosto 2026'},
   ]
 };
@@ -1298,7 +1312,7 @@ function renderTesoreria(){
     </div>`;
 
   document.getElementById('balanceGeneral').innerHTML = `
-    <div class="loan-row"><span class="l">Caja (Bs)</span><span class="mono">${fmt(tt.saldo)}</span></div>
+    <div class="loan-row"><span class="l">Caja (S/)</span><span class="mono">${fmt(tt.saldo)}</span></div>
     <div class="loan-row"><span class="l">Oro en stock (${fmtG(oroStock())})</span><span class="mono">${fmt(oroValorizado)}</span></div>
     <div class="loan-row"><span class="l"><b>Balance general</b></span><span class="mono accent-num"><b>${fmt(balanceGeneral)}</b></span></div>`;
 
@@ -1359,7 +1373,7 @@ function oroStock(){ return Math.max(0, oroProducidoTotal() - oroPagadoTotal());
 
 function renderCotizacion(){
   const c = state.cotizacionOro;
-  document.getElementById('quoteVal').textContent = fmt(c.valorGramo).replace('Bs ','');
+  document.getElementById('quoteVal').textContent = fmt(c.valorGramo).replace('S/ ','');
   document.getElementById('quoteMeta').innerHTML = `Actualizado ${fechaTxt(c.fecha)}<br>${c.fuente}`;
 }
 
@@ -1382,7 +1396,7 @@ function renderProduccion(){
     <div class="kpi">
       <div class="kpi-label">Cotización promedio</div>
       <div class="kpi-num num-display mono">${fmt(promedio)}</div>
-      <div class="kpi-sub">Bs por gramo</div>
+      <div class="kpi-sub">S/ por gramo</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Stock disponible</div>
@@ -1569,7 +1583,7 @@ function openDrawer(id){
         return `<div>
         <div class="field-label" style="margin-bottom:8px;">Historial de pagos</div>
         <div class="subtoggle">
-          <button class="active" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tl-bs').style.display=''; document.getElementById('tl-oro').style.display='none';">Bolivianos<span class="n">${pagosBs.length}</span></button>
+          <button class="active" onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tl-bs').style.display=''; document.getElementById('tl-oro').style.display='none';">Soles<span class="n">${pagosBs.length}</span></button>
           <button onclick="this.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); this.classList.add('active'); document.getElementById('tl-bs').style.display='none'; document.getElementById('tl-oro').style.display='';">Oro<span class="n">${pagosOro.length}</span></button>
         </div>
         <div id="tl-bs">${tl(pagosBs)}</div>
@@ -1836,7 +1850,7 @@ async function consultarApiOro(){
     const bsPorGramo = (usdPorOnza * BOB_PER_USD) / GRAMOS_POR_ONZA;
     document.getElementById('ct-valor').value = Math.round(bsPorGramo);
     document.getElementById('ct-fuente').value = 'API en tiempo real (Metalprice API)';
-    toast('Cotización obtenida: '+fmt(usdPorOnza)+' USD/oz → '+fmt(bsPorGramo)+'/g (tipo de cambio Bs '+BOB_PER_USD+')');
+    toast('Cotización obtenida: '+fmt(usdPorOnza)+' USD/oz → '+fmt(bsPorGramo)+'/g (tipo de cambio S/ '+BOB_PER_USD+')');
   } catch(err){
     toast('No se pudo consultar la API ahora mismo — ingresá el valor manualmente', 'bad');
   } finally {
@@ -1944,7 +1958,7 @@ function previewReport(kind){
       <tbody>${filasMovs || '<tr><td colspan="5">Sin movimientos en este rango</td></tr>'}</tbody></table>
 
       ${prod.length ? `<h5>Producción de oro en el periodo</h5>
-      <table><thead><tr><th>Fecha</th><th style="text-align:right">Gramos</th><th style="text-align:right">Cotización</th><th style="text-align:right">Valor Bs</th><th>Observación</th></tr></thead>
+      <table><thead><tr><th>Fecha</th><th style="text-align:right">Gramos</th><th style="text-align:right">Cotización</th><th style="text-align:right">Valor S/</th><th>Observación</th></tr></thead>
       <tbody>${filasProd}</tbody></table>` : ''}
     `;
 
@@ -1965,7 +1979,7 @@ function previewReport(kind){
     body.innerHTML = `<h4>Historial de pagos a acreedores</h4><div class="muted2">${rangoTxt} · ${pagos.length} pagos registrados</div>
 
       <h5>Detalle de pagos</h5>
-      <table><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th>Moneda</th><th style="text-align:right">Monto (Bs)</th></tr></thead>
+      <table><thead><tr><th>Acreedor</th><th>Fecha</th><th>Destino</th><th>Moneda</th><th style="text-align:right">Monto (S/)</th></tr></thead>
       <tbody>${rows || '<tr><td colspan="5">Sin pagos en este rango</td></tr>'}</tbody>
       ${pagos.length?`<tfoot><tr class="totalrow"><td colspan="4">Total pagado${totalOroG?' (incl. '+fmtG(totalOroG)+' de oro)':''}</td><td style="text-align:right">${fmt(totalBs)}</td></tr></tfoot>`:''}
       </table>
@@ -2070,7 +2084,7 @@ const pad=n=>String(n).padStart(2,'0');
 const isoOf=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
 const hoyISO=()=>{const t=new Date(); return isoOf(t.getFullYear(),t.getMonth(),t.getDate());};
 const fechaTxt=i=>{const [y,m,d]=i.split('-').map(Number); return d+' '+MES_S[m-1]+' '+y;};
-function mesLabel(p){ if(p.includes('..')){const [a,b]=p.split('..'); return fechaTxt(a)+' – '+fechaTxt(b);} const [y,m]=p.split('-').map(Number); return MES_L[m-1]+' '+y; }
+function mesLabel(p){ if(p.includes('..')){const [a,b]=p.split('..'); return a&&b?fechaTxt(a)+' – '+fechaTxt(b):(a?'Desde el '+fechaTxt(a):(b?'Hasta el '+fechaTxt(b):'Todo el periodo'));} const [y,m]=p.split('-').map(Number); return MES_L[m-1]+' '+y; }
 const fmtN=n=>n.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
 const money=(n,m)=>(n<0?'−':'')+MONEDAS[m].sym+' '+fmtN(Math.abs(n));
 const r2=n=>Math.round(n*100)/100;
@@ -2206,7 +2220,7 @@ function selDocs(f){
 /* ================= estado y persistencia ================= */
 const KEY='virgen-copacabana-demo-v2';
 let S, LASTNEW=null, DR=[], DETSTACK=[], FORM=null, DRAWER_ID=null;
-const F={periodo:'todo', unidad:'todas', moneda:'ambas', caja:'todas', tab:'accionistas'};
+const F={periodo:'todo', unidad:'todas', moneda:'PEN', caja:'todas', tab:'accionistas'};
 let FILES={}; const FKEY=KEY+'-files';
 function loadFiles(){ try{ FILES=JSON.parse(localStorage.getItem(FKEY)||'{}'); }catch(e){ FILES={}; } }
 function saveFiles(){ try{ localStorage.setItem(FKEY,JSON.stringify(FILES)); return true; }catch(e){ return false; } }
@@ -2225,10 +2239,11 @@ const cajaDe=id=>S.cajas.find(c=>c.id===id);
 const cajasMon=m=>S.cajas.filter(c=>c.moneda===m);
 const monedasSel=()=>F.moneda==='ambas'?['PEN','USD']:[F.moneda];
 const sm=a=>r2(a.reduce((s,x)=>s+x.monto,0));
-const perIni=p=>(!p||p==='todo')?'0000-01-01':(p.includes('..')?p.split('..')[0]:p+'-01');
-const perFin=p=>(!p||p==='todo')?'9999-12-31':(p.includes('..')?p.split('..')[1]:p+'-31');
+const perIni=p=>(!p||p==='todo')?'0000-01-01':(p.includes('..')?(p.split('..')[0]||'0000-01-01'):p+'-01');
+const perFin=p=>(!p||p==='todo')?'9999-12-31':(p.includes('..')?(p.split('..')[1]||'9999-12-31'):p+'-31');
 const enPer=(f,p)=>(!p||p==='todo')||(f>=perIni(p)&&f<=perFin(p));
 const finPeriodo=p=>perFin(p);
+const cierreTxt=p=>perFin(p)==='9999-12-31'?'a la fecha':'al '+fechaTxt(perFin(p));
 const diasEntre=(a,b)=>Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000);
 const addDays=(iso,n)=>{const d=new Date(iso+'T12:00:00'); d.setDate(d.getDate()+n); return isoOf(d.getFullYear(),d.getMonth(),d.getDate());};
 const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -2254,9 +2269,11 @@ function selVentas(f){
 }
 const abonado=c=>sm(selMovs({origen:'cuota', origenId:c.id}));
 const saldoCuota=c=>Math.max(0, r2(c.monto-abonado(c)));
+const abonadoH=(c,h)=>sm(selMovs({origen:'cuota', origenId:c.id, hasta:h}));
+const saldoCuotaH=(c,h)=>Math.max(0, r2(c.monto-abonadoH(c,h)));
 function selCuotas(f){
   return S.cuotas.filter(c=>{const a=terceroDe(c.accionistaId);
-    return (!f.unidad||f.unidad==='todas'||a.unidad===f.unidad)&&(!f.moneda||c.moneda===f.moneda)&&(!f.accionistaId||c.accionistaId===f.accionistaId)&&(!f.pendiente||saldoCuota(c)>0);});
+    return (!f.unidad||f.unidad==='todas'||a.unidad===f.unidad)&&(!f.moneda||c.moneda===f.moneda)&&(!f.accionistaId||c.accionistaId===f.accionistaId)&&(!f.pendiente||saldoCuotaH(c,f.hasta)>0);});
 }
 function saldoCaja(c,hasta){
   return r2(c.apertura+selMovs({cajaId:c.id, hasta:hasta||'9999-12-31'}).reduce((s,m)=>s+signed(m),0));
@@ -2286,31 +2303,44 @@ const emptyRow=(n,t)=>`<tr><td colspan="${n}" class="empty">${t||'Sin registros 
 
 /* ================= filtros ================= */
 function filterBar(o={}){
-  const ps=periodos(); const rango=F.periodo.includes('..');
-  const pills=(k,opts,cur)=>`<div class="subtoggle" style="margin:0">${opts.map(([v,l])=>`<button class="${v===cur?'active':''}" onclick="setF('${k}','${v}')">${l}</button>`).join('')}</div>`;
-  let h='<div class="panel tour-filtros" style="margin-bottom:16px;"><div class="panel-head" style="flex-wrap:wrap; row-gap:10px; column-gap:14px;">';
-  h+='<h2 style="font-size:14px;">Filtros</h2>';
-  if(o.periodo!==false){
-    h+=`<select class="fi" style="padding:6px 9px; font-size:12px;" onchange="setPeriodo(this.value)"><option value="todo" ${F.periodo==='todo'?'selected':''}>Todo el periodo</option>${ps.map(p=>`<option value="${p}" ${p===F.periodo?'selected':''}>${mesLabel(p)}</option>`).join('')}<option value="30d">Últimos 30 días</option><option value="custom" ${rango?'selected':''}>Rango de fechas…</option></select>`;
-    if(rango){ const [a,b]=F.periodo.split('..'); h+=`<span style="display:inline-flex; gap:6px; align-items:center;"><input class="fi" type="date" value="${a}" style="padding:5px 8px; font-size:12px;" onchange="setRango(this.value,null)"><span class="hint" style="margin:0">a</span><input class="fi" type="date" value="${b}" style="padding:5px 8px; font-size:12px;" onchange="setRango(null,this.value)"></span>`; }
-  }
-  h+=pills('unidad',[['todas','Cortada y Nivel 0'],['cortada','Cortada'],['nivel0','Nivel 0']],F.unidad);
-  if(o.moneda!==false) h+=pills('moneda',[['ambas','Soles y dólares'],['PEN','Soles'],['USD','Dólares']],F.moneda);
+  let h='<div class="vm-subbar">';
+  if(o.note) h+=`<span class="hint-note"><svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>${o.note}</span>`;
   if(o.caja) h+=`<select class="fi" style="padding:6px 9px; font-size:12px;" onchange="setF('caja',this.value)"><option value="todas">Todas las cajas</option>${S.cajas.map(c=>`<option value="${c.id}" ${c.id===F.caja?'selected':''}>${esc(c.nombre)}</option>`).join('')}</select>`;
-  h+=`<span class="hint">${o.note||''}</span>`;
   h+=`<button class="btn btn-sm tour-reset" title="Vuelve a los datos de ejemplo iniciales" onclick="resetDemo()"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>Restablecer datos</button>`;
-  return h+'</div></div>';
+  return h+'</div>';
 }
+function rangoF(){ const p=F.periodo; if(!p||p==='todo') return ['','']; return p.includes('..')?p.split('..'):[perIni(p),perFin(p)]; }
+function renderFiltros(){
+  const g=$('vmGlobalFilters'); if(!g) return;
+  const [a,b]=rangoF(); const ps=periodos();
+  const pill=(k,opts)=>`<div class="subtoggle" style="margin:0">${opts.map(([v,l])=>`<button class="${v===F[k]?'active':''}" onclick="setF('${k}','${v}')">${l}</button>`).join('')}</div>`;
+  const uni=F.unidad==='todas'?'Cortada y Nivel 0':UNIDADES[F.unidad];
+  const mon=F.moneda==='ambas'?'Soles y dólares':MONEDAS[F.moneda].nombre;
+  g.innerHTML=`<div class="vf-row">
+    <div class="vf-g"><span class="vf-l">Fecha</span><input type="date" class="fi" value="${a}" onchange="setRango(this.value,null)" title="Desde"><span class="vf-sep">a</span><input type="date" class="fi" value="${b}" onchange="setRango(null,this.value)" title="Hasta">
+      <select class="fi" onchange="setPeriodo(this.value)"><option value="">Periodo rápido…</option><option value="todo">Todo el periodo</option><option value="mes">Este mes</option><option value="mes_ant">Mes anterior</option><option value="30d">Últimos 30 días</option><option value="3m">Últimos 3 meses</option><option value="anio">Este año</option>${ps.map(p=>`<option value="${p}">${mesLabel(p)}</option>`).join('')}</select></div>
+    <div class="vf-g"><span class="vf-l">Unidad operativa</span>${pill('unidad',[['todas','Todas'],['cortada','Cortada'],['nivel0','Nivel 0']])}</div>
+    <div class="vf-g"><span class="vf-l">Moneda</span>${pill('moneda',[['PEN','Soles'],['USD','Dólares'],['ambas','Ambas']])}</div>
+    <button class="btn btn-sm" onclick="limpiarFiltros()">Limpiar filtros</button></div>
+  <div class="vf-sum">Mostrando: <b>${(!a&&!b)?'Todo el periodo':mesLabel(a+'..'+b)}</b> · <b>${uni}</b> · <b>${mon}</b></div>`;
+}
+function limpiarFiltros(){ F.periodo='todo'; F.unidad='todas'; F.moneda='PEN'; F.caja='todas'; F.dq=''; vmRenderAll(); }
 function setPeriodo(v){
-  const hoy=hoyISO();
-  if(v==='30d') F.periodo=addDays(hoy,-29)+'..'+hoy;
-  else if(v==='custom') F.periodo=hoy.slice(0,8)+'01..'+hoy;
-  else F.periodo=v;
+  if(!v) return; const t=new Date(), hoy=hoyISO(), y=t.getFullYear(), mo=t.getMonth();
+  const fin=(yy,mm)=>isoOf(yy,mm,new Date(yy,mm+1,0).getDate());
+  if(v==='todo') F.periodo='todo';
+  else if(v==='mes') F.periodo=isoOf(y,mo,1)+'..'+fin(y,mo);
+  else if(v==='mes_ant'){ const d=new Date(y,mo-1,1); F.periodo=isoOf(d.getFullYear(),d.getMonth(),1)+'..'+fin(d.getFullYear(),d.getMonth()); }
+  else if(v==='30d') F.periodo=addDays(hoy,-29)+'..'+hoy;
+  else if(v==='3m'){ const d=new Date(y,mo-2,1); F.periodo=isoOf(d.getFullYear(),d.getMonth(),1)+'..'+hoy; }
+  else if(v==='anio') F.periodo=isoOf(y,0,1)+'..'+isoOf(y,11,31);
+  else { const [yy,mm]=v.split('-').map(Number); F.periodo=isoOf(yy,mm-1,1)+'..'+fin(yy,mm-1); }
   vmRenderAll();
 }
 function setRango(a,b){
-  const [x,y]=F.periodo.split('..'); let d=a||x, h=b||y; if(d>h){const z=d; d=h; h=z;}
-  F.periodo=d+'..'+h; vmRenderAll();
+  let [x,y]=rangoF(); if(a!==null) x=a; if(b!==null) y=b;
+  if(x&&y&&x>y){ const z=x; x=y; y=z; }
+  F.periodo=(!x&&!y)?'todo':x+'..'+y; vmRenderAll();
 }
 function setF(k,v){F[k]=v; vmRenderAll();}
 const curHead=(m,sub)=>`<div class="cur-head"><span class="cur-tag">${MONEDAS[m].nombre} (${MONEDAS[m].sym})</span><span class="cur-sub">${sub||''}</span></div>`;
@@ -2334,7 +2364,7 @@ function renderTablero(){
     ${qa('i-users','Cobrar una cuota','Abono de un accionista',"openForm('abono')")}
     ${qa('i-camera','Subir un documento','Foto o PDF de un comprobante',"openForm('documento')")}
   </div></div>`;
-  h+=filterBar({note:'Soles y dólares van separados. Los importes subrayados se abren para ver su detalle.'});
+  h+=filterBar({note:'Importes en soles por defecto (cambia la moneda en la barra de filtros). Los subrayados se abren para ver su detalle.'});
   monedasSel().forEach(m=>{
     const per=F.periodo, u=F.unidad;
     const ven=metric('ventas',m,per,u), cob=metric('cobros',m,per,u), pen=metric('pendiente',m,per,u), res=metric('resultado',m,per,u);
@@ -2352,7 +2382,7 @@ function renderTablero(){
       ${kp('Ingresos',ing.val,'Todo lo que entró a caja',ing.spec,'pos')}
       ${kp('Egresos',egr.val,'Todo lo que salió de caja',egr.spec,'neg')}
       ${kp('Resultado de caja',res.val,'Ingresos − egresos · no es utilidad contable',res.spec,res.val>=0?'pos':'neg')}
-      ${kp('Saldo de caja',saldo,'Todas las cajas en '+MONEDAS[m].nombre.toLowerCase(),{kind:'saldo',f:{moneda:m,hasta},moneda:m,mixed:true,title:`Saldo de caja · ${MONEDAS[m].nombre} · ${per==='todo'?'a la fecha':'al cierre de '+mesLabel(per)}`})}
+      ${kp('Saldo de caja',saldo,'Todas las cajas en '+MONEDAS[m].nombre.toLowerCase(),{kind:'saldo',f:{moneda:m,hasta},moneda:m,mixed:true,title:`Saldo de caja · ${MONEDAS[m].nombre} · ${cierreTxt(per)}`})}
     </div>`;
     const uc=un=>{ const i2=metric('ingresos',m,per,un), e2=metric('egresos',m,per,un), r2m=metric('resultado',m,per,un), v2=metric('ventas',m,per,un), c2=metric('cobros',m,per,un); const mx=Math.max(1,i2.val,e2.val);
       return `<div class="panel unit-card ${un}"><div class="panel-head"><span class="utag ${un}">${UNIDADES[un]}</span>${F.unidad===un?'<span class="hint">Mostrando solo esta unidad</span>':`<button class="btn btn-sm" style="margin-left:auto" onclick="setF('unidad','${un}')">Ver solo ${UNIDADES[un]}</button>`}</div>
@@ -2404,7 +2434,7 @@ function renderCaja(){
     const hasta=finPeriodo(F.periodo);
     const cs=cajasMon(m).filter(c=>F.caja==='todas'||c.id===F.caja);
     if(!cs.length) return;
-    h+=curHead(m,'Saldo '+(F.periodo==='todo'?'a la fecha':'al cierre de '+mesLabel(F.periodo)));
+    h+=curHead(m,'Saldo '+cierreTxt(F.periodo));
     h+=`<div class="kpi-row sm">${cs.map(c=>`<div class="kpi click" onclick="drill(${dr({kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'})})"><div class="kpi-label">${esc(c.nombre)}</div><div class="kpi-num mono">${money(saldoCaja(c,hasta),m)}</div><div class="kpi-sub">Saldo inicial ${money(c.apertura,m)}</div></div>`).join('')}</div>`;
   });
   h+=`<div class="panel tour-inicio" style="margin-top:20px;"><div class="panel-head"><h2 style="font-size:14px;">Punto de partida de tesorería</h2><span class="hint">Saldos iniciales al ${fechaTxt(S.inicio)}</span><button class="btn btn-sm" style="margin-left:14px;" onclick="openForm('inicio')">Editar saldos iniciales</button></div><div style="padding:12px 20px; display:flex; gap:8px; flex-wrap:wrap;">${S.cajas.map(c=>`<span class="chip" style="font-size:12px; padding:4px 12px;">${esc(c.nombre)}: <b>${money(c.apertura,c.moneda)}</b></span>`).join('')}</div></div>`;
@@ -2519,24 +2549,26 @@ function renderCompras(){
 
 /* ================= pantalla: Cuotas de accionistas ================= */
 function renderCuotas(){
-  let h=filterBar({periodo:false, note:'Las cuotas no dependen del periodo: muestran el saldo vigente.'});
+  const per=F.periodo, hasta=perFin(per);
+  let h=filterBar({note:'Los abonos se cuentan dentro de las fechas elegidas; el saldo pendiente es el de la fecha final.'});
   monedasSel().forEach(m=>{
     const cs=selCuotas({unidad:F.unidad,moneda:m});
-    const asig=r2(cs.reduce((s,c)=>s+c.monto,0)), abo=r2(cs.reduce((s,c)=>s+abonado(c),0)), pen=r2(asig-abo);
+    const asig=r2(cs.reduce((s,c)=>s+c.monto,0)), abo=sm(selMovs({unidad:F.unidad,moneda:m,origen:'cuota',periodo:per})), pen=r2(cs.reduce((s,c)=>s+saldoCuotaH(c,hasta),0));
     h+=curHead(m,'Cuotas asignadas');
     h+=`<div class="kpi-row sm">
       <div class="kpi click" onclick="drill(${dr({kind:'cuotas',f:{unidad:F.unidad,moneda:m},moneda:m,title:'Cuotas asignadas · '+MONEDAS[m].nombre})})"><div class="kpi-label">Cuota asignada</div><div class="kpi-num mono">${money(asig,m)}</div><div class="kpi-sub">${cs.length} accionistas</div></div>
-      <div class="kpi click" onclick="drill(${dr({kind:'movs',f:{unidad:F.unidad,moneda:m,origen:'cuota'},moneda:m,title:'Abonos recibidos · '+MONEDAS[m].nombre})})"><div class="kpi-label">Abonos recibidos</div><div class="kpi-num mono pos">${money(abo,m)}</div><div class="kpi-sub">Ya está en caja</div></div>
-      <div class="kpi click" onclick="drill(${dr({kind:'cuotas',f:{unidad:F.unidad,moneda:m,pendiente:true},moneda:m,campo:'saldo',title:'Cuotas pendientes · '+MONEDAS[m].nombre})})"><div class="kpi-label">Saldo pendiente</div><div class="kpi-num mono ${pen>0?'neg':''}">${money(pen,m)}</div><div class="kpi-sub">Deuda de accionistas</div></div></div>`;
+      <div class="kpi click" onclick="drill(${dr({kind:'movs',f:{unidad:F.unidad,moneda:m,origen:'cuota',periodo:per},moneda:m,title:'Abonos recibidos · '+MONEDAS[m].nombre+' · '+(per==='todo'?'todo el periodo':mesLabel(per))})})"><div class="kpi-label">Abonos recibidos</div><div class="kpi-num mono pos">${money(abo,m)}</div><div class="kpi-sub">En las fechas elegidas</div></div>
+      <div class="kpi click" onclick="drill(${dr({kind:'cuotas',f:{unidad:F.unidad,moneda:m,pendiente:true,hasta},moneda:m,campo:'saldo',title:'Cuotas pendientes · '+MONEDAS[m].nombre})})"><div class="kpi-label">Saldo pendiente</div><div class="kpi-num mono ${pen>0?'neg':''}">${money(pen,m)}</div><div class="kpi-sub">${cierreTxt(per).replace(/^a/,'A')}</div></div></div>`;
   });
   const cs=selCuotas({unidad:F.unidad}).filter(c=>F.moneda==='ambas'||c.moneda===F.moneda);
-  h+=`<div class="panel tour-main" style="margin-top:20px;"><div class="panel-head"><h2>Cuotas por accionista</h2><span class="hint">Clic en una fila para abrir al accionista</span></div>
-    <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Cuota asignada</th><th class="num">Abonado</th><th class="num">Saldo pendiente</th><th>Avance</th><th></th></tr></thead><tbody>
-    ${cs.length?cs.map(c=>{const a=terceroDe(c.accionistaId), ab=abonado(c), sd=saldoCuota(c), pct=Math.min(100,Math.round(ab/c.monto*100));
-      return `<tr class="${c.id===LASTNEW?'audit-new':''}" onclick="openAccionista('${a.id}')"><td><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(c.concepto)}</div></td><td>${unidadTag(a.unidad)}</td>
-      <td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(ab,c.moneda)}</td><td class="num amount ${sd>0?'neg':''}">${money(sd,c.moneda)}</td>
+  h+=`<div class="panel tour-main" style="margin-top:20px;"><div class="panel-head"><h2>Cuotas por accionista</h2><span class="hint">Clic en una fila para abrir al accionista</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('abono')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar abono</button></div>
+    <table><thead><tr><th>Accionista</th><th>Unidad</th><th>Vence</th><th class="num">Cuota asignada</th><th class="num">Abonado en el periodo</th><th class="num">Saldo a la fecha final</th><th>Avance</th><th></th></tr></thead><tbody>
+    ${cs.length?cs.map(c=>{const a=terceroDe(c.accionistaId), abP=sm(selMovs({origen:'cuota',origenId:c.id,periodo:per})), sd=saldoCuotaH(c,hasta), pct=Math.min(100,Math.round((c.monto-sd)/c.monto*100)), now=saldoCuota(c);
+      return `<tr class="${c.id===LASTNEW?'audit-new':''}" onclick="openAccionista('${a.id}')"><td><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(c.concepto)}</div></td><td>${unidadTag(a.unidad)}</td><td class="dt">${fechaTxt(c.vence)}</td>
+      <td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(abP,c.moneda)}</td><td class="num amount ${sd>0?'neg':''}">${money(sd,c.moneda)}</td>
       <td><div class="pct-cell"><div class="pct-track"><div style="width:${pct}%"></div></div><span class="pct-txt">${pct}%</span></div></td>
-      <td>${sd>0?`<button class="btn btn-sm" onclick="event.stopPropagation();openForm('abono',{cuotaId:${c.id}})">Registrar abono</button>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join(''):emptyRow(7)}
+      <td>${now>0?`<button class="btn btn-sm" onclick="event.stopPropagation();openForm('abono',{cuotaId:${c.id}})">Registrar abono</button>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join(''):emptyRow(8)}
     </tbody></table></div>`;
   $('view-vm_cuotas').innerHTML=h;
 }
@@ -2544,32 +2576,37 @@ function renderCuotas(){
 /* ================= pantalla: Accionistas y terceros ================= */
 function renderTerceros(){
   const tabs=[['accionistas','Accionistas'],['razones','Razones sociales'],['proveedores','Proveedores'],['plantas','Plantas compradoras']];
-  let h=`<div class="subtoggle">${tabs.map(([k,l])=>`<button class="${F.tab===k?'active':''}" onclick="setTab('${k}')">${l}</button>`).join('')}</div>`;
-  let head, rows, nuevo=true;
+  const per=F.periodo, u=F.unidad, hasta=perFin(per);
+  const monTxt=fn=>monedasSel().map(m=>({m,v:fn(m)})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
+  const okMon=x=>F.moneda==='ambas'||x.moneda===F.moneda;
+  let h=filterBar({note:'Los totales de cada tercero respetan las fechas, la unidad operativa y la moneda elegidas.'});
+  h+=`<div class="subtoggle">${tabs.map(([k,l])=>`<button class="${F.tab===k?'active':''}" onclick="setTab('${k}')">${l}</button>`).join('')}</div>`;
+  let head, rows;
+  const accs=S.terceros.filter(t=>t.tipo==='accionista'&&(u==='todas'||t.unidad===u));
   if(F.tab==='accionistas'){
-    head='<tr><th>Alias</th><th>Unidad</th><th>Razones sociales vinculadas</th><th>Ventas</th><th>Cuota pendiente</th></tr>';
-    rows=S.terceros.filter(t=>t.tipo==='accionista').map(a=>{
-      const pend=['PEN','USD'].map(m=>({m,v:r2(selCuotas({accionistaId:a.id,moneda:m}).reduce((s,c)=>s+saldoCuota(c),0))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
-      return `<tr onclick="openAccionista('${a.id}')"><td><div class="who-cell"><div class="avatar">${esc(a.alias.replace(/\./g,'').slice(0,2))}</div><div><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(a.nombre)}</div></div></div></td><td>${unidadTag(a.unidad)}</td><td>${a.razones.map(id=>`<span class="chip">${esc(razonDe(id).nombre)}</span>`).join('')}</td><td>${selVentas({accionistaId:a.id}).length}</td><td class="amount">${pend}</td></tr>`;}).join('');
+    head='<tr><th>Alias</th><th>Unidad</th><th>Razones sociales vinculadas</th><th>Ventas</th><th class="num">Vendido</th><th class="num">Cuota pendiente</th></tr>';
+    rows=accs.map(a=>{
+      const vs=selVentas({accionistaId:a.id,periodo:per}).filter(okMon);
+      const vend=monTxt(m=>sm(vs.filter(v=>v.moneda===m)));
+      const pend=monTxt(m=>r2(selCuotas({accionistaId:a.id,moneda:m}).reduce((s,c)=>s+saldoCuotaH(c,hasta),0)));
+      return `<tr onclick="openAccionista('${a.id}')"><td><div class="who-cell"><div class="avatar">${esc(a.alias.replace(/\./g,'').slice(0,2))}</div><div><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(a.nombre)}</div></div></div></td><td>${unidadTag(a.unidad)}</td><td>${a.razones.map(id=>`<span class="chip">${esc(razonDe(id).nombre)}</span>`).join('')}</td><td>${vs.length}</td><td class="num amount">${vend}</td><td class="num amount">${pend}</td></tr>`;}).join('');
   } else if(F.tab==='razones'){
     head='<tr><th>Razón social</th><th>RUC (ficticio)</th><th>Accionistas vinculados</th></tr>';
-    rows=S.razones.map(r=>`<tr style="cursor:default"><td class="who-name">${esc(r.nombre)}</td><td class="mono">${esc(r.ruc)}</td><td>${S.terceros.filter(t=>t.tipo==='accionista'&&t.razones.includes(r.id)).map(a=>`<span class="chip">${esc(a.alias)}</span>`).join('')||'—'}</td></tr>`).join('');
+    rows=S.razones.filter(r=>u==='todas'||accs.some(a=>a.razones.includes(r.id))).map(r=>`<tr style="cursor:default"><td class="who-name">${esc(r.nombre)}</td><td class="mono">${esc(r.ruc)}</td><td>${accs.filter(a=>a.razones.includes(r.id)).map(a=>`<span class="chip">${esc(a.alias)}</span>`).join('')||'—'}</td></tr>`).join('');
   } else if(F.tab==='proveedores'){
     head='<tr><th>Proveedor</th><th>Categoría habitual</th><th>Movimientos</th><th class="num">Total pagado</th></tr>';
     rows=S.terceros.filter(t=>t.tipo==='proveedor').map(p=>{
-      const tot=['PEN','USD'].map(m=>({m,v:sm(selMovs({terceroId:p.id,moneda:m}))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
-      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td><span class="chip">${esc(p.habitual||'—')}</span></td><td>${selMovs({terceroId:p.id}).length}</td><td class="num amount">${tot}</td></tr>`;}).join('');
+      const ms=selMovs({terceroId:p.id,periodo:per,unidad:u}).filter(okMon);
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td><span class="chip">${esc(p.habitual||'—')}</span></td><td>${ms.length}</td><td class="num amount">${monTxt(m=>sm(ms.filter(x=>x.moneda===m)))}</td></tr>`;}).join('');
   } else {
     head='<tr><th>Planta compradora</th><th>Ventas</th><th class="num">Total vendido</th><th class="num">Pendiente de cobro</th></tr>';
     rows=S.terceros.filter(t=>t.tipo==='planta').map(p=>{
-      const vs=S.ventas.filter(v=>v.plantaId===p.id);
-      const tot=['PEN','USD'].map(m=>({m,v:sm(vs.filter(v=>v.moneda===m))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
-      const pen=['PEN','USD'].map(m=>({m,v:r2(vs.filter(v=>v.moneda===m).reduce((s,v)=>s+pendiente(v),0))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
-      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td>${vs.length}</td><td class="num amount">${tot}</td><td class="num amount">${pen}</td></tr>`;}).join('');
+      const vs=selVentas({plantaId:p.id,periodo:per,unidad:u}).filter(okMon);
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td>${vs.length}</td><td class="num amount">${monTxt(m=>sm(vs.filter(v=>v.moneda===m)))}</td><td class="num amount">${monTxt(m=>r2(vs.filter(v=>v.moneda===m).reduce((s,v)=>s+pendiente(v),0)))}</td></tr>`;}).join('');
   }
   h+=`<div class="panel tour-main"><div class="panel-head"><h2>${tabs.find(t=>t[0]===F.tab)[1]}</h2><span class="hint">Datos ficticios identificados</span>
     <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('tercero')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo tercero</button></div>
-    <table><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
+    <table><thead>${head}</thead><tbody>${rows||emptyRow(6)}</tbody></table></div>`;
   $('view-vm_terceros').innerHTML=h;
 }
 
@@ -2606,18 +2643,18 @@ function renderReportes(){
     const per=F.periodo, hasta=finPeriodo(per);
     h+=curHead(m, per==='todo'?'Todo el periodo':mesLabel(per));
     /* 1 ingresos y egresos por unidad */
-    const us=['cortada','nivel0'].map(u=>{const i=metric('ingresos',m,per,u), e=metric('egresos',m,per,u), r=metric('resultado',m,per,u); return `<tr style="cursor:default"><td>${unidadTag(u)}</td><td class="num">${lk(i,m,'pos')}</td><td class="num">${lk(e,m,'neg')}</td><td class="num">${lk(r,m,r.val>=0?'pos':'neg')}</td></tr>`;}).join('');
-    const ti=metric('ingresos',m,per,'todas'), te=metric('egresos',m,per,'todas'), tr=metric('resultado',m,per,'todas');
+    const us=(F.unidad==='todas'?['cortada','nivel0']:[F.unidad]).map(u=>{const i=metric('ingresos',m,per,u), e=metric('egresos',m,per,u), r=metric('resultado',m,per,u); return `<tr style="cursor:default"><td>${unidadTag(u)}</td><td class="num">${lk(i,m,'pos')}</td><td class="num">${lk(e,m,'neg')}</td><td class="num">${lk(r,m,r.val>=0?'pos':'neg')}</td></tr>`;}).join('');
+    const ti=metric('ingresos',m,per,F.unidad), te=metric('egresos',m,per,F.unidad), tr=metric('resultado',m,per,F.unidad);
     /* 2 ventas por accionista */
-    const acc=S.terceros.filter(t=>t.tipo==='accionista').map(a=>{
+    const acc=S.terceros.filter(t=>t.tipo==='accionista'&&(F.unidad==='todas'||t.unidad===F.unidad)).map(a=>{
       const f={periodo:per,moneda:m,accionistaId:a.id}; const vs=selVentas(f); if(!vs.length) return '';
       const tot=sm(vs), cb=r2(vs.reduce((s,v)=>s+cobrado(v),0)), pn=r2(vs.reduce((s,v)=>s+pendiente(v),0));
       const sp=(c,t)=>({kind:'ventas',f:c==='p'?{...f,pendiente:true}:f,campo:c==='p'?'pendiente':'monto',moneda:m,title:`${t} · ${a.alias} · ${MONEDAS[m].nombre}`});
       return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:tot,spec:sp('m','Ventas')},m)}</td><td class="num">${lk({val:cb,spec:{kind:'movs',f:{moneda:m,tipo:'ingreso',origenIds:vs.map(v=>v.id)},moneda:m,title:`Cobros · ${a.alias} · ${MONEDAS[m].nombre}`}},m,'pos')}</td><td class="num">${lk({val:pn,spec:sp('p','Pendiente de cobro')},m,pn>0?'neg':'')}</td></tr>`;}).join('');
     /* 3 gastos por categoría */
-    const gcat=CAT_EGR.map(c=>{const a=sm(selMovs({periodo:per,unidad:'cortada',moneda:m,tipo:'egreso',categoria:c})), b=sm(selMovs({periodo:per,unidad:'nivel0',moneda:m,tipo:'egreso',categoria:c})); if(!a&&!b) return '';
+    const gcat=CAT_EGR.map(c=>{const a=F.unidad==='nivel0'?0:sm(selMovs({periodo:per,unidad:'cortada',moneda:m,tipo:'egreso',categoria:c})), b=F.unidad==='cortada'?0:sm(selMovs({periodo:per,unidad:'nivel0',moneda:m,tipo:'egreso',categoria:c})); if(!a&&!b) return '';
       const sp=u=>({kind:'movs',f:{periodo:per,unidad:u,moneda:m,tipo:'egreso',categoria:c},moneda:m,title:`${c} · ${u==='todas'?'ambas unidades':UNIDADES[u]} · ${MONEDAS[m].nombre}`});
-      return `<tr style="cursor:default"><td>${c}</td><td class="num">${a?lk({val:a,spec:sp('cortada')},m):'—'}</td><td class="num">${b?lk({val:b,spec:sp('nivel0')},m):'—'}</td><td class="num"><b>${lk({val:r2(a+b),spec:sp('todas')},m)}</b></td></tr>`;}).join('');
+      return `<tr style="cursor:default"><td>${c}</td><td class="num">${a?lk({val:a,spec:sp('cortada')},m):'—'}</td><td class="num">${b?lk({val:b,spec:sp('nivel0')},m):'—'}</td><td class="num"><b>${lk({val:r2(a+b),spec:sp(F.unidad)},m)}</b></td></tr>`;}).join('');
     /* 4 movimientos de caja */
     const cj=cajasMon(m).map(c=>{
       const antes=r2(c.apertura+selMovs({cajaId:c.id}).filter(x=>per!=='todo'&&x.fecha<perIni(per)).reduce((s,x)=>s+signed(x),0));
@@ -2625,8 +2662,8 @@ function renderReportes(){
       const sp=(t,ti)=>({kind:'movs',f:{periodo:per,cajaId:c.id,tipo:t},moneda:m,title:`${ti} · ${c.nombre}`});
       return `<tr style="cursor:default"><td>${esc(c.nombre)}</td><td class="num">${money(antes,m)}</td><td class="num">${lk({val:ing,spec:sp('ingreso','Ingresos')},m,'pos')}</td><td class="num">${lk({val:eg,spec:sp('egreso','Egresos')},m,'neg')}</td><td class="num"><b>${lk({val:saldoCaja(c,hasta),spec:{kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'}},m)}</b></td></tr>`;}).join('');
     /* 5 cuotas pendientes */
-    const cq=selCuotas({moneda:m}).map(c=>{const a=terceroDe(c.accionistaId), ab=abonado(c), sd=saldoCuota(c);
-      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:c.monto,spec:{kind:'cuotas',f:{accionistaId:a.id,moneda:m},moneda:m,title:`Cuota asignada · ${a.alias}`}},m)}</td><td class="num">${lk({val:ab,spec:{kind:'movs',f:{moneda:m,origen:'cuota',origenId:c.id},moneda:m,title:`Abonos · ${a.alias}`}},m,'pos')}</td><td class="num">${sd>0?`<b class="amount neg">${money(sd,m)}</b>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join('');
+    const cq=selCuotas({moneda:m,unidad:F.unidad}).map(c=>{const a=terceroDe(c.accionistaId), ab=abonadoH(c,hasta), sd=saldoCuotaH(c,hasta);
+      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:c.monto,spec:{kind:'cuotas',f:{accionistaId:a.id,moneda:m},moneda:m,title:`Cuota asignada · ${a.alias}`}},m)}</td><td class="num">${lk({val:ab,spec:{kind:'movs',f:{moneda:m,origen:'cuota',origenId:c.id,hasta},moneda:m,title:`Abonos · ${a.alias}`}},m,'pos')}</td><td class="num">${sd>0?`<b class="amount neg">${money(sd,m)}</b>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join('');
     h+=`<div class="grid-eq tour-main">
       <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Ingresos y egresos por unidad</h2></div>
         <table><thead><tr><th>Unidad</th><th class="num">Ingresos</th><th class="num">Egresos</th><th class="num">Resultado de caja</th></tr></thead><tbody>${us}
@@ -2635,7 +2672,7 @@ function renderReportes(){
         <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Ventas</th><th class="num">Cobrado</th><th class="num">Pendiente</th></tr></thead><tbody>${acc||emptyRow(5)}</tbody></table></div>
       <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Gastos por categoría</h2></div>
         <table><thead><tr><th>Categoría</th><th class="num">Cortada</th><th class="num">Nivel 0</th><th class="num">Total</th></tr></thead><tbody>${gcat||emptyRow(4)}</tbody></table></div>
-      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Movimientos de caja</h2></div>
+      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Movimientos de caja</h2><span class="hint">Cajas compartidas por ambas unidades</span></div>
         <table><thead><tr><th>Caja</th><th class="num">Saldo inicial</th><th class="num">Ingresos</th><th class="num">Egresos</th><th class="num">Saldo final</th></tr></thead><tbody>${cj}</tbody></table></div>
       <div class="panel" style="grid-column:1/-1"><div class="panel-head"><h2 style="font-size:14px;">Cuotas pendientes</h2><span class="hint">No depende del periodo</span></div>
         <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Cuota asignada</th><th class="num">Abonado</th><th class="num">Saldo pendiente</th></tr></thead><tbody>${cq||emptyRow(5)}</tbody></table></div>
@@ -2667,9 +2704,9 @@ function drill(i){
     nota='Haz clic en una venta para ver sus cobros.';
   } else if(sp.kind==='cuotas'){
     const rows=selCuotas(sp.f); n=rows.length;
-    total=r2(rows.reduce((s,c)=>s+(sp.campo==='saldo'?saldoCuota(c):c.monto),0));
+    const hh=sp.f.hasta; total=r2(rows.reduce((s,c)=>s+(sp.campo==='saldo'?saldoCuotaH(c,hh):c.monto),0));
     body=`<table><thead><tr><th>Accionista</th><th>Unidad</th><th>Concepto</th><th class="num">Asignada</th><th class="num">Abonado</th><th class="num">Saldo</th></tr></thead><tbody>${rows.map(c=>{const a=terceroDe(c.accionistaId);
-      return `<tr onclick="openAccionista('${a.id}')"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td>${esc(c.concepto)}</td><td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(abonado(c),c.moneda)}</td><td class="num amount">${money(saldoCuota(c),c.moneda)}</td></tr>`;}).join('')||emptyRow(6)}</tbody></table>`;
+      return `<tr onclick="openAccionista('${a.id}')"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td>${esc(c.concepto)}</td><td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(abonadoH(c,hh),c.moneda)}</td><td class="num amount">${money(saldoCuotaH(c,hh),c.moneda)}</td></tr>`;}).join('')||emptyRow(6)}</tbody></table>`;
   }
   const head=`<div class="det-total"><span class="big mono ${sp.mixed&&total<0?'neg':''}">${money(total,sp.moneda)}</span><span class="cur-sub">${n} registro${n===1?'':'s'} componen este total${sp.kind==='saldo'?' (incluye saldo inicial)':''}. ${nota}</span></div>`;
   DETSTACK=[]; showDetail(sp.title, head+body, false);
@@ -2855,7 +2892,7 @@ function openForm(mode, ctx={}){
       ${fl('Documento base',selx('vmf-doct','<option>Liquidación</option><option>Propuesta de compra</option>'))}
       ${fl('N.º de liquidación / propuesta',inp('vmf-docn','text','','placeholder="LIQ-0000"'))}
       ${fl('Referencia de la carga',inp('vmf-carga','text','','placeholder="CG-000"'))}
-      ${fl('Moneda',selx('vmf-mon',optsMon('USD')))}
+      ${fl('Moneda',selx('vmf-mon',optsMon('PEN')))}
       ${fl('Monto de la venta',inp('vmf-monto','number','','min="0" step="0.01" placeholder="0.00" oninput="syncCobro()"'))}
       ${fl('Observaciones',inp('vmf-obs','text','','placeholder="Opcional"'),'style="grid-column:1/-1"')}
     </div>
@@ -2863,7 +2900,7 @@ function openForm(mode, ctx={}){
     <label class="chk"><input type="checkbox" id="vmf-inm" onchange="formChanged(this.id)"> El cobro es inmediato: registrar también el dinero recibido</label>
     <div class="cobro-box" id="vmCobroBox">
       ${fl('Fecha del cobro',inp('vmf-cfecha','date',hoy))}
-      ${fl('Caja que recibe',selx('vmf-ccaja',optsCaja('USD')))}
+      ${fl('Caja que recibe',selx('vmf-ccaja',optsCaja('PEN')))}
       ${fl('Monto cobrado',inp('vmf-cmonto','number','','min="0" step="0.01"'))}
       ${fl('N.º de operación / recibo',inp('vmf-cdoc','text','','placeholder="OP-0000"'))}
     </div>`;
@@ -3050,7 +3087,7 @@ function vmToast(msg,kind='ok'){
 }
 
 function vmRenderAll(){
-  DR=[];
+  DR=[]; renderFiltros();
   renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderDocumentos(); renderReportes();
 }
 loadFiles();
@@ -3101,7 +3138,7 @@ const TOUR=[
   {v:'vm_tablero', sel:'.sidebar-nav', side:true, t:'El menú, ordenado por tareas', x:'<b>Inicio</b> resume todo. <b>Día a día</b> es donde registras: caja, ventas, compras y cuotas. <b>Registros</b> guarda accionistas, terceros y documentos. <b>Análisis</b> tiene los reportes.'},
   {v:'vm_tablero', sel:'.search', t:'Buscador', x:'Escribe un nombre, un número de factura, un monto o una razón social: encuentra movimientos, ventas, accionistas y documentos. Toca un resultado para abrirlo.'},
   {v:'vm_tablero', sel:'#view-vm_tablero .tour-acciones', t:'¿Qué quieres hacer?', x:'Las tareas más comunes están aquí, a un clic: registrar un gasto, una venta, un cobro, una cuota, o subir la foto de un comprobante.'},
-  {v:'vm_tablero', sel:'#view-vm_tablero .tour-filtros', t:'Filtros por fecha, unidad y moneda', x:'Elige un mes, los últimos 30 días o un rango de fechas. También puedes ver solo <b>Cortada</b> o solo <b>Nivel 0</b>, y soles o dólares. Todo el tablero se actualiza al instante.'},
+  {v:'vm_tablero', sel:'#vmGlobalFilters', t:'Filtros: fecha y unidad operativa', x:'Esta barra queda fija arriba en todas las pantallas. Elige un rango de fechas (desde / hasta) o un periodo rápido, y filtra por <b>Cortada</b> o <b>Nivel 0</b>. Todos los datos se actualizan al instante. La moneda por defecto es soles.'},
   {v:'vm_tablero', sel:'#view-vm_tablero .tour-kpi', t:'Ventas, cobros y caja', x:'Una <b>venta</b> no es dinero hasta que se <b>cobra</b>. Por eso se muestran separados. Toca cualquier importe subrayado para ver los registros que lo componen.'},
   {v:'vm_tablero', sel:'#view-vm_tablero .tour-unidades', t:'Cortada y Nivel 0, lado a lado', x:'Cada unidad operativa tiene su propia tarjeta con ingresos, egresos y resultado de caja. Toca «Ver solo…» para enfocarte en una.'},
   {v:'vm_caja', sel:'#view-vm_caja .tour-inicio', t:'Punto de partida de tesorería', x:'Aquí defines los saldos iniciales de cada caja. A partir de ellos, el sistema calcula los saldos actuales con cada movimiento.'},
@@ -3151,7 +3188,8 @@ document.addEventListener('keydown',e=>{ if(TI<0) return; if(e.key==='Escape') t
 window.addEventListener('resize',()=>{ if(TI>=0) tourPlace(TOUR[TI]); });
 
 /* handlers inline */
-Object.assign(window,{setF,openForm,drill,ventaDetalle,openAccionista,docMov,guardarForm,formChanged,syncCobro,docDesdeForm,detBack,closeModal,closeDrawer,setTab,resetDemo,setPeriodo,setRango,setDq,pickFile,filePicked,quitarPending,verDoc,delDoc,abrirBlob,irA,startTour,tourEnd,tourNext,tourPrev,toggleOldNav});
+Object.assign(window,{limpiarFiltros,setF,openForm,drill,ventaDetalle,openAccionista,docMov,guardarForm,formChanged,syncCobro,docDesdeForm,detBack,closeModal,closeDrawer,setTab,resetDemo,setPeriodo,setRango,setDq,pickFile,filePicked,quitarPending,verDoc,delDoc,abrirBlob,irA,startTour,tourEnd,tourNext,tourPrev,toggleOldNav});
+const _av=window.activateView; window.activateView=function(v){ _av(v); const g=$('vmGlobalFilters'); if(g) g.style.display=String(v).startsWith('vm_')?'':'none'; };
 activateView('vm_tablero');
 })();
 </script>
