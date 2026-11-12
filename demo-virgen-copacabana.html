@@ -376,6 +376,55 @@ th.num, td.num{text-align:right; white-space:nowrap;}
 .det-total{display:flex; align-items:baseline; gap:12px; padding:0 0 12px; flex-wrap:wrap;}
 .det-total .big{font-size:24px; font-weight:600;}
 .sidebar-nav .side-item .lbl{overflow:hidden; text-overflow:ellipsis;}
+
+/* ---------- rediseño v2: panel lateral oscuro, tarjetas ---------- */
+.sidebar{width:268px; background:#0D2B2E; border-right:none; color:#C9DEDE;}
+.sidebar.collapsed{width:68px;}
+.sidebar-head{padding:22px 22px 14px;}
+.brand-mark{color:#6FD3D5;} .brand-word{color:#fff; font-size:18px; letter-spacing:.01em;}
+.sidebar .side-group-label{color:#6E9496; padding:14px 10px 6px;}
+.sidebar .side-item{color:#B7D0D0; padding:9px 11px;}
+.sidebar .side-item:hover{background:rgba(255,255,255,.07); color:#fff;}
+.sidebar .side-item.active{background:rgba(111,211,213,.16); color:#fff; box-shadow:inset 3px 0 0 #6FD3D5;}
+.sidebar-nav{flex:none; padding:0 14px 6px; overflow:visible;}
+.side-panel{padding:6px 18px 4px; border-top:1px solid rgba(255,255,255,.08); margin-top:6px;}
+.side-panel .side-group-label{padding:12px 0 8px;}
+.side-panel label{display:block; font-size:11px; color:#8DB1B2; font-weight:600; margin-bottom:8px;}
+.side-panel select{display:block; width:100%; margin-top:4px; background:rgba(255,255,255,.07); color:#fff; border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:7px 9px; font:inherit; font-size:12.5px; outline:none;}
+.side-panel select option{color:#14181C;}
+.side-panel select:focus{border-color:#6FD3D5;}
+.side-panel .hint2{font-size:10.5px; color:#6E9496; line-height:1.4; margin:-2px 0 6px;}
+.side-act{display:flex; align-items:center; gap:9px; width:100%; padding:8px 10px; margin-bottom:6px; border-radius:8px; border:1px solid rgba(255,255,255,.14); background:transparent; color:#E4F1F1; font-size:12.5px; font-weight:600; text-align:left;}
+.side-act:hover{background:rgba(111,211,213,.18); border-color:#6FD3D5; color:#fff;}
+.side-act.primary{background:#6FD3D5; border-color:#6FD3D5; color:#08191A;}
+.side-act.primary:hover{filter:brightness(1.06);}
+.side-act svg{width:15px;height:15px;}
+.sidebar-foot{margin-top:auto; border-top:1px solid rgba(255,255,255,.08);}
+.sidebar-foot .btn{background:transparent; color:#B7D0D0; border-color:rgba(255,255,255,.14);}
+.sidebar-foot .btn:hover{background:rgba(255,255,255,.07); color:#fff;}
+.sidebar{overflow-y:auto;}
+.sidebar.collapsed .side-panel, .sidebar.collapsed .brand-word{display:none;}
+.fbar{display:none;}
+.viewnote{font-size:12.5px; color:var(--ink-dim); background:var(--accent-soft); border-radius:9px; padding:9px 13px; margin:0 0 6px; display:flex; align-items:center; gap:8px;}
+.ctx-chip{display:inline-flex; gap:6px; align-items:center; font-size:11.5px; font-weight:600; color:var(--ink-dim); background:var(--surface); border:1px solid var(--border); padding:4px 10px; border-radius:20px; margin:0 6px 6px 0;}
+.ctx-chip b{color:var(--accent);}
+.topbar{background:var(--surface);}
+.page-head{padding:0 0 14px;} .page-head h1{font-size:26px;}
+.kpi-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; border:none; background:transparent; overflow:visible; border-radius:0;}
+.kpi{background:var(--surface); border:1px solid var(--border); border-radius:13px; box-shadow:var(--shadow); border-left:4px solid var(--accent-line); padding:16px 18px;}
+.kpi:last-child{border-right:1px solid var(--border);}
+.kpi.k-ok{border-left-color:var(--ok);} .kpi.k-warn{border-left-color:var(--warn);} .kpi.k-bad{border-left-color:var(--bad);} .kpi.k-acc{border-left-color:var(--accent);}
+.kpi.click:hover{box-shadow:var(--shadow-lg); transform:translateY(-1px);} .kpi.click{transition:all .15s;}
+.kpi-group{font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; margin:14px 0 8px;}
+.kpi-row.sm .kpi-num{font-size:22px;}
+.panel{border-radius:14px;}
+th{background:var(--surface-2); border-bottom:1px solid var(--border);}
+td:first-child, th:first-child{padding-left:20px;}
+td.dt{white-space:nowrap;}
+.cur-head{margin:26px 0 4px; padding-top:4px;}
+.cur-tag{font-size:12px; padding:5px 13px; background:var(--accent); color:var(--accent-ink);}
+main.content{max-width:1240px;}
+@media (max-width:980px){ .sidebar{width:268px;} .sidebar.collapsed{width:0;} }
 @media (max-width:980px){ .grid-eq{grid-template-columns:1fr;} .field-grid{grid-template-columns:1fr;} .cobro-box{grid-template-columns:1fr;} table{display:block; overflow-x:auto; white-space:nowrap;} .fbar .note{display:none;} }
 </style>
 </head>
@@ -433,6 +482,8 @@ th.num, td.num{text-align:right; white-space:nowrap;}
       <div class="side-group-label">Análisis</div>
       <button class="side-item" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg><span class="lbl">Reportes y resúmenes</span></button>
     </nav>
+    <div class="side-panel" id="sideFilters"></div>
+    <div class="side-panel" id="sideActions"></div>
     <div class="sidebar-foot">
       <button class="btn btn-sm" onclick="resetDemo()"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg><span>Restablecer datos</span></button>
     </div>
@@ -691,16 +742,30 @@ const emptyRow=(n,t)=>`<tr><td colspan="${n}" class="empty">${t||'Sin registros 
 
 /* ================= filtros ================= */
 function filterBar(o={}){
-  const o2={periodo:true, unidad:true, moneda:true, caja:false, ...o};
-  const ps=periodos();
-  const opt=(v,t,cur)=>`<option value="${v}" ${v===cur?'selected':''}>${t}</option>`;
-  let h='<div class="fbar">';
-  if(o2.periodo) h+=`<label class="fl">Periodo<select class="fi" onchange="setF('periodo',this.value)">${opt('todo','Todo el periodo',F.periodo)}${ps.map(p=>opt(p,mesLabel(p),F.periodo)).join('')}</select></label>`;
-  if(o2.unidad) h+=`<label class="fl">Unidad operativa<select class="fi" onchange="setF('unidad',this.value)">${opt('todas','Cortada y Nivel 0',F.unidad)}${opt('cortada','Cortada',F.unidad)}${opt('nivel0','Nivel 0',F.unidad)}</select></label>`;
-  if(o2.moneda) h+=`<label class="fl">Moneda<select class="fi" onchange="setF('moneda',this.value)">${opt('ambas','Soles y dólares (separados)',F.moneda)}${opt('PEN','Soles (S/)',F.moneda)}${opt('USD','Dólares (US$)',F.moneda)}</select></label>`;
-  if(o2.caja) h+=`<label class="fl">Caja<select class="fi" onchange="setF('caja',this.value)">${opt('todas','Todas las cajas',F.caja)}${S.cajas.map(c=>opt(c.id,c.nombre,F.caja)).join('')}</select></label>`;
-  if(o.note) h+=`<span class="note">${o.note}</span>`;
-  return h+'</div>';
+  let h='';
+  if(o.note) h+=`<p class="viewnote"><svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>${o.note}</p>`;
+  h+=ctxChips(o.periodo===false);
+  if(o.caja){ h+=`<div class="fbar" style="display:flex;margin:4px 0 0"><label class="fl">Caja<select class="fi" onchange="setF('caja',this.value)"><option value="todas">Todas las cajas</option>${S.cajas.map(c=>`<option value="${c.id}" ${c.id===F.caja?'selected':''}>${esc(c.nombre)}</option>`).join('')}</select></label></div>`; }
+  return h;
+}
+function ctxChips(sinPeriodo){
+  const per=F.periodo==='todo'?'Todo el periodo':mesLabel(F.periodo);
+  const uni=F.unidad==='todas'?'Cortada y Nivel 0':UNIDADES[F.unidad];
+  const mon=F.moneda==='ambas'?'Soles y dólares':MONEDAS[F.moneda].nombre;
+  return `<div style="margin:6px 0 0">${sinPeriodo?'':`<span class="ctx-chip">Periodo <b>${per}</b></span>`}<span class="ctx-chip">Unidad <b>${uni}</b></span><span class="ctx-chip">Moneda <b>${mon}</b></span></div>`;
+}
+function renderSide(){
+  const ps=periodos(); const o=(v,t,c)=>`<option value="${v}" ${v===c?'selected':''}>${t}</option>`;
+  $('sideFilters').innerHTML=`<div class="side-group-label">Filtros</div>
+    <label>Periodo<select onchange="setF('periodo',this.value)">${o('todo','Todo el periodo',F.periodo)}${ps.map(p=>o(p,mesLabel(p),F.periodo)).join('')}</select></label>
+    <label>Unidad operativa<select onchange="setF('unidad',this.value)">${o('todas','Cortada y Nivel 0',F.unidad)}${o('cortada','Cortada',F.unidad)}${o('nivel0','Nivel 0',F.unidad)}</select></label>
+    <label>Moneda<select onchange="setF('moneda',this.value)">${o('ambas','Soles y dólares (separados)',F.moneda)}${o('PEN','Soles (S/)',F.moneda)}${o('USD','Dólares (US$)',F.moneda)}</select></label>`;
+  const ic=n=>`<svg class="icon"><use href="#${n}"/></svg>`;
+  $('sideActions').innerHTML=`<div class="side-group-label">Registrar</div>
+    <button class="side-act primary" onclick="openForm('compra')">${ic('i-plus')}Compra o gasto</button>
+    <button class="side-act" onclick="openForm('venta')">${ic('i-plus')}Venta de mineral</button>
+    <button class="side-act" onclick="openForm('mov',{tipo:'ingreso'})">${ic('i-plus')}Movimiento de caja</button>
+    <button class="side-act" onclick="activateView('cuotas')">${ic('i-coins')}Cobrar una cuota</button>`;
 }
 function setF(k,v){F[k]=v; renderAll();}
 const curHead=(m,sub)=>`<div class="cur-head"><span class="cur-tag">${MONEDAS[m].nombre} (${MONEDAS[m].sym})</span><span class="cur-sub">${sub||''}</span></div>`;
@@ -715,12 +780,18 @@ function renderTablero(){
     const saldo=r2(cajasMon(m).reduce((s,c)=>s+saldoCaja(c,hasta),0));
     const kp=(label,val,sub,spec,cls)=>`<div class="kpi click" onclick="drill(${dr(spec)})"><div class="kpi-label">${label}</div><div class="kpi-num mono ${cls||''}">${money(val,m)}</div><div class="kpi-sub">${sub}</div></div>`;
     h+=curHead(m, u==='todas'?'Ambas unidades':'Unidad '+UNIDADES[u]);
-    h+=`<div class="kpi-row sm">
-      ${kp('Ventas registradas',ven.val,'Aún no es dinero en caja',ven.spec)}
-      ${kp('Cobros recibidos',cob.val,'Ingresó a caja por ventas',cob.spec)}
-      ${kp('Pendiente de cobro',pen.val,'Ventas sin cobrar',pen.spec,pen.val>0?'':'')}
-      ${kp('Resultado de caja',res.val,'Ingresos − egresos · no es utilidad contable',res.spec,res.val>=0?'pos':'neg')}
-      ${kp('Saldo de caja',saldo,'Todas las cajas en '+MONEDAS[m].nombre.toLowerCase(),{kind:'saldo',f:{moneda:m,hasta},moneda:m,mixed:true,title:`Saldo de caja · ${MONEDAS[m].nombre} · ${per==='todo'?'a la fecha':'al cierre de '+mesLabel(per)}`})}
+    const ing=metric('ingresos',m,per,u), egr=metric('egresos',m,per,u);
+    const kp2=(label,val,sub,spec,cls,kc)=>kp(label,val,sub,spec,cls).replace('class="kpi click"',`class="kpi click ${kc||''}"`);
+    h+=`<div class="kpi-group">Ventas y cobros</div><div class="kpi-row sm">
+      ${kp2('Ventas registradas',ven.val,'Aún no es dinero en caja',ven.spec,'','k-acc')}
+      ${kp2('Cobros recibidos',cob.val,'Ingresó a caja por ventas',cob.spec,'pos','k-ok')}
+      ${kp2('Pendiente de cobro',pen.val,'Ventas sin cobrar',pen.spec,pen.val>0?'neg':'','k-warn')}
+    </div>
+    <div class="kpi-group">Caja</div><div class="kpi-row sm">
+      ${kp2('Ingresos',ing.val,'Todo lo que entró a caja',ing.spec,'pos','k-ok')}
+      ${kp2('Egresos',egr.val,'Todo lo que salió de caja',egr.spec,'neg','k-bad')}
+      ${kp2('Resultado de caja',res.val,'Ingresos − egresos · no es utilidad contable',res.spec,res.val>=0?'pos':'neg','k-acc')}
+      ${kp2('Saldo de caja',saldo,'Todas las cajas en '+MONEDAS[m].nombre.toLowerCase(),{kind:'saldo',f:{moneda:m,hasta},moneda:m,mixed:true,title:`Saldo de caja · ${MONEDAS[m].nombre} · ${per==='todo'?'a la fecha':'al cierre de '+mesLabel(per)}`},'','k-acc')}
     </div>`;
     /* comparación Cortada vs Nivel 0 */
     const rows=[['ventas','Ventas registradas'],['cobros','Cobros recibidos'],['ingresos','Ingresos de caja'],['egresos','Egresos de caja'],['resultado','Resultado de caja']];
@@ -751,7 +822,7 @@ const ORIGEN_LBL={compra:'Compra / gasto', venta:'Cobro de venta', cuota:'Abono 
 function movRow(m, opts={}){
   const t=terceroDe(m.terceroId), r=razonDe(m.razonId), c=cajaDe(m.cajaId);
   return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})">
-    <td>${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td>
+    <td class="dt">${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td>
     <td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${ORIGEN_LBL[m.origen.tipo]}${m.obs?' · '+esc(m.obs):''}</div></td>
     <td>${t?esc(t.alias||t.nombre):'—'}${r?`<div class="who-ci">${esc(r.nombre)}</div>`:''}</td>
     <td>${esc(m.docTipo)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td>
@@ -795,7 +866,7 @@ function renderVentas(){
     <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('venta')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar venta</button></div>
     <table><thead><tr><th>Fecha</th><th>Unidad</th><th>Accionista · razón social</th><th>Planta compradora</th><th>Liquidación · carga</th><th class="num">Monto</th><th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th><th></th></tr></thead><tbody>
     ${rows.length?rows.map(v=>{const a=terceroDe(v.accionistaId), r=razonDe(v.razonId), p=terceroDe(v.plantaId), pen=pendiente(v);
-      return `<tr onclick="ventaDetalle(${v.id})"><td>${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td>
+      return `<tr onclick="ventaDetalle(${v.id})"><td class="dt">${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td>
       <td>${esc(v.docNum)}<div class="who-ci">${esc(v.docTipo)} · carga ${esc(v.carga||'—')}</div></td>
       <td class="num amount">${money(v.monto,v.moneda)}</td><td class="num amount pos">${money(cobrado(v),v.moneda)}</td><td class="num amount ${pen>0?'neg':''}">${money(pen,v.moneda)}</td><td>${ventaEstado(v)}</td>
       <td>${pen>0?`<button class="btn btn-sm" onclick="event.stopPropagation();openForm('cobro',{ventaId:${v.id}})">Registrar cobro</button>`:''}</td></tr>`;}).join(''):emptyRow(10)}
@@ -815,7 +886,7 @@ function ventaDetalle(id){
       <div><div class="field-label">${esc(v.docTipo)} · carga</div><div class="field-val">${esc(v.docNum)} · ${esc(v.carga||'—')}</div></div>
     </div>
     <h2 style="font-size:14px; margin:6px 0 0;">Cobros registrados</h2>
-    <table><thead><tr><th>Fecha</th><th>Caja</th><th>Documento</th><th class="num">Monto</th></tr></thead><tbody>${cs.length?cs.map(c=>`<tr onclick="docMov(${c.id})"><td>${fechaTxt(c.fecha)}</td><td>${esc(cajaDe(c.cajaId).nombre)}</td><td>${esc(c.docTipo)} ${esc(c.docNum)}</td><td class="num amount pos">${money(c.monto,c.moneda)}</td></tr>`).join(''):emptyRow(4,'Aún no se registró ningún cobro: la caja no ha cambiado por esta venta.')}</tbody></table>
+    <table><thead><tr><th>Fecha</th><th>Caja</th><th>Documento</th><th class="num">Monto</th></tr></thead><tbody>${cs.length?cs.map(c=>`<tr onclick="docMov(${c.id})"><td class="dt">${fechaTxt(c.fecha)}</td><td>${esc(cajaDe(c.cajaId).nombre)}</td><td>${esc(c.docTipo)} ${esc(c.docNum)}</td><td class="num amount pos">${money(c.monto,c.moneda)}</td></tr>`).join(''):emptyRow(4,'Aún no se registró ningún cobro: la caja no ha cambiado por esta venta.')}</tbody></table>
     ${pendiente(v)>0?`<div><button class="btn btn-primary" onclick="closeModal('modal-detail');openForm('cobro',{ventaId:${v.id}})">Registrar cobro</button></div>`:''}`;
   showDetail('Venta '+v.docNum, body, true);
 }
@@ -837,7 +908,7 @@ function renderCompras(){
     <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('compra')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar compra o gasto</button></div>
     <table><thead><tr><th>Fecha</th><th>Unidad</th><th>Categoría · concepto</th><th>Proveedor</th><th>Documento</th><th>Caja</th><th class="num">Monto</th></tr></thead><tbody>
     ${rows.length?rows.map(m=>{const t=terceroDe(m.terceroId),c=cajaDe(m.cajaId);
-      return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})"><td>${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td><td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${esc(m.obs)}</div></td><td>${t?esc(t.nombre):'<span class="who-ci">Planilla interna</span>'}</td><td>${esc(m.docTipo)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td><td>${esc(c.nombre)}</td><td class="num amount neg">${money(m.monto,m.moneda)}</td></tr>`;}).join(''):emptyRow(7)}
+      return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})"><td class="dt">${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td><td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${esc(m.obs)}</div></td><td>${t?esc(t.nombre):'<span class="who-ci">Planilla interna</span>'}</td><td>${esc(m.docTipo)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td><td>${esc(c.nombre)}</td><td class="num amount neg">${money(m.monto,m.moneda)}</td></tr>`;}).join(''):emptyRow(7)}
     </tbody></table></div>`;
   $('view-compras').innerHTML=h;
 }
@@ -988,7 +1059,7 @@ function drill(i){
     const rows=selVentas(sp.f).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id); n=rows.length;
     total=r2(rows.reduce((s,v)=>s+(sp.campo==='pendiente'?pendiente(v):v.monto),0));
     body=`<table><thead><tr><th>Fecha</th><th>Unidad</th><th>Accionista · razón social</th><th>Planta</th><th>Liquidación</th><th class="num">Monto</th><th class="num">Cobrado</th><th class="num">Pendiente</th></tr></thead><tbody>${rows.map(v=>{const a=terceroDe(v.accionistaId),r=razonDe(v.razonId),p=terceroDe(v.plantaId);
-      return `<tr onclick="ventaDetalle(${v.id})"><td>${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td><td>${esc(v.docNum)}</td><td class="num amount">${money(v.monto,v.moneda)}</td><td class="num amount pos">${money(cobrado(v),v.moneda)}</td><td class="num amount">${money(pendiente(v),v.moneda)}</td></tr>`;}).join('')||emptyRow(8)}</tbody></table>`;
+      return `<tr onclick="ventaDetalle(${v.id})"><td class="dt">${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td><td>${esc(v.docNum)}</td><td class="num amount">${money(v.monto,v.moneda)}</td><td class="num amount pos">${money(cobrado(v),v.moneda)}</td><td class="num amount">${money(pendiente(v),v.moneda)}</td></tr>`;}).join('')||emptyRow(8)}</tbody></table>`;
     nota='Haz clic en una venta para ver sus cobros.';
   } else if(sp.kind==='cuotas'){
     const rows=selCuotas(sp.f); n=rows.length;
@@ -1257,7 +1328,7 @@ function toast(msg,kind='ok'){
 
 function renderAll(){
   DR=[];
-  renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderReportes();
+  renderSide(); renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderReportes();
 }
 S=load();
 renderAll();
