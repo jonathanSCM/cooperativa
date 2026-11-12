@@ -12,3 +12,6 @@
 10. Acreedores, intereses y cotización del oro del sistema anterior: validar si este cliente los necesita (no incluidos).
 11. Fuera de alcance de la demo, a cotizar aparte si aplica: migración del Excel, contabilidad formal, facturación electrónica, banco, lectura de PDF, cálculo de liquidaciones, inventario, cálculo de planillas.
 12. Insumos a solicitar: el Excel mostrado y una liquidación de ejemplo con datos sensibles ocultos.
+13. Documentos: en la demo las fotos y PDF se guardan solo en el navegador (con límite de tamaño). Definir dónde se almacenarán, cuánto tiempo y quién puede verlos.
+14. Inteligencia comercial: confirmar qué indicadores necesita Yuri (hoy: ranking de plantas, plazo medio de cobro, antigüedad de pendientes, participación por accionista).
+15. Punto de partida: fecha de inicio y saldos iniciales reales de cada caja.

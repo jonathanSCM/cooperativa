@@ -2,6 +2,9 @@
 
 Dentro de Veta (`index.html`), grupo **Virgen de Copacabana** del menú lateral. Antes de empezar: **Restablecer datos** (panel de filtros de cualquiera de esas pantallas). Todos los datos son ficticios.
 
+## 0. Recorrido guiado (opcional, 1 min)
+Botón **Recorrido guiado** (arriba a la derecha) o «Hacer el recorrido» en la franja verde: oscurece la pantalla y explica cada zona paso a paso (17 pasos). Útil para que Tatiana lo haga sola.
+
 ## 1. Apertura (1 min)
 - Objetivo: reemplazar los Excel dispersos por un sistema único de ingresos, egresos, ventas de mineral, cuotas y saldos.
 - Tatiana valida lo fácil que es registrar; Yuri revisa los resultados consolidados.
@@ -32,6 +35,13 @@ Dentro de Veta (`index.html`), grupo **Virgen de Copacabana** del menú lateral.
 1. Tablero → filtrar un mes → comparar Cortada y Nivel 0.
 2. Hacer clic en un total: se abre la lista de movimientos que lo componen (con su conteo y suma).
 3. Clic en un movimiento: documento de ejemplo.
+
+## 6b. Extras que conviene mostrar (2 min)
+- **Buscador** (arriba): escribir «factura», un monto o un nombre → abre movimientos, ventas, accionistas o documentos.
+- **Filtro por fechas**: mes, últimos 30 días o rango personalizado.
+- **Documentos**: *Subir documento* o *Tomar foto* de un recibo → se ve en la galería y en su movimiento (📎).
+- **Punto de partida**: *Caja y movimientos → Editar saldos iniciales*.
+- **Inteligencia comercial** (al final de *Ventas de mineral*): plantas, plazo medio de cobro, antigüedad de lo pendiente.
 
 ## 7. Cierre (1 min)
 - *Accionistas y terceros*: razones sociales, proveedores y plantas compradoras diferenciados.
