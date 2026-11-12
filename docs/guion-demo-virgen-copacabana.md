@@ -1,6 +1,6 @@
 # Guion de presentación (10–15 min) — Demo Virgen de Copacabana
 
-Dentro de Veta (`index.html`), grupo **Virgen de Copacabana** del menú lateral. Antes de empezar: **Restablecer datos** (panel de filtros de cualquiera de esas pantallas). Todos los datos son ficticios.
+Todo está en `index.html` (menú lateral). Antes de empezar: **Restablecer datos** (panel de filtros de cualquiera de esas pantallas). Todos los datos son ficticios.
 
 ## 0. Recorrido guiado (opcional, 1 min)
 Botón **Recorrido guiado** (arriba a la derecha) o «Hacer el recorrido» en la franja verde: oscurece la pantalla y explica cada zona paso a paso (17 pasos). Útil para que Tatiana lo haga sola.
@@ -42,6 +42,8 @@ Botón **Recorrido guiado** (arriba a la derecha) o «Hacer el recorrido» en la
 - **Documentos**: *Subir documento* o *Tomar foto* de un recibo → se ve en la galería y en su movimiento (📎).
 - **Punto de partida**: *Caja y movimientos → Editar saldos iniciales*.
 - **Inteligencia comercial** (al final de *Ventas de mineral*): plantas, plazo medio de cobro, antigüedad de lo pendiente.
+
+- **Tipo de cambio** (Análisis): precio del dólar con gráfico de 7/30/90 días; elegir entre el precio de la API o un valor manual. Soles y dólares siguen separados.
 
 ## 7. Cierre (1 min)
 - *Accionistas y terceros*: razones sociales, proveedores y plantas compradoras diferenciados.

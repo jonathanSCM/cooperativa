@@ -2,7 +2,7 @@
 
 1. ¿Cortada y Nivel 0 son solo unidades operativas o empresas con RUC distintos? (hoy se tratan como unidades)
 2. Campos técnicos de la venta de mineral (leyes, peso, humedad, descuentos, etc.): definir con el Excel real y una liquidación de ejemplo.
-3. Tipo de cambio: ¿se necesita consolidar soles y dólares? ¿Cuál tipo de cambio y quién lo define?
+3. Tipo de cambio: la demo ya permite elegir entre el precio de una API gratuita (currency-api, diario) o un valor manual, y solo lo usa para equivalentes de referencia (nunca suma soles con dólares). Confirmar si el cliente necesita consolidar, qué fuente oficial usar (p. ej. SBS/SUNAT) y quién define el valor.
 4. Cajas reales: lista, moneda y saldos iniciales (la demo usa 2 de soles y 2 de dólares, ficticias).
 5. Categorías de gasto definitivas (la demo usa contratistas, ferretería, alimentación, combustible, madera, explosivos y planillas).
 6. Cuotas: periodicidad, monto por accionista, vencimientos, intereses o penalidades si los hubiera.
@@ -16,3 +16,4 @@
 14. Inteligencia comercial: confirmar qué indicadores necesita Yuri (hoy: ranking de plantas, plazo medio de cobro, antigüedad de pendientes, participación por accionista).
 15. Punto de partida: fecha de inicio y saldos iniciales reales de cada caja.
 16. Moneda: la demo arranca en soles. Los dólares quedan como opción de filtro porque el PDF pide ambas monedas; confirmar si el cliente necesita dólares o solo soles.
+17. API de precios: la demo consulta una API pública gratuita sin garantía de disponibilidad. Para producción conviene un proveedor con contrato o la fuente oficial.

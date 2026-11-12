@@ -372,6 +372,18 @@ section[id^="view-vm_"] td:last-child, section[id^="view-vm_"] th:last-child{pad
 section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 
 
+
+/* ---------- tipo de cambio ---------- */
+.fx-cfg{display:flex; gap:12px 18px; flex-wrap:wrap; align-items:center; padding:16px 20px;}
+.fx-badge{display:inline-block; font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; background:var(--accent-soft); color:var(--accent);}
+.fx-badge.man{background:var(--gold-soft); color:var(--gold);} .fx-badge.warn{background:var(--warn-soft); color:var(--warn);}
+.fx-chart{position:relative; padding:8px 14px 4px;}
+.fx-chart svg{width:100%; height:auto; display:block; overflow:visible;}
+.fx-tip{position:absolute; pointer-events:none; background:var(--ink); color:var(--bg); font-size:11.5px; padding:5px 9px; border-radius:7px; display:none; white-space:nowrap; transform:translate(-50%,-120%); z-index:3;}
+.fx-stats{display:flex; gap:22px; flex-wrap:wrap; padding:6px 20px 16px; font-size:12px; color:var(--ink-dim);} .fx-stats b{color:var(--ink); font-weight:600;}
+.up{color:var(--ok);} .down{color:var(--bad);}
+.fx-conv{display:flex; gap:10px; flex-wrap:wrap; align-items:center; padding:16px 20px 6px;}
+@media (max-width:980px){ .fx-cfg{padding:14px;} }
 /* ---------- barra global de filtros ---------- */
 .vm-filters{position:sticky; top:60px; z-index:15; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:10px 16px 8px; margin:0 0 16px; box-shadow:var(--shadow);}
 .vf-row{display:flex; flex-wrap:wrap; gap:8px 22px; align-items:center;}
@@ -524,17 +536,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 
       <div class="side-group-label">Análisis</div>
       <button class="side-item" data-view="vm_reportes"><svg class="icon"><use href="#i-chart"/></svg><span class="lbl">Reportes y resúmenes</span></button>
-
-      <button class="side-group-label side-old" id="oldToggle" onclick="toggleOldNav()">Sistema anterior · fuera del alcance <span id="oldArrow">▸</span></button>
-      <div id="oldNav" style="display:none">
-      <button class="side-item" data-view="dashboard"><svg class="icon"><use href="#i-grid"/></svg><span class="lbl">Dashboard</span></button>
-      <button class="side-item" data-view="acreedores"><svg class="icon"><use href="#i-users"/></svg><span class="lbl">Acreedores</span></button>
-      <button class="side-item" data-view="produccion"><svg class="icon"><use href="#i-pickaxe"/></svg><span class="lbl">Producción</span></button>
-      <button class="side-item" data-view="tesoreria"><svg class="icon"><use href="#i-wallet"/></svg><span class="lbl">Tesorería</span></button>
-      <button class="side-item" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg><span class="lbl">Reportes</span></button>
-      <button class="side-item" data-view="auditoria"><svg class="icon"><use href="#i-shield"/></svg><span class="lbl">Auditoría</span></button>
-      <button class="side-item" data-view="configuracion"><svg class="icon"><use href="#i-settings"/></svg><span class="lbl">Configuración</span></button>
-      </div>
+      <button class="side-item" data-view="vm_cambio"><svg class="icon"><use href="#i-refresh"/></svg><span class="lbl">Tipo de cambio</span></button>
     </nav>
     <div class="sidebar-foot">
       <div class="userchip">
@@ -819,6 +821,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
   <section class="view" id="view-vm_terceros"></section>
   <section class="view" id="view-vm_documentos"></section>
   <section class="view" id="view-vm_reportes"></section>
+  <section class="view" id="view-vm_cambio"></section>
     </main>
   </div>
 </div>
@@ -2324,7 +2327,7 @@ function renderFiltros(){
     <div class="vf-g"><span class="vf-l">Unidad operativa</span>${pill('unidad',[['todas','Todas'],['cortada','Cortada'],['nivel0','Nivel 0']])}</div>
     <div class="vf-g"><span class="vf-l">Moneda</span>${pill('moneda',[['PEN','Soles'],['USD','Dólares'],['ambas','Ambas']])}</div>
     <button class="btn btn-sm" onclick="limpiarFiltros()">Limpiar filtros</button></div>
-  <div class="vf-sum">Mostrando: <b>${(!a&&!b)?'Todo el periodo':mesLabel(a+'..'+b)}</b> · <b>${uni}</b> · <b>${mon}</b> <span style="color:var(--ink-faint)">· Soles y dólares nunca se suman: consolidarlos requiere un tipo de cambio definido (por confirmar).</span></div>`;
+  <div class="vf-sum">Mostrando: <b>${(!a&&!b)?'Todo el periodo':mesLabel(a+'..'+b)}</b> · <b>${uni}</b> · <b>${mon}</b> ${fxNota()}</div>`;
 }
 function limpiarFiltros(){ F.periodo='todo'; F.unidad='todas'; F.moneda='PEN'; F.caja='todas'; F.dq=''; vmRenderAll(); }
 function setPeriodo(v){
@@ -3076,6 +3079,7 @@ Object.assign(NAV_TITLES,{
   vm_cuotas:['Virgen de Copacabana','Cuotas de accionistas','Cuota asignada, abonos recibidos y saldo pendiente por accionista.'],
   vm_terceros:['Virgen de Copacabana','Accionistas y terceros','Accionistas con sus razones sociales, además de proveedores y plantas compradoras.'],
   vm_documentos:['Virgen de Copacabana','Documentos','Fotos y archivos de recibos, facturas y comprobantes de pago, para verlos sin salir del sistema.'],
+  vm_cambio:['Virgen de Copacabana','Tipo de cambio','Precio del dólar y de otras monedas frente al sol, con su gráfico. Elige si el sistema usa el precio de la API o un valor manual.'],
   vm_reportes:['Virgen de Copacabana','Reportes y resúmenes','Totales por unidad, accionista, categoría y caja, con acceso al detalle de cada importe.'],
 });
 function openModal(id){ $('overlay').classList.add('show'); $(id).classList.add('show'); }
@@ -3097,11 +3101,149 @@ function vmToast(msg,kind='ok'){
 
 function vmRenderAll(){
   DR=[]; renderFiltros();
-  renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderDocumentos(); renderReportes();
+  renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderDocumentos(); renderReportes(); renderCambio();
 }
+
+/* ================= tipo de cambio (API gratuita + manual) ================= */
+const FXKEY='virgen-copacabana-fx-v1';
+const FX_SRC=['https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@{v}/v1/currencies/usd.json','https://{v}.currency-api.pages.dev/v1/currencies/usd.json'];
+const FX_MON=[['usd','Dólar estadounidense'],['eur','Euro'],['gbp','Libra esterlina'],['brl','Real brasileño'],['clp','Peso chileno'],['cop','Peso colombiano'],['mxn','Peso mexicano'],['ars','Peso argentino'],['bob','Boliviano'],['cny','Yuan chino'],['jpy','Yen japonés'],['chf','Franco suizo'],['cad','Dólar canadiense']];
+let FX={fuente:'api', manual:3.75, manualFecha:null, api:null, cache:{}, rango:30, par:'usd', estado:'', cargando:false};
+function fxLoad(){ try{ const r=JSON.parse(localStorage.getItem(FXKEY)||'null'); if(r) FX=Object.assign(FX,r,{cargando:false,estado:''}); }catch(e){} if(!FX.manualFecha) FX.manualFecha=hoyISO(); }
+function fxSave(){ try{ localStorage.setItem(FXKEY,JSON.stringify({fuente:FX.fuente,manual:FX.manual,manualFecha:FX.manualFecha,api:FX.api,cache:FX.cache,rango:FX.rango,par:FX.par})); }catch(e){} }
+async function fxFetch(v){
+  let ult; for(const tpl of FX_SRC){ try{ const r=await fetch(tpl.replace('{v}',v)); if(r.ok){ const j=await r.json(); if(j&&j.usd&&j.usd.pen) return j; } }catch(e){ ult=e; } }
+  throw ult||new Error('sin respuesta');
+}
+function fxPick(usd){ const o={pen:usd.pen}; FX_MON.forEach(([c])=>{ if(usd[c]) o[c]=usd[c]; }); return o; }
+function fxPrecio(code,r){ const u=r[code]; return (r&&r.pen&&u)?r.pen/u:NaN; }
+function fxEnUso(){
+  if(FX.fuente==='api'&&FX.api&&FX.api.valor>0) return {valor:FX.api.valor,fuente:'api',fecha:FX.api.fecha,etiqueta:'API automática'};
+  if(FX.manual>0) return {valor:FX.manual,fuente:'manual',fecha:FX.manualFecha,etiqueta:FX.fuente==='api'?'Manual (la API no respondió)':'Manual'};
+  return null;
+}
+const fxDec=v=>v<0.1?6:(v<10?4:2);
+const fxFmt=v=>isFinite(v)?v.toLocaleString('es-PE',{minimumFractionDigits:fxDec(v),maximumFractionDigits:fxDec(v)}):'—';
+function fxNota(){
+  const u=fxEnUso(); const txt=u?`S/ ${fxFmt(u.valor)} (${u.fuente==='api'?'API':'manual'})`:'sin definir';
+  return `<span style="color:var(--ink-faint)">· Soles y dólares nunca se suman. Tipo de cambio de referencia: <a href="#" onclick="activateView('vm_cambio');return false;" style="color:var(--accent);font-weight:600">${txt}</a></span>`;
+}
+async function fxActualizar(){
+  FX.cargando=true;
+  try{
+    const j=await fxFetch('latest'); const d=j.date; FX.cache[d]=fxPick(j.usd); FX.api={valor:j.usd.pen,fecha:d,ts:Date.now()};
+    const prev=addDays(d,-1); if(!FX.cache[prev]){ try{ const jp=await fxFetch(prev); FX.cache[prev]=fxPick(jp.usd); }catch(e){} }
+    FX.estado='';
+  }catch(e){ FX.estado='No se pudo contactar con la API de precios. Se usa el último valor guardado.'; }
+  FX.cargando=false; fxSave(); vmRenderAll();
+}
+async function fxCargarHistorial(){
+  const hoy=hoyISO(), step=FX.rango<=7?1:(FX.rango<=30?2:6); const fechas=[];
+  for(let k=step;k<=FX.rango;k+=step) fechas.push(addDays(hoy,-k));
+  const faltan=fechas.filter(d=>!FX.cache[d]); if(!faltan.length){ renderCambio(); return; }
+  FX.cargando=true; renderCambio();
+  const res=await Promise.allSettled(faltan.map(d=>fxFetch(d).then(j=>[d,fxPick(j.usd)])));
+  let falla=0; res.forEach(r=>{ if(r.status==='fulfilled') FX.cache[r.value[0]]=r.value[1]; else falla++; });
+  FX.cargando=false; if(falla===faltan.length) FX.estado='No se pudo cargar el historial. Revisa tu conexión.'; fxSave(); renderCambio();
+}
+function fxRefrescar(){ fxActualizar().then(()=>{ fxCargarHistorial(); vmToast(FX.estado||'Precio actualizado desde la API', FX.estado?'bad':'ok'); }); }
+function setFxFuente(f){ FX.fuente=f; fxSave(); vmRenderAll(); const u=fxEnUso(); vmToast(f==='api'?'El sistema usará el precio de la API'+(u&&u.fuente==='api'?' (S/ '+fxFmt(u.valor)+')':''):'El sistema usará tu valor manual (S/ '+fxFmt(FX.manual)+')'); }
+function guardarManual(){
+  const v=parseFloat($('fxManual').value);
+  if(!(v>0)||v>100) return vmToast('Escribe un tipo de cambio válido (por ejemplo 3.75)','bad');
+  FX.manual=v; FX.manualFecha=hoyISO(); fxSave(); vmRenderAll(); vmToast('Valor manual guardado: S/ '+fxFmt(v)+' por US$ 1');
+}
+function setFxRango(d){ FX.rango=d; fxSave(); fxCargarHistorial(); }
+function setFxPar(c){ FX.par=c; fxSave(); renderCambio(); }
+function fxSerie(){
+  const hoy=hoyISO(), ini=addDays(hoy,-FX.rango);
+  return Object.keys(FX.cache).filter(d=>d>=ini&&d<=hoy).sort().map(d=>({d,v:fxPrecio(FX.par,FX.cache[d])})).filter(x=>isFinite(x.v));
+}
+let FXPTS=[]; const FXW=700, FXH=270, FXL=58, FXR=16, FXT=14, FXB=30;
+function fxChart(){
+  const s=fxSerie(); FXPTS=[];
+  if(s.length<2) return `<div class="empty">${FX.cargando?'Cargando historial…':(FX.estado||'Todavía no hay historial. Pulsa «Actualizar ahora».')}</div>`;
+  const manual=(FX.par==='usd'&&FX.manual>0)?FX.manual:null;
+  let mn=Math.min(...s.map(x=>x.v)), mx=Math.max(...s.map(x=>x.v)); const prom=(mn+mx)/2; const manualEnEscala=manual&&Math.abs(manual/prom-1)<0.06; if(manualEnEscala){ mn=Math.min(mn,manual); mx=Math.max(mx,manual); }
+  const pad=((mx-mn)||mx*0.01)*0.18; mn-=pad; mx+=pad;
+  const X=i=>FXL+(FXW-FXL-FXR)*i/(s.length-1), Y=v=>FXT+(FXH-FXT-FXB)*(1-(v-mn)/(mx-mn));
+  s.forEach((p,i)=>FXPTS.push({x:X(i),y:Y(p.v),d:p.d,v:p.v}));
+  const line=FXPTS.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ');
+  const area=line+` L${X(s.length-1).toFixed(1)} ${FXH-FXB} L${FXL} ${FXH-FXB} Z`;
+  let grid=''; for(let k=0;k<=4;k++){ const v=mn+(mx-mn)*k/4, y=Y(v); grid+=`<line x1="${FXL}" x2="${FXW-FXR}" y1="${y}" y2="${y}" style="stroke:var(--border)"/><text x="${FXL-8}" y="${y+4}" text-anchor="end" font-size="11" style="fill:var(--ink-faint)">${fxFmt(v)}</text>`; }
+  let xt=''; const nt=Math.min(5,s.length); for(let k=0;k<nt;k++){ const i=Math.round((s.length-1)*k/(nt-1)); xt+=`<text x="${X(i)}" y="${FXH-8}" text-anchor="${k===0?'start':(k===nt-1?'end':'middle')}" font-size="11" style="fill:var(--ink-faint)">${fechaTxt(s[i].d)}</text>`; }
+  const manFuera=manual&&!manualEnEscala?`<text x="${FXW-FXR}" y="${FXT+12}" text-anchor="end" font-size="11" font-weight="600" style="fill:var(--gold)">Manual S/ ${fxFmt(manual)} ${manual>mx?'▲ fuera de escala':'▼ fuera de escala'}</text>`:'';
+  const man=manualEnEscala?`<line x1="${FXL}" x2="${FXW-FXR}" y1="${Y(manual)}" y2="${Y(manual)}" style="stroke:var(--gold)" stroke-dasharray="6 4" stroke-width="1.6"/><text x="${FXW-FXR}" y="${Y(manual)-6}" text-anchor="end" font-size="11" font-weight="600" style="fill:var(--gold)">Manual S/ ${fxFmt(manual)}</text>`:'';
+  return `<div class="fx-chart"><svg viewBox="0 0 ${FXW} ${FXH}" onmousemove="fxHover(event)" onmouseleave="fxOut()" ontouchmove="fxHover(event.touches[0])">
+    ${grid}${xt}${man}${manFuera}<path d="${area}" style="fill:var(--accent); opacity:.1"/><path d="${line}" fill="none" style="stroke:var(--accent)" stroke-width="2.2" stroke-linejoin="round"/>
+    <line id="fxGuide" y1="${FXT}" y2="${FXH-FXB}" style="stroke:var(--ink-faint)" stroke-dasharray="3 3" visibility="hidden"/><circle id="fxDot" r="5" style="fill:var(--accent);stroke:var(--surface)" stroke-width="2" visibility="hidden"/></svg><div class="fx-tip" id="fxTip"></div></div>`;
+}
+function fxHover(e){
+  const svg=document.querySelector('.fx-chart svg'); if(!svg||!FXPTS.length) return;
+  const r=svg.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width*FXW;
+  let best=0,bd=1e9; FXPTS.forEach((p,i)=>{ const d=Math.abs(p.x-x); if(d<bd){bd=d;best=i;} }); const p=FXPTS[best];
+  const g=$('fxGuide'), dot=$('fxDot'), tip=$('fxTip');
+  g.setAttribute('x1',p.x); g.setAttribute('x2',p.x); g.setAttribute('visibility','visible'); dot.setAttribute('cx',p.x); dot.setAttribute('cy',p.y); dot.setAttribute('visibility','visible');
+  tip.style.display='block'; tip.style.left=(p.x/FXW*r.width+14)+'px'; tip.style.top=(p.y/FXH*r.height+8)+'px'; tip.innerHTML=`<b>S/ ${fxFmt(p.v)}</b> · ${fechaTxt(p.d)}`;
+}
+function fxOut(){ ['fxGuide','fxDot'].forEach(i=>{const e=$(i); if(e) e.setAttribute('visibility','hidden');}); const t=$('fxTip'); if(t) t.style.display='none'; }
+function fxConv(){
+  const u=fxEnUso(); const el=$('fxRes'); if(!el||!u) return; const a=parseFloat($('fxAmt').value)||0; const dir=$('fxDir').value;
+  el.innerHTML=dir==='usd'?`US$ ${fmtN(a)} ≈ <b>S/ ${fmtN(a*u.valor)}</b>`:`S/ ${fmtN(a)} ≈ <b>US$ ${fmtN(a/u.valor)}</b>`;
+}
+function renderCambio(){
+  const el=$('view-vm_cambio'); if(!el) return;
+  const u=fxEnUso(); const api=FX.api; const hoy=hoyISO();
+  const prevD=api?Object.keys(FX.cache).filter(d=>d<api.fecha).sort().pop():null;
+  const varPct=(api&&prevD)?(api.valor/FX.cache[prevD].pen-1)*100:null;
+  const kp=(l,big,sub,cls)=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-num mono ${cls||''}">${big}</div><div class="kpi-sub">${sub}</div></div>`;
+  let h=`<div class="kpi-row sm">
+    ${kp('Tipo de cambio en uso',u?'S/ '+fxFmt(u.valor):'—',u?`<span class="fx-badge ${u.fuente==='manual'?'man':''}">${u.etiqueta}</span> por US$ 1`:'Define un valor manual','pos')}
+    ${kp('Precio de la API',api?'S/ '+fxFmt(api.valor):'—',api?`${fechaTxt(api.fecha)}${varPct!=null?` · <span class="${varPct>=0?'up':'down'}">${varPct>=0?'▲':'▼'} ${Math.abs(varPct).toFixed(2)}% vs día anterior</span>`:''}`:(FX.cargando?'Consultando…':'Sin datos todavía'))}
+    ${kp('Valor manual',FX.manual>0?'S/ '+fxFmt(FX.manual):'—','Definido el '+fechaTxt(FX.manualFecha||hoy))}
+  </div>
+  ${FX.estado?`<p class="viewnote" style="margin-top:12px"><span class="fx-badge warn">Aviso</span> ${FX.estado}</p>`:''}
+  <div class="panel tour-main" style="margin-top:16px;"><div class="panel-head"><h2>¿Qué tipo de cambio usa el sistema?</h2><span class="hint">Se aplica a los equivalentes en soles de referencia</span></div>
+    <div class="fx-cfg">
+      <div class="subtoggle" style="margin:0"><button class="${FX.fuente==='api'?'active':''}" onclick="setFxFuente('api')">Precio de la API (automático)</button><button class="${FX.fuente==='manual'?'active':''}" onclick="setFxFuente('manual')">Valor manual</button></div>
+      <label class="fl" style="flex-direction:row; align-items:center; gap:8px;">Valor manual (S/ por US$ 1)<input class="fi" id="fxManual" type="number" step="0.0001" min="0" value="${FX.manual||''}" style="width:120px"></label>
+      <button class="btn btn-sm btn-primary" onclick="guardarManual()">Guardar valor manual</button>
+      <button class="btn btn-sm" onclick="fxRefrescar()"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg>${FX.cargando?'Actualizando…':'Actualizar ahora'}</button>
+    </div>
+    <div style="padding:0 20px 16px;" class="hint-block">Fuente de la API: <b>currency-api</b> (gratuita, sin clave, precios diarios). Los registros en dólares y en soles <b>siempre se guardan y se muestran por separado</b>; el tipo de cambio solo sirve para equivalentes de referencia.</div>
+  </div>`;
+  /* gráfico */
+  const s=fxSerie(); const first=s[0], last=s[s.length-1]; const vals=s.map(x=>x.v);
+  const par=FX_MON.find(x=>x[0]===FX.par);
+  h+=`<div class="panel" style="margin-top:16px;"><div class="panel-head" style="flex-wrap:wrap; row-gap:8px;"><h2>Evolución · ${par[1]} en soles</h2>
+    <select class="fi" style="padding:6px 9px; font-size:12px; margin-left:auto;" onchange="setFxPar(this.value)">${FX_MON.map(([c,n])=>`<option value="${c}" ${c===FX.par?'selected':''}>${n}</option>`).join('')}</select>
+    <div class="subtoggle" style="margin:0">${[7,30,90].map(d=>`<button class="${FX.rango===d?'active':''}" onclick="setFxRango(${d})">${d} días</button>`).join('')}</div></div>
+    ${fxChart()}
+    ${s.length>1?`<div class="fx-stats"><span>Mínimo <b>S/ ${fxFmt(Math.min(...vals))}</b></span><span>Máximo <b>S/ ${fxFmt(Math.max(...vals))}</b></span><span>Promedio <b>S/ ${fxFmt(vals.reduce((a,b)=>a+b,0)/vals.length)}</b></span><span>Variación <b class="${last.v>=first.v?'up':'down'}">${((last.v/first.v-1)*100).toFixed(2)}%</b></span></div>`:''}</div>`;
+  /* convertidor + equivalentes */
+  const usdSaldo=r2(cajasMon('USD').reduce((s,c)=>s+saldoCaja(c),0)), usdIng=sm(selMovs({moneda:'USD',tipo:'ingreso'})), usdPen=r2(selVentas({moneda:'USD',pendiente:true}).reduce((s,v)=>s+pendiente(v),0));
+  const eq=(l,v)=>`<tr style="cursor:default"><td>${l}</td><td class="num amount">${money(v,'USD')}</td><td class="num amount">${u?money(v*u.valor,'PEN'):'—'}</td></tr>`;
+  h+=`<div class="grid-eq" style="margin-top:16px;">
+    <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Convertidor</h2><span class="hint">Con el tipo de cambio en uso</span></div>
+      <div class="fx-conv"><input class="fi" id="fxAmt" type="number" min="0" step="0.01" value="100" oninput="fxConv()" style="width:130px"><select class="fi" id="fxDir" onchange="fxConv()"><option value="usd">De dólares a soles</option><option value="pen">De soles a dólares</option></select></div>
+      <div id="fxRes" style="padding:6px 20px 18px; font-size:18px;"></div></div>
+    <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Tus importes en dólares, en soles de referencia</h2></div>
+      <table><thead><tr><th>Concepto</th><th class="num">En dólares</th><th class="num">Equivalente en soles</th></tr></thead><tbody>${eq('Saldo de cajas en dólares',usdSaldo)}${eq('Ingresos en dólares (todo el periodo)',usdIng)}${eq('Ventas en dólares por cobrar',usdPen)}</tbody></table>
+      <div class="hint-block" style="margin:12px 16px 16px;">Equivalentes solo de referencia: <b>no se suman</b> a los importes en soles.</div></div>
+  </div>`;
+  /* tabla de monedas */
+  const filas=FX_MON.map(([c,n])=>{ const a=api?FX.cache[api.fecha]:null; const v=a?fxPrecio(c,a):NaN; const pv=(prevD&&FX.cache[prevD])?fxPrecio(c,FX.cache[prevD]):NaN; const ch=(isFinite(v)&&isFinite(pv))?(v/pv-1)*100:null;
+    return `<tr onclick="setFxPar('${c}')" class="${c===FX.par?'audit-new':''}"><td><div class="who-name">${n}</div><div class="who-ci">${c.toUpperCase()}</div></td><td class="num amount">S/ ${fxFmt(v)}</td><td class="num">${ch==null?'—':`<span class="${ch>=0?'up':'down'}">${ch>=0?'▲':'▼'} ${Math.abs(ch).toFixed(2)}%</span>`}</td></tr>`; }).join('');
+  h+=`<div class="panel" style="margin-top:16px;"><div class="panel-head"><h2>Precio de otras monedas en soles</h2><span class="hint">${api?'Al '+fechaTxt(api.fecha)+' · toca una fila para graficarla':'Sin datos'}</span></div>
+    <table><thead><tr><th>Moneda</th><th class="num">Precio (S/ por 1)</th><th class="num">Var. 1 día</th></tr></thead><tbody>${filas}</tbody></table></div>`;
+  el.innerHTML=h; fxConv();
+}
+fxLoad();
+
 loadFiles();
 S=load();
 vmRenderAll();
+fxActualizar();
 
 /* ================= búsqueda global ================= */
 function buscar(q){
@@ -3159,6 +3301,7 @@ const TOUR=[
   {v:'vm_terceros', sel:'#view-vm_terceros .tour-main', t:'Accionistas y terceros', x:'Accionistas con sus iniciales y razones sociales, y además proveedores y plantas compradoras, claramente separados.'},
   {v:'vm_documentos', sel:'#view-vm_documentos .tour-main', t:'Documentos', x:'Sube o toma una foto de recibos, facturas y comprobantes de pago, y míralos aquí mismo. Cada archivo queda ligado a su movimiento o venta.'},
   {v:'vm_reportes', sel:'#view-vm_reportes .tour-main', t:'Reportes y resúmenes', x:'Ingresos y egresos por unidad, ventas por accionista, gastos por categoría, movimientos de caja y cuotas pendientes. Cada total se abre hasta su detalle.'},
+  {v:'vm_cambio', sel:'#view-vm_cambio .tour-main', t:'Tipo de cambio', x:'Aquí ves el precio del dólar con su gráfico (se actualiza solo desde una API gratuita) y eliges si el sistema usa ese precio o un valor que definas tú. Soles y dólares siguen separados: el tipo de cambio solo da equivalentes de referencia.'},
   {v:'vm_tablero', sel:'#view-vm_tablero .tour-reset', t:'Listo para practicar', x:'Registra lo que quieras: es una demo con datos ficticios. Cuando termines, «Restablecer datos» vuelve todo al estado inicial. Puedes repetir este recorrido desde el botón de arriba.'},
 ];
 let TI=-1;
@@ -3197,8 +3340,8 @@ document.addEventListener('keydown',e=>{ if(TI<0) return; if(e.key==='Escape') t
 window.addEventListener('resize',()=>{ if(TI>=0) tourPlace(TOUR[TI]); });
 
 /* handlers inline */
-Object.assign(window,{limpiarFiltros,setF,openForm,drill,ventaDetalle,openAccionista,docMov,guardarForm,formChanged,syncCobro,docDesdeForm,detBack,closeModal,closeDrawer,setTab,resetDemo,setPeriodo,setRango,setDq,pickFile,filePicked,quitarPending,verDoc,delDoc,abrirBlob,irA,startTour,tourEnd,tourNext,tourPrev,toggleOldNav});
-const _av=window.activateView; window.activateView=function(v){ _av(v); const g=$('vmGlobalFilters'); if(g) g.style.display=String(v).startsWith('vm_')?'':'none'; };
+Object.assign(window,{setFxFuente,guardarManual,fxRefrescar,setFxRango,setFxPar,fxConv,fxHover,fxOut,limpiarFiltros,setF,openForm,drill,ventaDetalle,openAccionista,docMov,guardarForm,formChanged,syncCobro,docDesdeForm,detBack,closeModal,closeDrawer,setTab,resetDemo,setPeriodo,setRango,setDq,pickFile,filePicked,quitarPending,verDoc,delDoc,abrirBlob,irA,startTour,tourEnd,tourNext,tourPrev,toggleOldNav});
+const _av=window.activateView; window.activateView=function(v){ _av(v); const g=$('vmGlobalFilters'); if(g) g.style.display=(String(v).startsWith('vm_')&&v!=='vm_cambio')?'':'none'; if(v==='vm_cambio') fxCargarHistorial(); };
 activateView('vm_tablero');
 })();
 </script>
