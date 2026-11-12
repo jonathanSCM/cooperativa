@@ -1,6 +1,6 @@
 # Guion de presentación (10–15 min) — Demo Virgen de Copacabana
 
-Archivo: `demo-virgen-copacabana.html`. Antes de empezar: **Restablecer datos** (barra lateral). Todos los datos son ficticios.
+Dentro de Veta (`index.html`), grupo **Virgen de Copacabana** del menú lateral. Antes de empezar: **Restablecer datos** (panel de filtros de cualquiera de esas pantallas). Todos los datos son ficticios.
 
 ## 1. Apertura (1 min)
 - Objetivo: reemplazar los Excel dispersos por un sistema único de ingresos, egresos, ventas de mineral, cuotas y saldos.
@@ -13,7 +13,7 @@ Archivo: `demo-virgen-copacabana.html`. Antes de empezar: **Restablecer datos** 
 
 ## 3. Flujo A — Registrar un gasto (2 min)
 1. Tablero: filtrar unidad **Cortada**.
-2. *Compras y gastos* → *Registrar compra o gasto* → Combustible, proveedor Grifo Santa Rosa, monto, guardar.
+2. *Compras y gastos* → *Registrar compra o gasto* (o el botón *Registrar gasto* del Tablero) → Combustible, proveedor Grifo Santa Rosa, monto, guardar.
 3. El aviso muestra: saldo de la caja antes → después, y gasto de Cortada/Combustible antes → después.
 4. Volver al Tablero: el gasto de la unidad y categoría ya subió.
 

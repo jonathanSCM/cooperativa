@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-COPY index.html demo-virgen-copacabana.html /usr/share/nginx/html/
+COPY index.html /usr/share/nginx/html/index.html
 
 EXPOSE 80
 
