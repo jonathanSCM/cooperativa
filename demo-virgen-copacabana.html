@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veta · Virgen de Copacabana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F8F8; --surface:#FFFFFF; --surface-2:#F0F2F3; --border:#E2E5E8; --border-strong:#CBD1D6;
+  --ink:#14181C; --ink-dim:#5B636B; --ink-faint:#8B929A;
+  --accent:#0D6E73; --accent-ink:#FFFFFF; --accent-soft:#E0EFEE; --accent-line:#0D6E7333;
+  --ok:#2F7D53; --ok-soft:#E6F1EA; --warn:#A9711E; --warn-soft:#F5ECD9; --bad:#B14434; --bad-soft:#F5E3DF;
+  --muted:#8B8F84; --muted-soft:#EEEFEA;
+  --gold:#9C7A1E; --gold-soft:#F3E9CC;
+  --shadow: 0 1px 2px rgba(20,24,28,0.04);
+  --shadow-lg: 0 18px 40px -20px rgba(20,24,28,0.22);
+  --r-sm:6px; --r-md:9px; --r-lg:13px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101315; --surface:#171B1E; --surface-2:#1E2326; --border:#2A3033; --border-strong:#3B4247;
+    --ink:#EEF1F2; --ink-dim:#A6AEB3; --ink-faint:#767E83;
+    --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
+    --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
+    --muted:#8B9089; --muted-soft:#1C1F1B;
+    --gold:#D9B25C; --gold-soft:#332912;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3);
+    --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101315; --surface:#171B1E; --surface-2:#1E2326; --border:#2A3033; --border-strong:#3B4247;
+  --ink:#EEF1F2; --ink-dim:#A6AEB3; --ink-faint:#767E83;
+  --accent:#4FC2C4; --accent-ink:#08191A; --accent-soft:#17302F; --accent-line:#4FC2C440;
+  --ok:#7FBE96; --ok-soft:#16261C; --warn:#D9AE5C; --warn-soft:#2C2415; --bad:#D6897A; --bad-soft:#2E1D1A;
+  --muted:#8B9089; --muted-soft:#1C1F1B;
+  --gold:#D9B25C; --gold-soft:#332912;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 22px 46px -20px rgba(0,0,0,0.55);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Archivo",-apple-system,"Segoe UI",sans-serif;
+  font-size:14px; line-height:1.5; min-height:100vh;
+}
+h1,h2,h3,.num-display{font-family:"Archivo",-apple-system,"Segoe UI",sans-serif; text-wrap:balance; font-weight:600; letter-spacing:-.01em;}
+.mono{font-family:"Archivo",-apple-system,"Segoe UI",sans-serif; font-variant-numeric:tabular-nums; font-weight:500;}
+button{font-family:inherit; cursor:pointer;}
+svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block;}
+
+/* ---------- shell / sidebar ---------- */
+.app-shell{display:flex; min-height:100vh; align-items:stretch;}
+.sidebar{
+  width:238px; flex:none; background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; transition:width .18s ease; overflow:hidden;
+  position:sticky; top:0; align-self:flex-start; height:100vh;
+}
+.sidebar.collapsed{width:68px;}
+.sidebar-head{display:flex; align-items:center; gap:10px; padding:19px 20px 15px; white-space:nowrap;}
+.brand-mark{width:20px;height:20px;flex:none; color:var(--accent);}
+.brand-word{font-family:"Archivo",sans-serif; font-weight:700; font-size:16px;}
+.sidebar.collapsed .brand-word, .sidebar.collapsed .side-group-label,
+.sidebar.collapsed .side-item .lbl, .sidebar.collapsed .userchip .who,
+.sidebar.collapsed .userchip .role{display:none;}
+.sidebar.collapsed .sidebar-head{justify-content:center; padding:19px 10px 15px;}
+.sidebar.collapsed .userchip{justify-content:center;}
+.sidebar-nav{flex:1; overflow-y:auto; overflow-x:hidden; padding:2px 14px 14px;}
+.side-group-label{font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; padding:15px 10px 7px;}
+.side-item{
+  display:flex; align-items:center; gap:11px; width:100%; padding:9px 10px; border-radius:9px; border:1px solid transparent;
+  color:var(--ink-dim); background:transparent; font-size:13.5px; font-weight:500; text-align:left; white-space:nowrap;
+}
+.side-item svg{width:17px;height:17px; flex:none;}
+.side-item:hover{background:var(--surface-2); color:var(--ink);}
+.side-item.active{background:var(--accent-soft); color:var(--accent); font-weight:600;}
+.sidebar.collapsed .side-item{justify-content:center; padding:9px;}
+.sidebar-foot{padding:13px 14px; border-top:1px solid var(--border);}
+.userchip{display:flex; align-items:center; gap:9px;}
+.avatar{width:28px;height:28px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:700; font-size:11px; flex:none;}
+.userchip .who{font-size:12.5px; font-weight:600; line-height:1.2; white-space:nowrap;}
+.userchip .role{font-size:10.5px; color:var(--ink-faint); line-height:1.2; white-space:nowrap;}
+
+.main-col{flex:1; min-width:0; display:flex; flex-direction:column;}
+.topbar{
+  display:flex; align-items:center; gap:14px; padding:14px 28px; border-bottom:1px solid var(--border);
+  position:sticky; top:0; background:var(--bg); z-index:20;
+}
+.hamburger{width:32px;height:32px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim); display:flex; align-items:center; justify-content:center; flex:none;}
+.hamburger:hover{background:var(--surface-2); color:var(--ink);}
+.crumb{font-size:13.5px; color:var(--ink-faint); white-space:nowrap;}
+.crumb b{color:var(--ink); font-weight:600;}
+
+.search{
+  display:flex; align-items:center; gap:8px; background:var(--surface-2); border:1px solid transparent;
+  border-radius:8px; padding:7px 11px; width:190px; color:var(--ink-faint); margin-left:auto;
+}
+.search input{border:none; outline:none; background:transparent; color:var(--ink); font-size:13px; width:100%; font-family:inherit;}
+.iconbtn{
+  width:32px;height:32px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--ink-dim);
+  display:flex; align-items:center; justify-content:center; position:relative; flex:none;
+}
+.iconbtn:hover{color:var(--ink); background:var(--surface-2);}
+.dot-badge{position:absolute; top:6px; right:6px; width:6px; height:6px; border-radius:50%; background:var(--bad); border:1.5px solid var(--bg);}
+
+main.content{max-width:1180px; margin:0 auto; padding:22px 28px 70px; width:100%;}
+.banner{
+  display:flex; align-items:center; gap:10px; background:var(--accent); color:var(--accent-ink);
+  padding:10px 16px; border-radius:10px; font-size:12.5px; font-weight:500; margin-bottom:18px;
+}
+.banner a, .banner b{color:inherit;}
+.banner .x{margin-left:auto; background:transparent; border:none; color:inherit; opacity:.8; display:flex; flex:none;}
+.banner .x:hover{opacity:1;}
+.page-head{padding:2px 0 20px;}
+.page-head .eyebrow{font-size:10.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 4px;}
+.page-head h1{font-size:23px; font-weight:560; margin:0;}
+.page-head .desc{font-size:13px; color:var(--ink-dim); margin:7px 0 0; max-width:620px; line-height:1.55;}
+
+.view{display:none;}
+.view.active{display:block; animation:rise .32s ease both;}
+@keyframes rise{from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);}}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:600; border-radius:8px;
+  padding:9px 14px; border:1px solid var(--border); background:var(--surface); color:var(--ink);
+  transition:border-color .15s, background .15s;
+}
+.btn:hover{border-color:var(--border-strong); background:var(--surface-2);}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.btn-primary:hover{filter:brightness(1.07); background:var(--accent);}
+.btn-sm{padding:6px 10px; font-size:12px; border-radius:7px;}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+
+/* ---------- KPI row ---------- */
+.kpi-row{display:flex; border:1px solid var(--border); border-radius:var(--r-lg); overflow:hidden; background:var(--surface);}
+.kpi{flex:1; padding:18px 22px; border-right:1px solid var(--border);}
+.kpi:last-child{border-right:none;}
+.kpi-label{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); display:flex; align-items:center; gap:6px;}
+.kpi-num{font-size:27px; font-weight:500; margin-top:9px; letter-spacing:-.01em;}
+.kpi-num.accent-num{color:var(--accent);}
+.kpi-sub{font-size:11.5px; color:var(--ink-faint); margin-top:4px;}
+
+/* ---------- panels/cards ---------- */
+.panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); box-shadow:var(--shadow);}
+.panel-head{display:flex; align-items:center; gap:10px; padding:15px 20px; border-bottom:1px solid var(--border);}
+.panel-head h2{font-size:15px; font-weight:560; margin:0;}
+.panel-head .hint{font-size:11.5px; color:var(--ink-faint); margin-left:auto;}
+.grid-2{display:grid; grid-template-columns:1.5fr 1fr; gap:16px; align-items:start;}
+
+.trend-svg{width:100%; height:112px; display:block;}
+
+/* table */
+table{width:100%; border-collapse:collapse;}
+th{text-align:left; font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; padding:9px 20px; border-bottom:1px solid var(--border);}
+td{padding:12px 20px; border-bottom:1px solid var(--border); font-size:13.5px; vertical-align:middle;}
+tbody tr{cursor:pointer; transition:background .12s;}
+tbody tr:hover{background:var(--surface-2);}
+tbody tr:last-child td{border-bottom:none;}
+.who-cell{display:flex; align-items:center; gap:10px;}
+.who-name{font-weight:600;}
+.who-ci{font-size:11.5px; color:var(--ink-faint);}
+.status{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;}
+.status .dot{width:6px;height:6px;border-radius:50%; flex:none;}
+.status.vigente{color:var(--ok);} .status.vigente .dot{background:var(--ok);}
+.status.proximo{color:var(--warn);} .status.proximo .dot{background:var(--warn);}
+.status.urgente{color:var(--bad);} .status.urgente .dot{background:var(--bad);}
+.status.cancelado{color:var(--muted);} .status.cancelado .dot{background:var(--muted);}
+.amount{font-family:"Archivo",sans-serif; font-variant-numeric:tabular-nums; font-weight:500;}
+.pct-cell{display:flex; align-items:center; gap:8px;}
+.pct-track{width:52px; height:5px; border-radius:20px; background:var(--surface-2); overflow:hidden; flex:none;}
+.pct-track > div{height:100%; background:var(--accent); border-radius:20px;}
+.pct-txt{font-size:11.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums; width:30px;}
+.flow{display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600;}
+.flow .dot{width:6px;height:6px;border-radius:50%;}
+.flow.ingreso{color:var(--ok);} .flow.ingreso .dot{background:var(--ok);}
+.flow.egreso{color:var(--bad);} .flow.egreso .dot{background:var(--bad);}
+.amount.pos{color:var(--ok);} .amount.neg{color:var(--bad);}
+.bar-row{display:flex; flex-direction:column; gap:5px;}
+.bar-row-top{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-dim);}
+.bar-track{height:8px; border-radius:20px; background:var(--surface-2); overflow:hidden;}
+.bar-track > div{height:100%; border-radius:20px;}
+.cat-item{display:flex; align-items:center; justify-content:space-between; padding:9px 20px; border-bottom:1px solid var(--border); font-size:12.5px;}
+.cat-item:last-child{border-bottom:none;}
+.cat-item .l{display:flex; align-items:center; gap:8px; color:var(--ink-dim);}
+.cat-item .l .dot{width:6px;height:6px;border-radius:50%; background:var(--accent);}
+tr.audit-new{animation:auditFlash 1.6s ease;}
+@keyframes auditFlash{ 0%{background:var(--accent-soft);} 100%{background:transparent;} }
+.audit-user{font-weight:600;}
+.audit-role{font-size:11px; color:var(--ink-faint);}
+.days-txt{font-size:11.5px; color:var(--ink-faint);}
+.days-txt.late{color:var(--bad); font-weight:600;}
+
+/* alerts rail */
+.alert-item{display:flex; gap:10px; padding:12px 20px; border-bottom:1px solid var(--border);}
+.alert-item:last-child{border-bottom:none;}
+.alert-ic{width:28px;height:28px;border-radius:7px; display:flex; align-items:center; justify-content:center; flex:none;}
+.alert-ic.urgente{background:var(--bad-soft); color:var(--bad);}
+.alert-ic.proximo{background:var(--warn-soft); color:var(--warn);}
+.alert-title{font-size:12.5px; font-weight:600;}
+.alert-sub{font-size:11.5px; color:var(--ink-faint); margin-top:2px;}
+
+/* drawer */
+.overlay{position:fixed; inset:0; background:rgba(15,18,20,.38); opacity:0; pointer-events:none; transition:opacity .2s; z-index:50;}
+.overlay.show{opacity:1; pointer-events:auto;}
+.drawer{
+  position:fixed; top:0; right:0; height:100%; width:440px; max-width:92vw; background:var(--bg);
+  border-left:1px solid var(--border); box-shadow:var(--shadow-lg);
+  transform:translateX(100%); transition:transform .26s cubic-bezier(.2,.8,.2,1); z-index:51; overflow-y:auto;
+}
+.drawer.show{transform:translateX(0);}
+.drawer-head{padding:22px 22px 16px; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--bg); z-index:2;}
+.drawer-close{position:absolute; top:18px; right:18px;}
+.drawer-avatar{width:46px;height:46px;border-radius:50%; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-family:"Archivo",sans-serif; font-weight:600; font-size:17px;}
+.drawer-body{padding:20px 22px 40px; display:flex; flex-direction:column; gap:18px;}
+.field-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px 16px;}
+.field-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-faint); margin-bottom:3px;}
+.field-val{font-size:13px; font-weight:500;}
+.loan-card{border:1px solid var(--border); border-radius:var(--r-md); padding:16px 18px; background:var(--surface);}
+.loan-row{display:flex; justify-content:space-between; align-items:baseline; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px;}
+.loan-row:last-child{border-bottom:none;}
+.loan-row .l{color:var(--ink-dim);}
+.progress{height:5px; border-radius:20px; background:var(--surface-2); overflow:hidden; margin-top:12px;}
+.progress > div{height:100%; background:var(--accent); border-radius:20px;}
+.timeline{display:flex; flex-direction:column;}
+.tl-item{display:flex; gap:12px; padding:10px 0; position:relative;}
+.tl-dot{width:8px;height:8px;border-radius:50%; background:var(--accent); margin-top:5px; flex:none; position:relative; z-index:1;}
+.tl-item::before{content:""; position:absolute; left:3.5px; top:15px; bottom:-4px; width:1px; background:var(--border);}
+.tl-item:last-child::before{display:none;}
+.tl-title{font-size:12.5px; font-weight:600;}
+.tl-sub{font-size:11.5px; color:var(--ink-faint);}
+.doc-chip{display:flex; align-items:center; gap:9px; padding:9px 11px; border:1px solid var(--border); border-radius:9px; font-size:12px; background:var(--surface);}
+.doc-chip .ic{width:24px;height:24px;border-radius:6px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; color:var(--ink-dim);}
+
+/* modal */
+.modal{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:60; opacity:0; pointer-events:none; transition:opacity .18s;}
+.modal.show{opacity:1; pointer-events:auto;}
+.modal-card{
+  width:420px; max-width:92vw; background:var(--bg); border:1px solid var(--border); border-radius:var(--r-lg);
+  box-shadow:var(--shadow-lg); transform:translateY(8px); transition:transform .2s; max-height:88vh; overflow-y:auto;
+}
+.modal.show .modal-card{transform:translateY(0);}
+.modal-head{display:flex; align-items:center; gap:10px; padding:18px 20px; border-bottom:1px solid var(--border); color:var(--accent);}
+.modal-head h3{margin:0; font-size:16px; font-weight:560; color:var(--ink);}
+.modal-body{padding:18px 20px; display:flex; flex-direction:column; gap:14px;}
+.modal-foot{padding:14px 20px 20px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid var(--border); margin-top:2px; padding-top:16px;}
+label.fl{display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--ink-dim); font-weight:600;}
+input.fi, select.fi{
+  border:1px solid var(--border); background:var(--surface); color:var(--ink); border-radius:8px; padding:9px 11px;
+  font-size:13.5px; font-family:inherit; outline:none;
+}
+input.fi:focus, select.fi:focus{border-color:var(--accent);}
+.seg{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+.seg button{flex:1; padding:9px 6px; font-size:12px; font-weight:600; background:var(--surface); color:var(--ink-dim); border:none; border-right:1px solid var(--border);}
+.seg button:last-child{border-right:none;}
+.seg button.active{background:var(--accent-soft); color:var(--accent);}
+
+/* reports */
+.report-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+.report-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--r-lg); padding:20px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow);}
+.report-ic{width:34px;height:34px;border-radius:8px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
+.report-card h3{font-size:15px; margin:0; font-weight:560;}
+.report-card p{font-size:12.5px; color:var(--ink-dim); margin:0; flex:1;}
+.report-actions{display:flex; gap:8px;}
+.locked{opacity:.6;}
+.phase-tag{font-size:10px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--warn); background:var(--warn-soft); padding:3px 8px; border-radius:20px; width:fit-content;}
+
+/* oro */
+.oro-badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; color:var(--gold); background:var(--gold-soft); padding:3px 8px; border-radius:20px;}
+.subtoggle{display:flex; gap:6px; margin-bottom:10px;}
+.subtoggle button{
+  padding:6px 12px; font-size:12px; font-weight:600; border-radius:20px; border:1px solid var(--border);
+  background:var(--surface); color:var(--ink-dim);
+}
+.subtoggle button.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent-line);}
+.subtoggle button .n{opacity:.7; font-weight:500; margin-left:2px;}
+.quote-card{display:flex; align-items:center; justify-content:space-between; padding:18px 20px; gap:20px; flex-wrap:wrap;}
+.quote-big{display:flex; align-items:baseline; gap:10px;}
+.quote-num{font-size:30px; font-weight:600; letter-spacing:-.01em;}
+.quote-unit{font-size:12.5px; color:var(--ink-faint);}
+.quote-meta{font-size:11.5px; color:var(--ink-faint); text-align:right;}
+
+/* config */
+.switch{position:relative; display:inline-block; width:34px; height:19px; flex:none;}
+.switch input{opacity:0; width:0; height:0;}
+.switch .track{position:absolute; inset:0; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; transition:.15s;}
+.switch .track::before{content:""; position:absolute; width:13px; height:13px; left:2px; top:2px; background:var(--ink-faint); border-radius:50%; transition:.15s;}
+.switch input:checked + .track{background:var(--accent-soft); border-color:var(--accent-line);}
+.switch input:checked + .track::before{transform:translateX(15px); background:var(--accent);}
+.cfg-row{display:flex; align-items:center; gap:12px; padding:10px 20px; border-bottom:1px solid var(--border);}
+.cfg-row:last-child{border-bottom:none;}
+.cfg-row .name{flex:1; font-size:13px; font-weight:500;}
+.cfg-row .name.off{color:var(--ink-faint); text-decoration:line-through;}
+.cfg-add{display:flex; gap:8px; padding:12px 20px; border-top:1px solid var(--border); background:var(--surface-2);}
+.cfg-add input{flex:1;}
+.gestion-banner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px 20px; flex-wrap:wrap;}
+.gestion-tag{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ok); background:var(--ok-soft); padding:4px 10px; border-radius:20px;}
+
+/* teaser */
+.teaser{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:64px 30px; border:1px dashed var(--border-strong); border-radius:var(--r-lg); background:var(--surface);}
+.teaser .ic-big{width:46px;height:46px;border-radius:12px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center;}
+
+/* toast */
+.toast-wrap{position:fixed; bottom:22px; right:22px; display:flex; flex-direction:column; gap:8px; z-index:80;}
+.toast{
+  display:flex; align-items:center; gap:10px; background:var(--surface); color:var(--ink); border:1px solid var(--border);
+  padding:11px 15px; border-radius:9px; font-size:12.5px; font-weight:500; box-shadow:var(--shadow-lg);
+  transform:translateY(8px); opacity:0; transition:all .22s ease; min-width:240px;
+}
+.toast.show{transform:translateY(0); opacity:1;}
+.toast .tic{color:var(--ok);}
+.toast .tic.bad{color:var(--bad);}
+
+/* preview sheet */
+.sheet{background:var(--surface); color:var(--ink); border-radius:8px; padding:22px 24px; font-family:"Archivo",sans-serif; font-size:12px; border:1px solid var(--border);}
+.sheet h4{font-family:"Archivo",sans-serif; font-size:16px; margin:0 0 2px; font-weight:560;}
+.sheet .muted2{color:var(--ink-faint); font-size:10.5px;}
+.sheet table{margin-top:12px;}
+.sheet th,.sheet td{padding:6px 4px; font-size:11px; border-bottom:1px solid var(--border);}
+.sheet h5{font-size:11px; font-weight:700; margin:20px 0 2px; color:var(--ink); text-transform:uppercase; letter-spacing:.05em;}
+.sheet .sec-sub{font-size:10.5px; color:var(--ink-faint); margin:0 0 6px;}
+.sheet .totalrow td{font-weight:700; border-top:1.5px solid var(--border-strong); border-bottom:none;}
+.sheet .pos{color:var(--ok);} .sheet .neg{color:var(--bad);}
+.sheet table{width:100%; table-layout:auto;}
+
+::selection{background:var(--accent-soft); color:var(--accent);}
+@media (max-width:980px){
+  .sidebar{position:fixed; z-index:40; height:100vh; box-shadow:var(--shadow-lg);}
+  .sidebar:not(.collapsed){width:236px;}
+  .sidebar.collapsed{width:0; border-right:none;}
+  .topbar{padding:12px 16px;} main.content{padding:16px 16px 60px;}
+  .search{display:none;}
+  .kpi-row{flex-wrap:wrap;} .kpi{flex:1 1 50%; border-bottom:1px solid var(--border);}
+  .grid-2{grid-template-columns:1fr;}
+  .report-grid{grid-template-columns:1fr;}
+}
+
+/* ---------- extras demo Virgen de Copacabana ---------- */
+.fbar{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; margin-bottom:6px;}
+.fbar label.fl{min-width:150px;}
+.fbar .note{font-size:11.5px; color:var(--ink-faint); margin-left:auto; align-self:center; max-width:340px; text-align:right;}
+.cur-head{display:flex; align-items:center; gap:10px; margin:22px 0 10px;}
+.cur-tag{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); background:var(--accent-soft); padding:4px 11px; border-radius:20px;}
+.cur-sub{font-size:11.5px; color:var(--ink-faint);}
+.lnk{cursor:pointer; border-bottom:1px dotted var(--ink-faint);}
+.lnk:hover{color:var(--accent); border-color:var(--accent);}
+.kpi.click{cursor:pointer; transition:background .12s;}
+.kpi.click:hover{background:var(--surface-2);}
+.kpi-row.sm .kpi{padding:16px 18px;}
+.kpi-row.sm .kpi-num{font-size:21px; margin-top:8px;}
+.kpi-num.pos{color:var(--ok);} .kpi-num.neg{color:var(--bad);}
+th.num, td.num{text-align:right; white-space:nowrap;}
+.amount{white-space:nowrap;}
+.utag{display:inline-block; font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+.utag.cortada{background:var(--accent-soft); color:var(--accent);}
+.utag.nivel0{background:var(--gold-soft); color:var(--gold);}
+.stag{display:inline-block; font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap;}
+.stag.ok{background:var(--ok-soft); color:var(--ok);} .stag.warn{background:var(--warn-soft); color:var(--warn);} .stag.bad{background:var(--bad-soft); color:var(--bad);}
+.chip{display:inline-block; font-size:11px; background:var(--surface-2); color:var(--ink-dim); border-radius:20px; padding:2px 9px; margin:1px 3px 1px 0;}
+.empty{padding:26px; text-align:center; color:var(--ink-faint); font-size:13px;}
+.stack{display:flex; flex-direction:column; gap:16px;}
+.grid-eq{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;}
+.sidebar-foot .btn{width:100%; justify-content:center;}
+.sidebar.collapsed .sidebar-foot .btn span{display:none;}
+.hint-block{font-size:12px; color:var(--ink-dim); background:var(--surface-2); border-radius:8px; padding:9px 12px; line-height:1.5;}
+.docbox{border:1px dashed var(--border-strong); border-radius:8px; padding:22px; text-align:center; color:var(--ink-faint); font-size:11.5px; margin-top:14px;}
+.cobro-box{display:none; grid-template-columns:1fr 1fr; gap:12px 16px; padding:14px; border:1px solid var(--accent-line); background:var(--accent-soft); border-radius:9px;}
+.cobro-box label.fl{color:var(--accent);}
+.chk{display:flex; align-items:center; gap:9px; font-size:13px; font-weight:600; color:var(--ink);}
+.modal-card.wide{width:640px;}
+.modal-card.xwide{width:900px;}
+.det-total{display:flex; align-items:baseline; gap:12px; padding:0 0 12px; flex-wrap:wrap;}
+.det-total .big{font-size:24px; font-weight:600;}
+.sidebar-nav .side-item .lbl{overflow:hidden; text-overflow:ellipsis;}
+@media (max-width:980px){ .grid-eq{grid-template-columns:1fr;} .field-grid{grid-template-columns:1fr;} .cobro-box{grid-template-columns:1fr;} table{display:block; overflow-x:auto; white-space:nowrap;} .fbar .note{display:none;} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+<defs>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.4"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.4"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.4"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.4"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="8.5" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.5-5.6 5.5-5.6S14 16.7 14 20"/><circle cx="17" cy="9" r="2.6"/><path d="M15.2 14.6c2.6.2 4.3 2.3 4.3 5.4"/></symbol>
+<symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="9" cy="7" rx="5.5" ry="3"/><path d="M3.5 7v5c0 1.66 2.46 3 5.5 3s5.5-1.34 5.5-3V7"/><path d="M3.5 12v5c0 1.66 2.46 3 5.5 3s5.5-1.34 5.5-3v-5"/><path d="M14.5 9c2.6.3 4 1.5 4 2.8s-1.4 2.5-4 2.8"/><path d="M14.5 14.6c2.6.3 4 1.5 4 2.8s-1.4 2.5-4 2.8"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14 3.5V8h4.5"/><path d="M8.5 13h7M8.5 16.3h5" /></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10.5 20V4M17 20v-7"/><path d="M3 20.5h18"/></symbol>
+<symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h11a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 17 19H6a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M15.5 12.3h3.2v2.4h-3.2a1.2 1.2 0 0 1 0-2.4z"/><path d="M3.5 9h16"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 10a6 6 0 1 1 12 0c0 4 1.5 5.4 1.5 5.4H4.5S6 14 6 10z"/><path d="M9.7 18.4a2.3 2.3 0 0 0 4.6 0"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4.5v15M4.5 12h15"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-10.5"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5 21 19.5H3z"/><path d="M12 9.5v5"/><circle cx="12" cy="17" r=".4" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="1.6"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
+<symbol id="i-file-img" viewBox="0 0 24 24"><path d="M6 3.5h8l4.5 4.5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><circle cx="9.3" cy="12.3" r="1.3"/><path d="M8 17l2.6-3 2.4 2.6L15.5 13l2 4"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v12M7.5 11l4.5 4.5L16.5 11"/><path d="M4.5 19.5h15"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="1.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-gem" viewBox="0 0 24 24"><path d="M4 9l4-5.5h8L20 9l-8 11.5z"/><path d="M4 9h16M9.5 3.5 8 9l4 11.5M14.5 3.5 16 9l-4 11.5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5 19 6.3v5.8c0 4.5-3 7.4-7 8.9-4-1.5-7-4.4-7-8.9V6.3z"/><path d="M9 12l2.2 2.2L15.5 9.5"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3"/><circle cx="14" cy="6" r="2"/><path d="M4 12h3M11 12h9"/><circle cx="8" cy="12" r="2"/><path d="M4 18h9M17 18h3"/><circle cx="14" cy="18" r="2"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.2" rx="1"/><path d="M4.5 8.2V19a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1V8.2"/><path d="M10 13h4"/></symbol>
+<symbol id="i-pickaxe" viewBox="0 0 24 24"><path d="M5 5c3.5 0 8 2.5 10 6"/><path d="M19 5c-3.5 0-8 2.5-10 6"/><path d="M8.5 13 4.5 19.5"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.6-5.7"/><path d="M20 12a8 8 0 0 1-13.6 5.7"/><path d="M17.5 3.8v3.6h-3.6"/><path d="M6.5 20.2v-3.6h3.6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15.5v-12M7.5 7.5 12 3l4.5 4.5"/><path d="M4.5 19.5h15"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.3"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/><path d="M3.5 4.5h2.3l2 10h9.7l1.7-7H7"/></symbol>
+</defs>
+</svg>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head">
+      <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><use href="#i-gem"/></svg>
+      <span class="brand-word">Veta</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="side-group-label">Resumen</div>
+      <button class="side-item" data-view="tablero"><svg class="icon"><use href="#i-grid"/></svg><span class="lbl">Tablero general</span></button>
+      <div class="side-group-label">Operación</div>
+      <button class="side-item" data-view="caja"><svg class="icon"><use href="#i-wallet"/></svg><span class="lbl">Caja y movimientos</span></button>
+      <button class="side-item" data-view="ventas"><svg class="icon"><use href="#i-gem"/></svg><span class="lbl">Ventas de mineral</span></button>
+      <button class="side-item" data-view="compras"><svg class="icon"><use href="#i-cart"/></svg><span class="lbl">Compras y gastos</span></button>
+      <button class="side-item" data-view="cuotas"><svg class="icon"><use href="#i-coins"/></svg><span class="lbl">Cuotas de accionistas</span></button>
+      <div class="side-group-label">Registros</div>
+      <button class="side-item" data-view="terceros"><svg class="icon"><use href="#i-users"/></svg><span class="lbl">Accionistas y terceros</span></button>
+      <div class="side-group-label">Análisis</div>
+      <button class="side-item" data-view="reportes"><svg class="icon"><use href="#i-chart"/></svg><span class="lbl">Reportes y resúmenes</span></button>
+    </nav>
+    <div class="sidebar-foot">
+      <button class="btn btn-sm" onclick="resetDemo()"><svg class="icon" style="width:13px;height:13px"><use href="#i-refresh"/></svg><span>Restablecer datos</span></button>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <button class="hamburger" id="sidebarToggle"><svg class="icon"><use href="#i-menu"/></svg></button>
+      <span class="crumb" id="crumbTxt">Tablero general</span>
+      <span class="crumb" style="margin-left:auto;">Sociedad Minera Virgen de Copacabana S.A. · RUC 20455717427</span>
+    </header>
+
+    <main class="content">
+      <div class="banner" id="demoBanner">
+        <svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>
+        <span><b>Demo con datos ficticios.</b> Lo que registres se guarda en este navegador durante la presentación; usa «Restablecer datos» para volver al estado inicial.</span>
+        <button class="x" onclick="document.getElementById('demoBanner').style.display='none'"><svg class="icon" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
+      </div>
+
+      <div class="page-head">
+        <p class="eyebrow" id="topEyebrow"></p>
+        <h1 id="topTitle"></h1>
+        <p class="desc" id="topDesc"></p>
+      </div>
+
+      <section class="view" id="view-tablero"></section>
+      <section class="view" id="view-caja"></section>
+      <section class="view" id="view-ventas"></section>
+      <section class="view" id="view-compras"></section>
+      <section class="view" id="view-cuotas"></section>
+      <section class="view" id="view-terceros"></section>
+      <section class="view" id="view-reportes"></section>
+    </main>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="drawer" id="drawer"></div>
+
+<div class="modal" id="modal-form">
+  <div class="modal-card wide">
+    <div class="modal-head"><svg class="icon"><use href="#i-plus"/></svg><h3 id="formTitle">Registrar</h3></div>
+    <div class="modal-body" id="formBody"></div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('modal-form')">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarForm()"><svg class="icon" style="width:14px;height:14px"><use href="#i-check"/></svg><span id="formOk">Guardar</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-detail">
+  <div class="modal-card xwide">
+    <div class="modal-head"><svg class="icon"><use href="#i-doc"/></svg><h3 id="detTitle">Detalle</h3></div>
+    <div class="modal-body" id="detBody"></div>
+    <div class="modal-foot">
+      <button class="btn" id="detBack" style="margin-right:auto; display:none;" onclick="detBack()">← Volver</button>
+      <button class="btn" onclick="closeModal('modal-detail')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-doc">
+  <div class="modal-card wide">
+    <div class="modal-head"><svg class="icon"><use href="#i-file-img"/></svg><h3>Documento de ejemplo</h3></div>
+    <div class="modal-body" id="docBody"></div>
+    <div class="modal-foot"><button class="btn" onclick="closeModal('modal-doc')">Cerrar</button></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ================= utilidades ================= */
+const MES_S=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const MES_L=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const UNIDADES={cortada:'Cortada', nivel0:'Nivel 0'};
+const MONEDAS={PEN:{sym:'S/', nombre:'Soles'}, USD:{sym:'US$', nombre:'Dólares'}};
+const CAT_ING=['Cobro de venta','Cuota de accionista','Aporte extraordinario','Otros ingresos'];
+const CAT_EGR=['Contratistas','Ferretería','Alimentación','Combustible','Madera','Explosivos','Planillas','Otros gastos'];
+const DOC_TIPOS=['Factura','Boleta','Recibo por honorarios','Planilla','Liquidación','Propuesta de compra','Recibo','Transferencia','Otro'];
+const pad=n=>String(n).padStart(2,'0');
+const isoOf=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+const hoyISO=()=>{const t=new Date(); return isoOf(t.getFullYear(),t.getMonth(),t.getDate());};
+const fechaTxt=i=>{const [y,m,d]=i.split('-').map(Number); return d+' '+MES_S[m-1]+' '+y;};
+const mesLabel=p=>{const [y,m]=p.split('-').map(Number); return MES_L[m-1]+' '+y;};
+const fmtN=n=>n.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const money=(n,m)=>(n<0?'−':'')+MONEDAS[m].sym+' '+fmtN(Math.abs(n));
+const r2=n=>Math.round(n*100)/100;
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+
+/* ================= datos iniciales (ficticios) ================= */
+function D(mOff, day){
+  const t=new Date(); const base=new Date(t.getFullYear(), t.getMonth()+mOff, 1);
+  const last=new Date(base.getFullYear(), base.getMonth()+1, 0).getDate();
+  let d=Math.min(day,last); if(mOff===0) d=Math.min(d,t.getDate());
+  return isoOf(base.getFullYear(), base.getMonth(), d);
+}
+function finMesISO(){const t=new Date(); return isoOf(t.getFullYear(),t.getMonth(),new Date(t.getFullYear(),t.getMonth()+1,0).getDate());}
+
+function seed(){
+  const s={nextId:1, razones:[], terceros:[], cajas:[], movs:[], ventas:[], cuotas:[]};
+  const id=()=>s.nextId++;
+  s.razones=[
+    {id:'r1', nombre:'Inversiones Qollqe S.A.C.', ruc:'20999000011'},
+    {id:'r2', nombre:'Servicios Mineros Apu E.I.R.L.', ruc:'20999000022'},
+    {id:'r3', nombre:'Comercial Warmi S.R.L.', ruc:'20999000033'},
+    {id:'r4', nombre:'Transportes Ccori S.A.C.', ruc:'20999000044'},
+    {id:'r5', nombre:'Minera Illari S.A.C.', ruc:'20999000055'},
+    {id:'r6', nombre:'Corporación Sumaq Runa S.A.C.', ruc:'20999000066'},
+  ];
+  s.terceros=[
+    {id:'a1', tipo:'accionista', alias:'J.M.R.', nombre:'Accionista J.M.R.', unidad:'cortada', razones:['r1','r2']},
+    {id:'a2', tipo:'accionista', alias:'C.H.Q.', nombre:'Accionista C.H.Q.', unidad:'cortada', razones:['r3']},
+    {id:'a3', tipo:'accionista', alias:'M.T.A.', nombre:'Accionista M.T.A.', unidad:'nivel0', razones:['r4']},
+    {id:'a4', tipo:'accionista', alias:'R.P.V.', nombre:'Accionista R.P.V.', unidad:'nivel0', razones:['r5','r6']},
+    {id:'a5', tipo:'accionista', alias:'L.C.S.', nombre:'Accionista L.C.S.', unidad:'nivel0', razones:['r6']},
+    {id:'p1', tipo:'proveedor', nombre:'Ferretería Los Andes (ficticio)', habitual:'Ferretería'},
+    {id:'p2', tipo:'proveedor', nombre:'Grifo Santa Rosa (ficticio)', habitual:'Combustible'},
+    {id:'p3', tipo:'proveedor', nombre:'Maderas del Sur (ficticio)', habitual:'Madera'},
+    {id:'p4', tipo:'proveedor', nombre:'Explosivos y Accesorios Mineros (ficticio)', habitual:'Explosivos'},
+    {id:'p5', tipo:'proveedor', nombre:'Contratista Huayna Perforaciones (ficticio)', habitual:'Contratistas'},
+    {id:'p6', tipo:'proveedor', nombre:'Comedor Industrial Sumaq (ficticio)', habitual:'Alimentación'},
+    {id:'pl1', tipo:'planta', nombre:'Planta Concentradora Ñawi (ficticia)'},
+    {id:'pl2', tipo:'planta', nombre:'Planta Procesadora Intiwasi (ficticia)'},
+  ];
+  s.cajas=[
+    {id:'c1', nombre:'Caja efectivo S/', moneda:'PEN', apertura:40000},
+    {id:'c2', nombre:'Banco soles', moneda:'PEN', apertura:130000},
+    {id:'c3', nombre:'Caja efectivo US$', moneda:'USD', apertura:6000},
+    {id:'c4', nombre:'Banco dólares', moneda:'USD', apertura:30000},
+  ];
+  const mov=o=>{const m={id:id(), obs:'', docTipo:'Recibo', docNum:'', ...o}; s.movs.push(m); return m;};
+  /* compras y gastos: [mes, día, unidad, categoría, proveedor, moneda, caja, monto, docTipo, docNum, obs] */
+  [
+    [-2,5,'cortada','Combustible','p2','PEN','c1',1850,'Factura','F001-4421','Diésel para compresora'],
+    [-2,6,'nivel0','Explosivos','p4','PEN','c2',7200,'Factura','F002-1180','Dinamita y fulminantes'],
+    [-2,8,'nivel0','Madera','p3','PEN','c1',3150,'Boleta','B001-0912','Madera para sostenimiento'],
+    [-2,12,'cortada','Ferretería','p1','PEN','c1',980.5,'Factura','F003-2210','Herramientas y repuestos'],
+    [-2,15,'cortada','Contratistas','p5','PEN','c2',14500,'Recibo por honorarios','E001-77','Avance de perforación'],
+    [-2,28,'cortada','Planillas',null,'PEN','c2',18600,'Planilla','PL-01','Planilla del mes'],
+    [-2,28,'nivel0','Planillas',null,'PEN','c2',22400,'Planilla','PL-02','Planilla del mes'],
+    [-1,4,'nivel0','Alimentación','p6','PEN','c1',4300,'Factura','F001-0551','Alimentación del personal'],
+    [-1,7,'cortada','Combustible','p2','PEN','c1',2100,'Factura','F001-4502','Diésel'],
+    [-1,10,'nivel0','Explosivos','p4','USD','c3',1850,'Factura','F002-1199','Compra facturada en dólares'],
+    [-1,13,'nivel0','Contratistas','p5','PEN','c2',16800,'Recibo por honorarios','E001-84','Avance de perforación'],
+    [-1,17,'cortada','Madera','p3','PEN','c1',2780,'Boleta','B001-0977','Madera para sostenimiento'],
+    [-1,20,'cortada','Ferretería','p1','PEN','c1',1320,'Factura','F003-2301','Brocas y mangueras'],
+    [-1,27,'cortada','Planillas',null,'PEN','c2',19200,'Planilla','PL-03','Planilla del mes'],
+    [-1,27,'nivel0','Planillas',null,'PEN','c2',23100,'Planilla','PL-04','Planilla del mes'],
+    [0,3,'cortada','Alimentación','p6','PEN','c1',3900,'Factura','F001-0602','Alimentación del personal'],
+    [0,5,'nivel0','Combustible','p2','PEN','c1',2650,'Factura','F001-4588','Diésel'],
+    [0,8,'nivel0','Ferretería','p1','PEN','c1',1740,'Factura','F003-2377','Repuestos'],
+    [0,9,'cortada','Contratistas','p5','USD','c4',3200,'Recibo por honorarios','E001-91','Servicio de voladura'],
+    [0,10,'nivel0','Madera','p3','PEN','c1',2950,'Boleta','B001-1030','Madera para sostenimiento'],
+  ].forEach(r=>mov({fecha:D(r[0],r[1]), tipo:'egreso', unidad:r[2], categoria:r[3], terceroId:r[4], razonId:null, moneda:r[5], cajaId:r[6], monto:r[7], docTipo:r[8], docNum:r[9], obs:r[10], origen:{tipo:'compra'}}));
+  mov({fecha:D(-1,15), tipo:'ingreso', unidad:'cortada', categoria:'Otros ingresos', terceroId:null, razonId:null, moneda:'PEN', cajaId:'c1', monto:1200, docTipo:'Recibo', docNum:'R-0031', obs:'Venta de chatarra', origen:{tipo:'manual'}});
+
+  /* ventas de mineral */
+  const venta=o=>{const v={id:id(), obs:'', ...o}; s.ventas.push(v); return v;};
+  const cobro=(v,fecha,caja,monto,docTipo,docNum)=>mov({fecha, tipo:'ingreso', unidad:v.unidad, categoria:'Cobro de venta', terceroId:v.plantaId, razonId:v.razonId, moneda:v.moneda, cajaId:caja, monto, docTipo, docNum, obs:'Cobro de liquidación '+v.docNum, origen:{tipo:'venta', id:v.id}});
+  const v1=venta({fecha:D(-2,10), unidad:'nivel0', accionistaId:'a3', razonId:'r4', plantaId:'pl1', moneda:'USD', monto:18450, docTipo:'Liquidación', docNum:'LIQ-0412', carga:'CG-221'});
+  cobro(v1,D(-2,18),'c4',18450,'Transferencia','OP-88231');
+  const v2=venta({fecha:D(-2,24), unidad:'cortada', accionistaId:'a1', razonId:'r1', plantaId:'pl1', moneda:'USD', monto:12300, docTipo:'Liquidación', docNum:'LIQ-0431', carga:'CG-228'});
+  cobro(v2,D(-1,5),'c4',6000,'Transferencia','OP-88402');
+  const v3=venta({fecha:D(-1,8), unidad:'nivel0', accionistaId:'a4', razonId:'r5', plantaId:'pl2', moneda:'PEN', monto:168000, docTipo:'Propuesta de compra', docNum:'PC-0118', carga:'CG-233'});
+  cobro(v3,D(-1,20),'c2',168000,'Transferencia','OP-90112');
+  venta({fecha:D(-1,22), unidad:'cortada', accionistaId:'a2', razonId:'r3', plantaId:'pl2', moneda:'USD', monto:9750, docTipo:'Liquidación', docNum:'LIQ-0452', carga:'CG-239'});
+  const v5=venta({fecha:D(0,4), unidad:'nivel0', accionistaId:'a3', razonId:'r4', plantaId:'pl1', moneda:'USD', monto:21200, docTipo:'Liquidación', docNum:'LIQ-0467', carga:'CG-244'});
+  cobro(v5,D(0,9),'c4',10000,'Transferencia','OP-91007');
+  const v6=venta({fecha:D(0,6), unidad:'cortada', accionistaId:'a1', razonId:'r2', plantaId:'pl2', moneda:'PEN', monto:92500, docTipo:'Propuesta de compra', docNum:'PC-0124', carga:'CG-246'});
+  cobro(v6,D(0,9),'c2',45000,'Transferencia','OP-91020');
+
+  /* cuotas */
+  const cuota=(acc,mon,monto)=>{const c={id:id(), accionistaId:acc, concepto:'Cuota de aporte del trimestre', moneda:mon, monto, vence:finMesISO()}; s.cuotas.push(c); return c;};
+  const abono=(c,fecha,caja,monto,docNum)=>{const a=s.terceros.find(t=>t.id===c.accionistaId); mov({fecha, tipo:'ingreso', unidad:a.unidad, categoria:'Cuota de accionista', terceroId:a.id, razonId:a.razones[0], moneda:c.moneda, cajaId:caja, monto, docTipo:'Recibo', docNum, obs:'Abono de cuota', origen:{tipo:'cuota', id:c.id}});};
+  const q1=cuota('a1','PEN',12000); abono(q1,D(-1,12),'c1',4000,'R-0040'); abono(q1,D(0,4),'c1',2000,'R-0052');
+  cuota('a2','PEN',9000);
+  const q3=cuota('a3','PEN',15000); abono(q3,D(-1,9),'c2',15000,'R-0043');
+  const q4=cuota('a4','PEN',8000); abono(q4,D(0,2),'c1',3000,'R-0050');
+  const q5=cuota('a5','USD',2500); abono(q5,D(-1,25),'c3',1000,'R-0047');
+  return s;
+}
+
+/* ================= estado y persistencia ================= */
+const KEY='veta-virgen-copacabana-demo-v1';
+let S, LASTNEW=null, DR=[], DETSTACK=[], FORM=null, DRAWER_ID=null;
+const F={periodo:'todo', unidad:'todas', moneda:'ambas', caja:'todas', tab:'accionistas'};
+function load(){ try{const r=localStorage.getItem(KEY); if(r) return JSON.parse(r);}catch(e){} return seed(); }
+function save(){ try{localStorage.setItem(KEY, JSON.stringify(S));}catch(e){} }
+function resetDemo(){
+  if(!confirm('¿Restablecer los datos iniciales de la demo? Se perderán los registros hechos durante la presentación.')) return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  S=seed(); LASTNEW=null; closeAll(); renderAll(); toast('Datos iniciales restablecidos');
+}
+
+/* ================= consultas ================= */
+const terceroDe=id=>S.terceros.find(t=>t.id===id);
+const razonDe=id=>S.razones.find(r=>r.id===id);
+const cajaDe=id=>S.cajas.find(c=>c.id===id);
+const cajasMon=m=>S.cajas.filter(c=>c.moneda===m);
+const monedasSel=()=>F.moneda==='ambas'?['PEN','USD']:[F.moneda];
+const sm=a=>r2(a.reduce((s,x)=>s+x.monto,0));
+const finPeriodo=p=>p==='todo'?'9999-12-31':p+'-31';
+const signed=m=>m.tipo==='ingreso'?m.monto:-m.monto;
+
+function selMovs(f){
+  return S.movs.filter(m=>
+    (!f.periodo||f.periodo==='todo'||m.fecha.startsWith(f.periodo)) &&
+    (!f.unidad||f.unidad==='todas'||m.unidad===f.unidad) &&
+    (!f.moneda||m.moneda===f.moneda) && (!f.tipo||m.tipo===f.tipo) &&
+    (!f.categoria||m.categoria===f.categoria) && (!f.cajaId||m.cajaId===f.cajaId) &&
+    (!f.terceroId||m.terceroId===f.terceroId) && (!f.origen||m.origen.tipo===f.origen) &&
+    (!f.origenId||m.origen.id===f.origenId) && (!f.hasta||m.fecha<=f.hasta));
+}
+const cobrado=v=>sm(selMovs({origen:'venta', origenId:v.id}));
+const pendiente=v=>Math.max(0, r2(v.monto-cobrado(v)));
+function selVentas(f){
+  return S.ventas.filter(v=>
+    (!f.periodo||f.periodo==='todo'||v.fecha.startsWith(f.periodo)) &&
+    (!f.unidad||f.unidad==='todas'||v.unidad===f.unidad) &&
+    (!f.moneda||v.moneda===f.moneda) && (!f.accionistaId||v.accionistaId===f.accionistaId) &&
+    (!f.plantaId||v.plantaId===f.plantaId) && (!f.pendiente||pendiente(v)>0));
+}
+const abonado=c=>sm(selMovs({origen:'cuota', origenId:c.id}));
+const saldoCuota=c=>Math.max(0, r2(c.monto-abonado(c)));
+function selCuotas(f){
+  return S.cuotas.filter(c=>{const a=terceroDe(c.accionistaId);
+    return (!f.unidad||f.unidad==='todas'||a.unidad===f.unidad)&&(!f.moneda||c.moneda===f.moneda)&&(!f.accionistaId||c.accionistaId===f.accionistaId)&&(!f.pendiente||saldoCuota(c)>0);});
+}
+function saldoCaja(c,hasta){
+  return r2(c.apertura+selMovs({cajaId:c.id, hasta:hasta||'9999-12-31'}).reduce((s,m)=>s+signed(m),0));
+}
+function periodos(){
+  const set=new Set(); S.movs.forEach(m=>set.add(m.fecha.slice(0,7))); S.ventas.forEach(v=>set.add(v.fecha.slice(0,7)));
+  return [...set].sort().reverse();
+}
+
+/* métricas reutilizadas por tablero y reportes */
+function metric(name,m,periodo,u){
+  const f={periodo,unidad:u,moneda:m};
+  const ttl=t=>`${t} · ${MONEDAS[m].nombre} · ${u==='todas'?'ambas unidades':UNIDADES[u]} · ${periodo==='todo'?'todo el periodo':mesLabel(periodo)}`;
+  switch(name){
+    case 'ventas': {const r=selVentas(f); return {val:sm(r), spec:{kind:'ventas', f, campo:'monto', moneda:m, title:ttl('Ventas registradas')}};}
+    case 'pendiente': {const fp={...f, pendiente:true}; const r=selVentas(fp); return {val:r2(r.reduce((s,v)=>s+pendiente(v),0)), spec:{kind:'ventas', f:fp, campo:'pendiente', moneda:m, title:ttl('Pendiente de cobro')}};}
+    case 'cobros': {const fm={...f, tipo:'ingreso', origen:'venta'}; return {val:sm(selMovs(fm)), spec:{kind:'movs', f:fm, moneda:m, title:ttl('Cobros de ventas recibidos')}};}
+    case 'ingresos': {const fm={...f, tipo:'ingreso'}; return {val:sm(selMovs(fm)), spec:{kind:'movs', f:fm, moneda:m, title:ttl('Ingresos de caja')}};}
+    case 'egresos': {const fm={...f, tipo:'egreso'}; return {val:sm(selMovs(fm)), spec:{kind:'movs', f:fm, moneda:m, title:ttl('Egresos de caja')}};}
+    case 'resultado': {const r=selMovs(f); return {val:r2(r.reduce((s,x)=>s+signed(x),0)), spec:{kind:'movs', f, moneda:m, mixed:true, title:ttl('Resultado de caja (ingresos − egresos)')}};}
+  }
+}
+const dr=spec=>{DR.push(spec); return DR.length-1;};
+const lk=(met,m,extra)=>`<span class="lnk amount ${extra||''}" onclick="drill(${dr(met.spec)})">${money(met.val,m)}</span>`;
+const unidadTag=u=>`<span class="utag ${u}">${UNIDADES[u]}</span>`;
+const emptyRow=(n,t)=>`<tr><td colspan="${n}" class="empty">${t||'Sin registros con este filtro.'}</td></tr>`;
+
+/* ================= filtros ================= */
+function filterBar(o={}){
+  const o2={periodo:true, unidad:true, moneda:true, caja:false, ...o};
+  const ps=periodos();
+  const opt=(v,t,cur)=>`<option value="${v}" ${v===cur?'selected':''}>${t}</option>`;
+  let h='<div class="fbar">';
+  if(o2.periodo) h+=`<label class="fl">Periodo<select class="fi" onchange="setF('periodo',this.value)">${opt('todo','Todo el periodo',F.periodo)}${ps.map(p=>opt(p,mesLabel(p),F.periodo)).join('')}</select></label>`;
+  if(o2.unidad) h+=`<label class="fl">Unidad operativa<select class="fi" onchange="setF('unidad',this.value)">${opt('todas','Cortada y Nivel 0',F.unidad)}${opt('cortada','Cortada',F.unidad)}${opt('nivel0','Nivel 0',F.unidad)}</select></label>`;
+  if(o2.moneda) h+=`<label class="fl">Moneda<select class="fi" onchange="setF('moneda',this.value)">${opt('ambas','Soles y dólares (separados)',F.moneda)}${opt('PEN','Soles (S/)',F.moneda)}${opt('USD','Dólares (US$)',F.moneda)}</select></label>`;
+  if(o2.caja) h+=`<label class="fl">Caja<select class="fi" onchange="setF('caja',this.value)">${opt('todas','Todas las cajas',F.caja)}${S.cajas.map(c=>opt(c.id,c.nombre,F.caja)).join('')}</select></label>`;
+  if(o.note) h+=`<span class="note">${o.note}</span>`;
+  return h+'</div>';
+}
+function setF(k,v){F[k]=v; renderAll();}
+const curHead=(m,sub)=>`<div class="cur-head"><span class="cur-tag">${MONEDAS[m].nombre} (${MONEDAS[m].sym})</span><span class="cur-sub">${sub||''}</span></div>`;
+
+/* ================= pantalla: Tablero general ================= */
+function renderTablero(){
+  let h=filterBar({note:'Cada total se puede abrir para ver los registros que lo componen.'});
+  monedasSel().forEach(m=>{
+    const per=F.periodo, u=F.unidad;
+    const ven=metric('ventas',m,per,u), cob=metric('cobros',m,per,u), pen=metric('pendiente',m,per,u), res=metric('resultado',m,per,u);
+    const hasta=finPeriodo(per);
+    const saldo=r2(cajasMon(m).reduce((s,c)=>s+saldoCaja(c,hasta),0));
+    const kp=(label,val,sub,spec,cls)=>`<div class="kpi click" onclick="drill(${dr(spec)})"><div class="kpi-label">${label}</div><div class="kpi-num mono ${cls||''}">${money(val,m)}</div><div class="kpi-sub">${sub}</div></div>`;
+    h+=curHead(m, u==='todas'?'Ambas unidades':'Unidad '+UNIDADES[u]);
+    h+=`<div class="kpi-row sm">
+      ${kp('Ventas registradas',ven.val,'Aún no es dinero en caja',ven.spec)}
+      ${kp('Cobros recibidos',cob.val,'Ingresó a caja por ventas',cob.spec)}
+      ${kp('Pendiente de cobro',pen.val,'Ventas sin cobrar',pen.spec,pen.val>0?'':'')}
+      ${kp('Resultado de caja',res.val,'Ingresos − egresos · no es utilidad contable',res.spec,res.val>=0?'pos':'neg')}
+      ${kp('Saldo de caja',saldo,'Todas las cajas en '+MONEDAS[m].nombre.toLowerCase(),{kind:'saldo',f:{moneda:m,hasta},moneda:m,mixed:true,title:`Saldo de caja · ${MONEDAS[m].nombre} · ${per==='todo'?'a la fecha':'al cierre de '+mesLabel(per)}`})}
+    </div>`;
+    /* comparación Cortada vs Nivel 0 */
+    const rows=[['ventas','Ventas registradas'],['cobros','Cobros recibidos'],['ingresos','Ingresos de caja'],['egresos','Egresos de caja'],['resultado','Resultado de caja']];
+    const cmp=rows.map(([k,l])=>{
+      const a=metric(k,m,per,'cortada'), b=metric(k,m,per,'nivel0'), t=metric(k,m,per,'todas');
+      const cls=k==='resultado'?(x=>x.val>=0?'pos':'neg'):(()=>'');
+      return `<tr><td>${l}</td><td class="num">${lk(a,m,cls(a))}</td><td class="num">${lk(b,m,cls(b))}</td><td class="num"><b>${lk(t,m,cls(t))}</b></td></tr>`;
+    }).join('');
+    /* saldo por caja */
+    const cajas=cajasMon(m).map(c=>`<div class="cat-item" style="cursor:pointer" onclick="drill(${dr({kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'})})"><span class="l"><span class="dot"></span>${esc(c.nombre)}</span><span class="amount lnk">${money(saldoCaja(c,hasta),m)}</span></div>`).join('');
+    /* gastos por categoría */
+    const gas=CAT_EGR.map(c=>({c, v:sm(selMovs({periodo:per,unidad:u,moneda:m,tipo:'egreso',categoria:c}))})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+    const mx=Math.max(1,...gas.map(x=>x.v));
+    const bars=gas.length?gas.map(x=>`<div class="bar-row" style="cursor:pointer" onclick="drill(${dr({kind:'movs',f:{periodo:per,unidad:u,moneda:m,tipo:'egreso',categoria:x.c},moneda:m,title:`Egresos · ${x.c} · ${MONEDAS[m].nombre}`})})"><div class="bar-row-top"><span>${x.c}</span><span class="amount">${money(x.v,m)}</span></div><div class="bar-track"><div style="width:${Math.max(3,x.v/mx*100)}%; background:var(--accent)"></div></div></div>`).join(''):'<div class="empty">Sin egresos con este filtro.</div>';
+    h+=`<div class="grid-2" style="margin-top:16px;">
+      <div class="panel"><div class="panel-head"><h2>Cortada vs. Nivel 0</h2><span class="hint">Ignora el filtro de unidad</span></div>
+        <table><thead><tr><th>Concepto</th><th class="num">Cortada</th><th class="num">Nivel 0</th><th class="num">Total</th></tr></thead><tbody>${cmp}</tbody></table></div>
+      <div class="stack">
+        <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Saldo por caja</h2><span class="hint">Cajas compartidas</span></div>${cajas}</div>
+        <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Egresos por categoría</h2></div><div style="padding:14px 20px 18px; display:flex; flex-direction:column; gap:12px;">${bars}</div></div>
+      </div></div>`;
+  });
+  $('view-tablero').innerHTML=h;
+}
+
+/* ================= pantalla: Caja y movimientos ================= */
+const ORIGEN_LBL={compra:'Compra / gasto', venta:'Cobro de venta', cuota:'Abono de cuota', manual:'Manual'};
+function movRow(m, opts={}){
+  const t=terceroDe(m.terceroId), r=razonDe(m.razonId), c=cajaDe(m.cajaId);
+  return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})">
+    <td>${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td>
+    <td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${ORIGEN_LBL[m.origen.tipo]}${m.obs?' · '+esc(m.obs):''}</div></td>
+    <td>${t?esc(t.alias||t.nombre):'—'}${r?`<div class="who-ci">${esc(r.nombre)}</div>`:''}</td>
+    <td>${esc(m.docTipo)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td>
+    <td>${esc(c.nombre)}</td>
+    <td class="num"><span class="amount ${m.tipo==='ingreso'?'pos':'neg'}">${opts.plain?'':(m.tipo==='ingreso'?'+':'−')}${money(m.monto,m.moneda)}</span></td></tr>`;
+}
+const MOV_HEAD='<thead><tr><th>Fecha</th><th>Unidad</th><th>Concepto</th><th>Tercero / razón social</th><th>Documento</th><th>Caja</th><th class="num">Monto</th></tr></thead>';
+function renderCaja(){
+  let h=filterBar({caja:true});
+  monedasSel().forEach(m=>{
+    const hasta=finPeriodo(F.periodo);
+    const cs=cajasMon(m).filter(c=>F.caja==='todas'||c.id===F.caja);
+    if(!cs.length) return;
+    h+=curHead(m,'Saldo '+(F.periodo==='todo'?'a la fecha':'al cierre de '+mesLabel(F.periodo)));
+    h+=`<div class="kpi-row sm">${cs.map(c=>`<div class="kpi click" onclick="drill(${dr({kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'})})"><div class="kpi-label">${esc(c.nombre)}</div><div class="kpi-num mono">${money(saldoCaja(c,hasta),m)}</div><div class="kpi-sub">Saldo inicial ${money(c.apertura,m)}</div></div>`).join('')}</div>`;
+  });
+  const rows=selMovs({periodo:F.periodo,unidad:F.unidad,cajaId:F.caja==='todas'?null:F.caja})
+    .filter(m=>F.moneda==='ambas'||m.moneda===F.moneda).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id);
+  h+=`<div class="panel" style="margin-top:20px;"><div class="panel-head"><h2>Movimientos</h2><span class="hint">${rows.length} registros · clic en una fila para ver el documento</span>
+    <button class="btn btn-sm" style="margin-left:14px;" onclick="openForm('mov',{tipo:'ingreso'})"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar ingreso</button>
+    <button class="btn btn-primary btn-sm" onclick="openForm('mov',{tipo:'egreso'})"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar egreso</button></div>
+    <table>${MOV_HEAD}<tbody>${rows.length?rows.map(m=>movRow(m)).join(''):emptyRow(7)}</tbody></table></div>`;
+  $('view-caja').innerHTML=h;
+}
+
+/* ================= pantalla: Ventas de mineral ================= */
+function ventaEstado(v){const p=pendiente(v); return p<=0?'<span class="stag ok">Cobrada</span>':(cobrado(v)>0?'<span class="stag warn">Cobro parcial</span>':'<span class="stag bad">Sin cobrar</span>');}
+function renderVentas(){
+  let h=filterBar({note:'Registrar una venta no aumenta la caja: el dinero entra al registrar el cobro.'});
+  monedasSel().forEach(m=>{
+    const per=F.periodo,u=F.unidad;
+    const a=metric('ventas',m,per,u), b=metric('cobros',m,per,u), c=metric('pendiente',m,per,u);
+    h+=curHead(m);
+    h+=`<div class="kpi-row sm">
+      <div class="kpi click" onclick="drill(${dr(a.spec)})"><div class="kpi-label">Ventas registradas</div><div class="kpi-num mono">${money(a.val,m)}</div><div class="kpi-sub">${selVentas({periodo:per,unidad:u,moneda:m}).length} ventas</div></div>
+      <div class="kpi click" onclick="drill(${dr(b.spec)})"><div class="kpi-label">Cobros recibidos</div><div class="kpi-num mono pos">${money(b.val,m)}</div><div class="kpi-sub">Ya está en caja</div></div>
+      <div class="kpi click" onclick="drill(${dr(c.spec)})"><div class="kpi-label">Pendiente de cobro</div><div class="kpi-num mono ${c.val>0?'neg':''}">${money(c.val,m)}</div><div class="kpi-sub">Por cobrar a la planta</div></div></div>`;
+  });
+  const rows=selVentas({periodo:F.periodo,unidad:F.unidad}).filter(v=>F.moneda==='ambas'||v.moneda===F.moneda).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id);
+  h+=`<div class="panel" style="margin-top:20px;"><div class="panel-head"><h2>Ventas</h2><span class="hint">${rows.length} registros</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('venta')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar venta</button></div>
+    <table><thead><tr><th>Fecha</th><th>Unidad</th><th>Accionista · razón social</th><th>Planta compradora</th><th>Liquidación · carga</th><th class="num">Monto</th><th class="num">Cobrado</th><th class="num">Pendiente</th><th>Estado</th><th></th></tr></thead><tbody>
+    ${rows.length?rows.map(v=>{const a=terceroDe(v.accionistaId), r=razonDe(v.razonId), p=terceroDe(v.plantaId), pen=pendiente(v);
+      return `<tr onclick="ventaDetalle(${v.id})"><td>${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td>
+      <td>${esc(v.docNum)}<div class="who-ci">${esc(v.docTipo)} · carga ${esc(v.carga||'—')}</div></td>
+      <td class="num amount">${money(v.monto,v.moneda)}</td><td class="num amount pos">${money(cobrado(v),v.moneda)}</td><td class="num amount ${pen>0?'neg':''}">${money(pen,v.moneda)}</td><td>${ventaEstado(v)}</td>
+      <td>${pen>0?`<button class="btn btn-sm" onclick="event.stopPropagation();openForm('cobro',{ventaId:${v.id}})">Registrar cobro</button>`:''}</td></tr>`;}).join(''):emptyRow(10)}
+    </tbody></table></div>`;
+  $('view-ventas').innerHTML=h;
+}
+function ventaDetalle(id){
+  const v=S.ventas.find(x=>x.id===id), a=terceroDe(v.accionistaId), r=razonDe(v.razonId), p=terceroDe(v.plantaId);
+  const cs=selMovs({origen:'venta',origenId:id}).sort((x,y)=>x.fecha.localeCompare(y.fecha));
+  const body=`<div class="det-total"><span class="big mono">${money(v.monto,v.moneda)}</span>${ventaEstado(v)}<span class="cur-sub">Cobrado ${money(cobrado(v),v.moneda)} · pendiente ${money(pendiente(v),v.moneda)}</span></div>
+    <div class="field-grid">
+      <div><div class="field-label">Unidad operativa</div><div class="field-val">${UNIDADES[v.unidad]}</div></div>
+      <div><div class="field-label">Fecha</div><div class="field-val">${fechaTxt(v.fecha)}</div></div>
+      <div><div class="field-label">Accionista</div><div class="field-val">${esc(a.alias)}</div></div>
+      <div><div class="field-label">Razón social</div><div class="field-val">${esc(r.nombre)}</div></div>
+      <div><div class="field-label">Planta compradora</div><div class="field-val">${esc(p.nombre)}</div></div>
+      <div><div class="field-label">${esc(v.docTipo)} · carga</div><div class="field-val">${esc(v.docNum)} · ${esc(v.carga||'—')}</div></div>
+    </div>
+    <h2 style="font-size:14px; margin:6px 0 0;">Cobros registrados</h2>
+    <table><thead><tr><th>Fecha</th><th>Caja</th><th>Documento</th><th class="num">Monto</th></tr></thead><tbody>${cs.length?cs.map(c=>`<tr onclick="docMov(${c.id})"><td>${fechaTxt(c.fecha)}</td><td>${esc(cajaDe(c.cajaId).nombre)}</td><td>${esc(c.docTipo)} ${esc(c.docNum)}</td><td class="num amount pos">${money(c.monto,c.moneda)}</td></tr>`).join(''):emptyRow(4,'Aún no se registró ningún cobro: la caja no ha cambiado por esta venta.')}</tbody></table>
+    ${pendiente(v)>0?`<div><button class="btn btn-primary" onclick="closeModal('modal-detail');openForm('cobro',{ventaId:${v.id}})">Registrar cobro</button></div>`:''}`;
+  showDetail('Venta '+v.docNum, body, true);
+}
+
+/* ================= pantalla: Compras y gastos ================= */
+function renderCompras(){
+  let h=filterBar();
+  monedasSel().forEach(m=>{
+    const per=F.periodo,u=F.unidad;
+    const tot=metric('egresos',m,per,u);
+    const gas=CAT_EGR.map(c=>({c, v:sm(selMovs({periodo:per,unidad:u,moneda:m,tipo:'egreso',origen:'compra',categoria:c}))})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+    h+=curHead(m,'Compras y gastos registrados');
+    h+=`<div class="kpi-row sm">
+      <div class="kpi click" onclick="drill(${dr({kind:'movs',f:{periodo:per,unidad:u,moneda:m,tipo:'egreso',origen:'compra'},moneda:m,title:`Compras y gastos · ${MONEDAS[m].nombre}`})})"><div class="kpi-label">Total compras y gastos</div><div class="kpi-num mono neg">${money(sm(selMovs({periodo:per,unidad:u,moneda:m,tipo:'egreso',origen:'compra'})),m)}</div><div class="kpi-sub">Incluye planillas</div></div>
+      ${gas.slice(0,4).map(x=>`<div class="kpi click" onclick="drill(${dr({kind:'movs',f:{periodo:per,unidad:u,moneda:m,tipo:'egreso',origen:'compra',categoria:x.c},moneda:m,title:`${x.c} · ${MONEDAS[m].nombre}`})})"><div class="kpi-label">${x.c}</div><div class="kpi-num mono">${money(x.v,m)}</div><div class="kpi-sub">Categoría</div></div>`).join('')}</div>`;
+  });
+  const rows=selMovs({periodo:F.periodo,unidad:F.unidad,tipo:'egreso',origen:'compra'}).filter(m=>F.moneda==='ambas'||m.moneda===F.moneda).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id);
+  h+=`<div class="panel" style="margin-top:20px;"><div class="panel-head"><h2>Compras y gastos</h2><span class="hint">${rows.length} registros</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('compra')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Registrar compra o gasto</button></div>
+    <table><thead><tr><th>Fecha</th><th>Unidad</th><th>Categoría · concepto</th><th>Proveedor</th><th>Documento</th><th>Caja</th><th class="num">Monto</th></tr></thead><tbody>
+    ${rows.length?rows.map(m=>{const t=terceroDe(m.terceroId),c=cajaDe(m.cajaId);
+      return `<tr class="${m.id===LASTNEW?'audit-new':''}" onclick="docMov(${m.id})"><td>${fechaTxt(m.fecha)}</td><td>${unidadTag(m.unidad)}</td><td><div class="who-name">${esc(m.categoria)}</div><div class="who-ci">${esc(m.obs)}</div></td><td>${t?esc(t.nombre):'<span class="who-ci">Planilla interna</span>'}</td><td>${esc(m.docTipo)}<div class="who-ci">${esc(m.docNum||'s/n')}</div></td><td>${esc(c.nombre)}</td><td class="num amount neg">${money(m.monto,m.moneda)}</td></tr>`;}).join(''):emptyRow(7)}
+    </tbody></table></div>`;
+  $('view-compras').innerHTML=h;
+}
+
+/* ================= pantalla: Cuotas de accionistas ================= */
+function renderCuotas(){
+  let h=filterBar({periodo:false, note:'Las cuotas no dependen del periodo: muestran el saldo vigente.'});
+  monedasSel().forEach(m=>{
+    const cs=selCuotas({unidad:F.unidad,moneda:m});
+    const asig=r2(cs.reduce((s,c)=>s+c.monto,0)), abo=r2(cs.reduce((s,c)=>s+abonado(c),0)), pen=r2(asig-abo);
+    h+=curHead(m,'Cuotas asignadas');
+    h+=`<div class="kpi-row sm">
+      <div class="kpi click" onclick="drill(${dr({kind:'cuotas',f:{unidad:F.unidad,moneda:m},moneda:m,title:'Cuotas asignadas · '+MONEDAS[m].nombre})})"><div class="kpi-label">Cuota asignada</div><div class="kpi-num mono">${money(asig,m)}</div><div class="kpi-sub">${cs.length} accionistas</div></div>
+      <div class="kpi click" onclick="drill(${dr({kind:'movs',f:{unidad:F.unidad,moneda:m,origen:'cuota'},moneda:m,title:'Abonos recibidos · '+MONEDAS[m].nombre})})"><div class="kpi-label">Abonos recibidos</div><div class="kpi-num mono pos">${money(abo,m)}</div><div class="kpi-sub">Ya está en caja</div></div>
+      <div class="kpi click" onclick="drill(${dr({kind:'cuotas',f:{unidad:F.unidad,moneda:m,pendiente:true},moneda:m,campo:'saldo',title:'Cuotas pendientes · '+MONEDAS[m].nombre})})"><div class="kpi-label">Saldo pendiente</div><div class="kpi-num mono ${pen>0?'neg':''}">${money(pen,m)}</div><div class="kpi-sub">Deuda de accionistas</div></div></div>`;
+  });
+  const cs=selCuotas({unidad:F.unidad}).filter(c=>F.moneda==='ambas'||c.moneda===F.moneda);
+  h+=`<div class="panel" style="margin-top:20px;"><div class="panel-head"><h2>Cuotas por accionista</h2><span class="hint">Clic en una fila para abrir al accionista</span></div>
+    <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Cuota asignada</th><th class="num">Abonado</th><th class="num">Saldo pendiente</th><th>Avance</th><th></th></tr></thead><tbody>
+    ${cs.length?cs.map(c=>{const a=terceroDe(c.accionistaId), ab=abonado(c), sd=saldoCuota(c), pct=Math.min(100,Math.round(ab/c.monto*100));
+      return `<tr class="${c.id===LASTNEW?'audit-new':''}" onclick="openAccionista('${a.id}')"><td><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(c.concepto)}</div></td><td>${unidadTag(a.unidad)}</td>
+      <td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(ab,c.moneda)}</td><td class="num amount ${sd>0?'neg':''}">${money(sd,c.moneda)}</td>
+      <td><div class="pct-cell"><div class="pct-track"><div style="width:${pct}%"></div></div><span class="pct-txt">${pct}%</span></div></td>
+      <td>${sd>0?`<button class="btn btn-sm" onclick="event.stopPropagation();openForm('abono',{cuotaId:${c.id}})">Registrar abono</button>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join(''):emptyRow(7)}
+    </tbody></table></div>`;
+  $('view-cuotas').innerHTML=h;
+}
+
+/* ================= pantalla: Accionistas y terceros ================= */
+function renderTerceros(){
+  const tabs=[['accionistas','Accionistas'],['razones','Razones sociales'],['proveedores','Proveedores'],['plantas','Plantas compradoras']];
+  let h=`<div class="subtoggle">${tabs.map(([k,l])=>`<button class="${F.tab===k?'active':''}" onclick="F.tab='${k}';renderTerceros()">${l}</button>`).join('')}</div>`;
+  let head, rows, nuevo=true;
+  if(F.tab==='accionistas'){
+    head='<tr><th>Alias</th><th>Unidad</th><th>Razones sociales vinculadas</th><th>Ventas</th><th>Cuota pendiente</th></tr>';
+    rows=S.terceros.filter(t=>t.tipo==='accionista').map(a=>{
+      const pend=['PEN','USD'].map(m=>({m,v:r2(selCuotas({accionistaId:a.id,moneda:m}).reduce((s,c)=>s+saldoCuota(c),0))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
+      return `<tr onclick="openAccionista('${a.id}')"><td><div class="who-cell"><div class="avatar">${esc(a.alias.replace(/\./g,'').slice(0,2))}</div><div><div class="who-name">${esc(a.alias)}</div><div class="who-ci">${esc(a.nombre)}</div></div></div></td><td>${unidadTag(a.unidad)}</td><td>${a.razones.map(id=>`<span class="chip">${esc(razonDe(id).nombre)}</span>`).join('')}</td><td>${selVentas({accionistaId:a.id}).length}</td><td class="amount">${pend}</td></tr>`;}).join('');
+  } else if(F.tab==='razones'){
+    head='<tr><th>Razón social</th><th>RUC (ficticio)</th><th>Accionistas vinculados</th></tr>';
+    rows=S.razones.map(r=>`<tr style="cursor:default"><td class="who-name">${esc(r.nombre)}</td><td class="mono">${esc(r.ruc)}</td><td>${S.terceros.filter(t=>t.tipo==='accionista'&&t.razones.includes(r.id)).map(a=>`<span class="chip">${esc(a.alias)}</span>`).join('')||'—'}</td></tr>`).join('');
+  } else if(F.tab==='proveedores'){
+    head='<tr><th>Proveedor</th><th>Categoría habitual</th><th>Movimientos</th><th class="num">Total pagado</th></tr>';
+    rows=S.terceros.filter(t=>t.tipo==='proveedor').map(p=>{
+      const tot=['PEN','USD'].map(m=>({m,v:sm(selMovs({terceroId:p.id,moneda:m}))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td><span class="chip">${esc(p.habitual||'—')}</span></td><td>${selMovs({terceroId:p.id}).length}</td><td class="num amount">${tot}</td></tr>`;}).join('');
+  } else {
+    head='<tr><th>Planta compradora</th><th>Ventas</th><th class="num">Total vendido</th><th class="num">Pendiente de cobro</th></tr>';
+    rows=S.terceros.filter(t=>t.tipo==='planta').map(p=>{
+      const vs=S.ventas.filter(v=>v.plantaId===p.id);
+      const tot=['PEN','USD'].map(m=>({m,v:sm(vs.filter(v=>v.moneda===m))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
+      const pen=['PEN','USD'].map(m=>({m,v:r2(vs.filter(v=>v.moneda===m).reduce((s,v)=>s+pendiente(v),0))})).filter(x=>x.v>0).map(x=>money(x.v,x.m)).join(' · ')||'—';
+      return `<tr style="cursor:default"><td class="who-name">${esc(p.nombre)}</td><td>${vs.length}</td><td class="num amount">${tot}</td><td class="num amount">${pen}</td></tr>`;}).join('');
+  }
+  h+=`<div class="panel"><div class="panel-head"><h2>${tabs.find(t=>t[0]===F.tab)[1]}</h2><span class="hint">Datos ficticios identificados</span>
+    <button class="btn btn-primary btn-sm" style="margin-left:14px;" onclick="openForm('tercero')"><svg class="icon" style="width:14px;height:14px"><use href="#i-plus"/></svg>Nuevo tercero</button></div>
+    <table><thead>${head}</thead><tbody>${rows}</tbody></table></div>`;
+  $('view-terceros').innerHTML=h;
+}
+
+function openAccionista(id){
+  DRAWER_ID=id; paintDrawer(); $('overlay').classList.add('show'); $('drawer').classList.add('show');
+}
+function paintDrawer(){
+  if(!DRAWER_ID) return;
+  const a=terceroDe(DRAWER_ID);
+  const cuotas=selCuotas({accionistaId:a.id});
+  const ventas=selVentas({accionistaId:a.id}).sort((x,y)=>y.fecha.localeCompare(x.fecha));
+  const abonos=selMovs({terceroId:a.id,origen:'cuota'}).sort((x,y)=>y.fecha.localeCompare(x.fecha));
+  $('drawer').innerHTML=`
+    <div class="drawer-head"><button class="iconbtn drawer-close" onclick="closeAll()"><svg class="icon"><use href="#i-x"/></svg></button>
+      <div class="who-cell"><div class="drawer-avatar">${esc(a.alias.replace(/\./g,'').slice(0,2))}</div><div><h2 style="margin:0; font-size:18px;">${esc(a.alias)}</h2><div class="who-ci">${esc(a.nombre)} · ${UNIDADES[a.unidad]}</div></div></div></div>
+    <div class="drawer-body">
+      <div><div class="field-label">Razones sociales vinculadas</div>${a.razones.map(id=>{const r=razonDe(id); return `<div class="doc-chip" style="margin-top:6px"><span class="ic"><svg class="icon" style="width:13px;height:13px"><use href="#i-doc"/></svg></span><span>${esc(r.nombre)}<div class="who-ci">RUC ficticio ${esc(r.ruc)}</div></span></div>`;}).join('')}</div>
+      ${cuotas.map(c=>{const ab=abonado(c), sd=saldoCuota(c), pct=Math.min(100,Math.round(ab/c.monto*100)); return `<div class="loan-card">
+        <div class="field-label">${esc(c.concepto)} · vence ${fechaTxt(c.vence)}</div>
+        <div class="loan-row"><span class="l">Cuota asignada</span><span class="amount">${money(c.monto,c.moneda)}</span></div>
+        <div class="loan-row"><span class="l">Abonos recibidos</span><span class="amount pos">${money(ab,c.moneda)}</span></div>
+        <div class="loan-row"><span class="l">Saldo pendiente</span><span class="amount ${sd>0?'neg':''}">${money(sd,c.moneda)}</span></div>
+        <div class="progress"><div style="width:${pct}%"></div></div>
+        ${sd>0?`<div style="margin-top:14px"><button class="btn btn-primary btn-sm" onclick="openForm('abono',{cuotaId:${c.id}})">Registrar abono</button></div>`:''}</div>`;}).join('')}
+      <div><div class="field-label" style="margin-bottom:6px">Abonos</div><div class="timeline">${abonos.length?abonos.map(m=>`<div class="tl-item" style="cursor:pointer" onclick="docMov(${m.id})"><div class="tl-dot"></div><div><div class="tl-title">${money(m.monto,m.moneda)} · ${esc(cajaDe(m.cajaId).nombre)}</div><div class="tl-sub">${fechaTxt(m.fecha)} · ${esc(m.docTipo)} ${esc(m.docNum)}</div></div></div>`).join(''):'<div class="who-ci">Sin abonos todavía.</div>'}</div></div>
+      <div><div class="field-label" style="margin-bottom:6px">Ventas de mineral</div>${ventas.length?ventas.map(v=>`<div class="doc-chip" style="margin-bottom:6px; cursor:pointer; justify-content:space-between" onclick="ventaDetalle(${v.id})"><span>${fechaTxt(v.fecha)} · ${esc(v.docNum)}</span><span class="amount">${money(v.monto,v.moneda)}</span></div>`).join(''):'<div class="who-ci">Sin ventas registradas.</div>'}</div>
+    </div>`;
+}
+
+/* ================= pantalla: Reportes y resúmenes ================= */
+function renderReportes(){
+  let h=filterBar({note:'Todos los importes son clicables y abren el detalle.'});
+  monedasSel().forEach(m=>{
+    const per=F.periodo, hasta=finPeriodo(per);
+    h+=curHead(m, per==='todo'?'Todo el periodo':mesLabel(per));
+    /* 1 ingresos y egresos por unidad */
+    const us=['cortada','nivel0'].map(u=>{const i=metric('ingresos',m,per,u), e=metric('egresos',m,per,u), r=metric('resultado',m,per,u); return `<tr style="cursor:default"><td>${unidadTag(u)}</td><td class="num">${lk(i,m,'pos')}</td><td class="num">${lk(e,m,'neg')}</td><td class="num">${lk(r,m,r.val>=0?'pos':'neg')}</td></tr>`;}).join('');
+    const ti=metric('ingresos',m,per,'todas'), te=metric('egresos',m,per,'todas'), tr=metric('resultado',m,per,'todas');
+    /* 2 ventas por accionista */
+    const acc=S.terceros.filter(t=>t.tipo==='accionista').map(a=>{
+      const f={periodo:per,moneda:m,accionistaId:a.id}; const vs=selVentas(f); if(!vs.length) return '';
+      const tot=sm(vs), cb=r2(vs.reduce((s,v)=>s+cobrado(v),0)), pn=r2(vs.reduce((s,v)=>s+pendiente(v),0));
+      const sp=(c,t)=>({kind:'ventas',f:c==='p'?{...f,pendiente:true}:f,campo:c==='p'?'pendiente':'monto',moneda:m,title:`${t} · ${a.alias} · ${MONEDAS[m].nombre}`});
+      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${lk({val:tot,spec:sp('m','Ventas')},m)}</td><td class="num">${money(cb,m)}</td><td class="num">${lk({val:pn,spec:sp('p','Pendiente de cobro')},m,pn>0?'neg':'')}</td></tr>`;}).join('');
+    /* 3 gastos por categoría */
+    const gcat=CAT_EGR.map(c=>{const a=sm(selMovs({periodo:per,unidad:'cortada',moneda:m,tipo:'egreso',categoria:c})), b=sm(selMovs({periodo:per,unidad:'nivel0',moneda:m,tipo:'egreso',categoria:c})); if(!a&&!b) return '';
+      const sp=u=>({kind:'movs',f:{periodo:per,unidad:u,moneda:m,tipo:'egreso',categoria:c},moneda:m,title:`${c} · ${u==='todas'?'ambas unidades':UNIDADES[u]} · ${MONEDAS[m].nombre}`});
+      return `<tr style="cursor:default"><td>${c}</td><td class="num">${a?lk({val:a,spec:sp('cortada')},m):'—'}</td><td class="num">${b?lk({val:b,spec:sp('nivel0')},m):'—'}</td><td class="num"><b>${lk({val:r2(a+b),spec:sp('todas')},m)}</b></td></tr>`;}).join('');
+    /* 4 movimientos de caja */
+    const cj=cajasMon(m).map(c=>{
+      const antes=r2(c.apertura+selMovs({cajaId:c.id}).filter(x=>per!=='todo'&&x.fecha<per+'-01').reduce((s,x)=>s+signed(x),0));
+      const ing=sm(selMovs({periodo:per,cajaId:c.id,tipo:'ingreso'})), eg=sm(selMovs({periodo:per,cajaId:c.id,tipo:'egreso'}));
+      const sp=(t,ti)=>({kind:'movs',f:{periodo:per,cajaId:c.id,tipo:t},moneda:m,title:`${ti} · ${c.nombre}`});
+      return `<tr style="cursor:default"><td>${esc(c.nombre)}</td><td class="num">${money(antes,m)}</td><td class="num">${lk({val:ing,spec:sp('ingreso','Ingresos')},m,'pos')}</td><td class="num">${lk({val:eg,spec:sp('egreso','Egresos')},m,'neg')}</td><td class="num"><b>${lk({val:saldoCaja(c,hasta),spec:{kind:'saldo',f:{moneda:m,cajaId:c.id,hasta},moneda:m,mixed:true,title:c.nombre+' · movimientos y saldo'}},m)}</b></td></tr>`;}).join('');
+    /* 5 cuotas pendientes */
+    const cq=selCuotas({moneda:m}).map(c=>{const a=terceroDe(c.accionistaId), ab=abonado(c), sd=saldoCuota(c);
+      return `<tr style="cursor:default"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td class="num">${money(c.monto,m)}</td><td class="num">${lk({val:ab,spec:{kind:'movs',f:{moneda:m,origen:'cuota',origenId:c.id},moneda:m,title:`Abonos · ${a.alias}`}},m,'pos')}</td><td class="num">${sd>0?`<b class="amount neg">${money(sd,m)}</b>`:'<span class="stag ok">Al día</span>'}</td></tr>`;}).join('');
+    h+=`<div class="grid-eq">
+      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Ingresos y egresos por unidad</h2></div>
+        <table><thead><tr><th>Unidad</th><th class="num">Ingresos</th><th class="num">Egresos</th><th class="num">Resultado de caja</th></tr></thead><tbody>${us}
+        <tr style="cursor:default"><td><b>Total</b></td><td class="num"><b>${lk(ti,m,'pos')}</b></td><td class="num"><b>${lk(te,m,'neg')}</b></td><td class="num"><b>${lk(tr,m,tr.val>=0?'pos':'neg')}</b></td></tr></tbody></table></div>
+      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Ventas por accionista</h2></div>
+        <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Ventas</th><th class="num">Cobrado</th><th class="num">Pendiente</th></tr></thead><tbody>${acc||emptyRow(5)}</tbody></table></div>
+      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Gastos por categoría</h2></div>
+        <table><thead><tr><th>Categoría</th><th class="num">Cortada</th><th class="num">Nivel 0</th><th class="num">Total</th></tr></thead><tbody>${gcat||emptyRow(4)}</tbody></table></div>
+      <div class="panel"><div class="panel-head"><h2 style="font-size:14px;">Movimientos de caja</h2></div>
+        <table><thead><tr><th>Caja</th><th class="num">Saldo inicial</th><th class="num">Ingresos</th><th class="num">Egresos</th><th class="num">Saldo final</th></tr></thead><tbody>${cj}</tbody></table></div>
+      <div class="panel" style="grid-column:1/-1"><div class="panel-head"><h2 style="font-size:14px;">Cuotas pendientes</h2><span class="hint">No depende del periodo</span></div>
+        <table><thead><tr><th>Accionista</th><th>Unidad</th><th class="num">Cuota asignada</th><th class="num">Abonado</th><th class="num">Saldo pendiente</th></tr></thead><tbody>${cq||emptyRow(5)}</tbody></table></div>
+    </div>`;
+  });
+  $('view-reportes').innerHTML=h;
+}
+
+/* ================= detalle / drill-down ================= */
+function drill(i){
+  const sp=DR[i]; if(!sp) return;
+  let body='', total=0, n=0, nota='';
+  if(sp.kind==='movs'||sp.kind==='saldo'){
+    const rows=selMovs(sp.f).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id);
+    let ap=0, apRows='';
+    if(sp.kind==='saldo'){
+      const cs=cajasMon(sp.moneda).filter(c=>!sp.f.cajaId||c.id===sp.f.cajaId);
+      ap=r2(cs.reduce((s,c)=>s+c.apertura,0));
+      apRows=cs.map(c=>`<tr style="cursor:default"><td>—</td><td></td><td><div class="who-name">Saldo inicial</div></td><td>—</td><td>—</td><td>${esc(c.nombre)}</td><td class="num amount">${money(c.apertura,sp.moneda)}</td></tr>`).join('');
+    }
+    total=r2(ap+rows.reduce((s,m)=>s+(sp.mixed||sp.kind==='saldo'?signed(m):m.monto),0)); n=rows.length;
+    body=`<table>${MOV_HEAD}<tbody>${rows.map(m=>movRow(m,{plain:!sp.mixed&&sp.kind!=='saldo'})).join('')}${apRows}${!rows.length&&!apRows?emptyRow(7):''}</tbody></table>`;
+    nota='Haz clic en un movimiento para ver su documento de ejemplo.';
+  } else if(sp.kind==='ventas'){
+    const rows=selVentas(sp.f).sort((a,b)=>b.fecha.localeCompare(a.fecha)||b.id-a.id); n=rows.length;
+    total=r2(rows.reduce((s,v)=>s+(sp.campo==='pendiente'?pendiente(v):v.monto),0));
+    body=`<table><thead><tr><th>Fecha</th><th>Unidad</th><th>Accionista · razón social</th><th>Planta</th><th>Liquidación</th><th class="num">Monto</th><th class="num">Cobrado</th><th class="num">Pendiente</th></tr></thead><tbody>${rows.map(v=>{const a=terceroDe(v.accionistaId),r=razonDe(v.razonId),p=terceroDe(v.plantaId);
+      return `<tr onclick="ventaDetalle(${v.id})"><td>${fechaTxt(v.fecha)}</td><td>${unidadTag(v.unidad)}</td><td>${esc(a.alias)}<div class="who-ci">${esc(r.nombre)}</div></td><td>${esc(p.nombre)}</td><td>${esc(v.docNum)}</td><td class="num amount">${money(v.monto,v.moneda)}</td><td class="num amount pos">${money(cobrado(v),v.moneda)}</td><td class="num amount">${money(pendiente(v),v.moneda)}</td></tr>`;}).join('')||emptyRow(8)}</tbody></table>`;
+    nota='Haz clic en una venta para ver sus cobros.';
+  } else if(sp.kind==='cuotas'){
+    const rows=selCuotas(sp.f); n=rows.length;
+    total=r2(rows.reduce((s,c)=>s+(sp.campo==='saldo'?saldoCuota(c):c.monto),0));
+    body=`<table><thead><tr><th>Accionista</th><th>Unidad</th><th>Concepto</th><th class="num">Asignada</th><th class="num">Abonado</th><th class="num">Saldo</th></tr></thead><tbody>${rows.map(c=>{const a=terceroDe(c.accionistaId);
+      return `<tr onclick="openAccionista('${a.id}')"><td>${esc(a.alias)}</td><td>${unidadTag(a.unidad)}</td><td>${esc(c.concepto)}</td><td class="num amount">${money(c.monto,c.moneda)}</td><td class="num amount pos">${money(abonado(c),c.moneda)}</td><td class="num amount">${money(saldoCuota(c),c.moneda)}</td></tr>`;}).join('')||emptyRow(6)}</tbody></table>`;
+  }
+  const head=`<div class="det-total"><span class="big mono ${sp.mixed&&total<0?'neg':''}">${money(total,sp.moneda)}</span><span class="cur-sub">${n} registro${n===1?'':'s'} componen este total${sp.kind==='saldo'?' (incluye saldo inicial)':''}. ${nota}</span></div>`;
+  DETSTACK=[]; showDetail(sp.title, head+body, false);
+}
+function showDetail(title, html, push){
+  if(!push) DETSTACK=[];
+  DETSTACK.push({title, html});
+  paintDetail();
+  openModal('modal-detail');
+}
+function paintDetail(){
+  const cur=DETSTACK[DETSTACK.length-1];
+  $('detTitle').textContent=cur.title; $('detBody').innerHTML=cur.html;
+  $('detBack').style.display=DETSTACK.length>1?'inline-flex':'none';
+}
+function detBack(){ DETSTACK.pop(); paintDetail(); }
+
+/* documento de ejemplo */
+function docMov(id){
+  const m=S.movs.find(x=>x.id===id), t=terceroDe(m.terceroId), r=razonDe(m.razonId), c=cajaDe(m.cajaId);
+  docSample({tipo:m.docTipo, num:m.docNum, fecha:m.fecha, tercero:t?(t.alias||t.nombre):'—', razon:r?r.nombre:'—', concepto:m.categoria+(m.obs?' · '+m.obs:''), unidad:UNIDADES[m.unidad], caja:c.nombre, monto:money(m.monto,m.moneda), flujo:m.tipo});
+}
+function docSample(o){
+  $('docBody').innerHTML=`<div class="sheet"><h4>${esc(o.tipo)} ${esc(o.num||'(sin número)')}</h4><div class="muted2">Documento de ejemplo — ilustrativo, no es un comprobante real</div>
+    <table><tbody>
+      <tr style="cursor:default"><td>Fecha</td><td>${o.fecha?fechaTxt(o.fecha):'—'}</td></tr>
+      <tr style="cursor:default"><td>${o.flujo==='ingreso'?'Pagador':'Proveedor / tercero'}</td><td>${esc(o.tercero)}</td></tr>
+      <tr style="cursor:default"><td>Razón social</td><td>${esc(o.razon)}</td></tr>
+      <tr style="cursor:default"><td>Concepto</td><td>${esc(o.concepto)}</td></tr>
+      <tr style="cursor:default"><td>Unidad operativa</td><td>${esc(o.unidad)}</td></tr>
+      <tr style="cursor:default"><td>Caja</td><td>${esc(o.caja)}</td></tr>
+      <tr class="totalrow" style="cursor:default"><td>Monto</td><td>${esc(o.monto)}</td></tr>
+    </tbody></table>
+    <div class="docbox"><svg class="icon" style="width:22px;height:22px;margin:0 auto 6px"><use href="#i-file-img"/></svg>Aquí se adjuntaría el PDF o la foto del comprobante</div></div>`;
+  openModal('modal-doc');
+}
+
+/* ================= formularios ================= */
+const optsCaja=(m,sel)=>cajasMon(m).map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${esc(c.nombre)} · saldo ${money(saldoCaja(c),m)}</option>`).join('');
+const optsCat=t=>(t==='ingreso'?CAT_ING:CAT_EGR).map(c=>`<option>${c}</option>`).join('');
+const optsDoc=(sel)=>DOC_TIPOS.map(d=>`<option ${d===sel?'selected':''}>${d}</option>`).join('');
+const optsUni=sel=>Object.entries(UNIDADES).map(([k,v])=>`<option value="${k}" ${k===sel?'selected':''}>${v}</option>`).join('');
+const optsMon=sel=>Object.entries(MONEDAS).map(([k,v])=>`<option value="${k}" ${k===sel?'selected':''}>${v.nombre} (${v.sym})</option>`).join('');
+function optsTercero(mode){
+  const grp=(l,tipo)=>`<optgroup label="${l}">${S.terceros.filter(t=>t.tipo===tipo).map(t=>`<option value="${t.id}">${esc(t.alias||t.nombre)}</option>`).join('')}</optgroup>`;
+  if(mode==='compra') return grp('Proveedores','proveedor');
+  return '<option value="">— Sin tercero —</option>'+grp('Accionistas','accionista')+grp('Proveedores','proveedor')+grp('Plantas compradoras','planta');
+}
+function optsRazonTercero(id){
+  const t=terceroDe(id);
+  const list=t&&t.tipo==='accionista'?t.razones.map(razonDe):S.razones;
+  return '<option value="">— Ninguna —</option>'+list.map(r=>`<option value="${r.id}">${esc(r.nombre)}</option>`).join('');
+}
+const optsAcc=u=>S.terceros.filter(t=>t.tipo==='accionista'&&(!u||t.unidad===u)).map(t=>`<option value="${t.id}">${esc(t.alias)}</option>`).join('');
+const optsRazonAcc=id=>{const t=terceroDe(id); return t?t.razones.map(razonDe).map(r=>`<option value="${r.id}">${esc(r.nombre)}</option>`).join(''):'';};
+const fl=(label,inner,extra='')=>`<label class="fl" ${extra}>${label}${inner}</label>`;
+const inp=(id,type,val,extra='')=>`<input class="fi" id="${id}" type="${type}" value="${esc(val)}" ${extra}>`;
+const selx=(id,opts,extra='')=>`<select class="fi" id="${id}" onchange="formChanged(this.id)" ${extra}>${opts}</select>`;
+const docBtn='<div><button type="button" class="btn btn-sm" onclick="docDesdeForm()"><svg class="icon" style="width:13px;height:13px"><use href="#i-file-img"/></svg>Ver documento de ejemplo</button></div>';
+
+function openForm(mode, ctx={}){
+  FORM={mode,ctx}; const hoy=hoyISO(); const u0=F.unidad!=='todas'?F.unidad:null;
+  const mon0=F.moneda==='USD'?'USD':'PEN';
+  let title='', ok='Guardar', body='';
+  if(mode==='mov'||mode==='compra'){
+    const tipo=mode==='compra'?'egreso':(ctx.tipo||'ingreso');
+    title=mode==='compra'?'Registrar compra o gasto':(tipo==='ingreso'?'Registrar ingreso':'Registrar egreso');
+    body=`<div class="field-grid">
+      ${fl('Fecha',inp('f-fecha','date',hoy))}
+      ${mode==='mov'?fl('Tipo de operación',selx('f-tipo',`<option value="ingreso" ${tipo==='ingreso'?'selected':''}>Ingreso</option><option value="egreso" ${tipo==='egreso'?'selected':''}>Egreso</option>`)):fl('Tipo de operación','<input class="fi" value="Egreso (compra o gasto)" disabled>')}
+      ${fl('Unidad operativa',selx('f-unidad',optsUni(u0||'cortada')))}
+      ${fl('Categoría o concepto',selx('f-cat',optsCat(tipo)))}
+      ${fl(mode==='compra'?'Proveedor':'Accionista, proveedor o comprador',selx('f-ter',optsTercero(mode)))}
+      ${fl('Razón social relacionada',selx('f-rs',optsRazonTercero(mode==='compra'?'':'')))}
+      ${fl('Moneda',selx('f-mon',optsMon(mon0)))}
+      ${fl('Caja',selx('f-caja',optsCaja(mon0)))}
+      ${fl('Monto',inp('f-monto','number','','min="0" step="0.01" placeholder="0.00"'))}
+      ${fl('Tipo de documento',selx('f-doct',optsDoc(mode==='compra'?'Factura':'Recibo')))}
+      ${fl('Número de documento o referencia',inp('f-docn','text','','placeholder="F001-0000"'))}
+      ${fl('Observaciones',inp('f-obs','text','','placeholder="Opcional"'))}
+    </div>${docBtn}`;
+  } else if(mode==='venta'){
+    title='Registrar venta de mineral'; const u=u0||'nivel0';
+    const accs=S.terceros.filter(t=>t.tipo==='accionista'&&t.unidad===u); const a0=accs[0];
+    body=`<div class="hint-block">Registrar la venta <b>no aumenta la caja</b>: el dinero entra cuando se registra el cobro. Si el cobro es inmediato, márcalo abajo y se resuelve desde este mismo formulario.</div>
+    <div class="field-grid">
+      ${fl('Fecha de la venta',inp('f-fecha','date',hoy))}
+      ${fl('Unidad operativa',selx('f-unidad',optsUni(u)))}
+      ${fl('Accionista',selx('f-acc',optsAcc(u)))}
+      ${fl('Razón social',selx('f-rs',a0?optsRazonAcc(a0.id):''))}
+      ${fl('Planta compradora',selx('f-pl',S.terceros.filter(t=>t.tipo==='planta').map(t=>`<option value="${t.id}">${esc(t.nombre)}</option>`).join('')))}
+      ${fl('Documento base',selx('f-doct','<option>Liquidación</option><option>Propuesta de compra</option>'))}
+      ${fl('N.º de liquidación / propuesta',inp('f-docn','text','','placeholder="LIQ-0000"'))}
+      ${fl('Referencia de la carga',inp('f-carga','text','','placeholder="CG-000"'))}
+      ${fl('Moneda',selx('f-mon',optsMon('USD')))}
+      ${fl('Monto de la venta',inp('f-monto','number','','min="0" step="0.01" placeholder="0.00" oninput="syncCobro()"'))}
+      ${fl('Observaciones',inp('f-obs','text','','placeholder="Opcional"'),'style="grid-column:1/-1"')}
+    </div>
+    <label class="chk"><input type="checkbox" id="f-inm" onchange="formChanged(this.id)"> El cobro es inmediato: registrar también el dinero recibido</label>
+    <div class="cobro-box" id="cobroBox">
+      ${fl('Fecha del cobro',inp('f-cfecha','date',hoy))}
+      ${fl('Caja que recibe',selx('f-ccaja',optsCaja('USD')))}
+      ${fl('Monto cobrado',inp('f-cmonto','number','','min="0" step="0.01"'))}
+      ${fl('N.º de operación / recibo',inp('f-cdoc','text','','placeholder="OP-0000"'))}
+    </div>`;
+  } else if(mode==='cobro'){
+    const v=S.ventas.find(x=>x.id===ctx.ventaId), p=pendiente(v);
+    title='Registrar cobro de venta';
+    body=`<div class="hint-block">Venta <b>${esc(v.docNum)}</b> · ${esc(terceroDe(v.accionistaId).alias)} · ${UNIDADES[v.unidad]}<br>Monto ${money(v.monto,v.moneda)} · cobrado ${money(cobrado(v),v.moneda)} · <b>pendiente ${money(p,v.moneda)}</b></div>
+    <div class="field-grid">
+      ${fl('Fecha del cobro',inp('f-fecha','date',hoy))}
+      ${fl('Caja que recibe',selx('f-caja',optsCaja(v.moneda)))}
+      ${fl('Monto cobrado',inp('f-monto','number',p,`min="0" step="0.01" max="${p}"`))}
+      ${fl('Tipo de documento',selx('f-doct',optsDoc('Transferencia')))}
+      ${fl('N.º de operación / recibo',inp('f-docn','text','','placeholder="OP-0000"'))}
+      ${fl('Observaciones',inp('f-obs','text','','placeholder="Opcional"'))}
+    </div>${docBtn}`; ok='Registrar cobro';
+  } else if(mode==='abono'){
+    const c=S.cuotas.find(x=>x.id===ctx.cuotaId), a=terceroDe(c.accionistaId), sd=saldoCuota(c);
+    title='Registrar abono de cuota';
+    body=`<div class="hint-block">Accionista <b>${esc(a.alias)}</b> · ${UNIDADES[a.unidad]}<br>Cuota ${money(c.monto,c.moneda)} · abonado ${money(abonado(c),c.moneda)} · <b>saldo pendiente ${money(sd,c.moneda)}</b></div>
+    <div class="field-grid">
+      ${fl('Fecha del abono',inp('f-fecha','date',hoy))}
+      ${fl('Caja que recibe',selx('f-caja',optsCaja(c.moneda)))}
+      ${fl('Monto del abono',inp('f-monto','number',sd,`min="0" step="0.01" max="${sd}"`))}
+      ${fl('Tipo de documento',selx('f-doct',optsDoc('Recibo')))}
+      ${fl('N.º de documento',inp('f-docn','text','','placeholder="R-0000"'))}
+      ${fl('Observaciones',inp('f-obs','text','','placeholder="Opcional"'))}
+    </div>${docBtn}`; ok='Registrar abono';
+  } else if(mode==='tercero'){
+    title='Nuevo tercero';
+    body=`<div class="field-grid">
+      ${fl('Tipo',selx('f-ttipo','<option value="accionista">Accionista</option><option value="proveedor">Proveedor</option><option value="planta">Planta compradora</option>'))}
+      ${fl('Nombre o alias / iniciales',inp('f-tnombre','text','','placeholder="Ej. P.Q.R."'))}
+      <div id="tAccBox" style="display:contents">
+        ${fl('Unidad operativa',selx('f-tunidad',optsUni('cortada')))}
+        ${fl('Razón social vinculada',inp('f-trs','text','','placeholder="Opcional"'))}
+      </div>
+    </div>`;
+  }
+  $('formTitle').textContent=title; $('formOk').textContent=ok; $('formBody').innerHTML=body;
+  if(mode==='mov'||mode==='compra'){ formChanged('f-ter'); }
+  openModal('modal-form');
+}
+function formChanged(id){
+  const {mode}=FORM; const val=x=>$(x)&&$(x).value;
+  if(id==='f-mon'){ if($('f-caja')) $('f-caja').innerHTML=optsCaja(val('f-mon')); if($('f-ccaja')) $('f-ccaja').innerHTML=optsCaja(val('f-mon')); }
+  if(id==='f-tipo') $('f-cat').innerHTML=optsCat(val('f-tipo'));
+  if(id==='f-ter'){ $('f-rs').innerHTML=optsRazonTercero(val('f-ter')); const t=terceroDe(val('f-ter')); if(t&&t.tipo==='accionista') $('f-unidad').value=t.unidad; }
+  if(id==='f-unidad'&&mode==='venta'){ $('f-acc').innerHTML=optsAcc(val('f-unidad')); formChanged('f-acc'); }
+  if(id==='f-acc') $('f-rs').innerHTML=optsRazonAcc(val('f-acc'));
+  if(id==='f-inm'){ $('cobroBox').style.display=$('f-inm').checked?'grid':'none'; syncCobro(); }
+  if(id==='f-ttipo'){ $('tAccBox').style.display=val('f-ttipo')==='accionista'?'contents':'none'; }
+}
+function syncCobro(){ if($('f-inm')&&$('f-inm').checked) $('f-cmonto').value=$('f-monto').value; }
+function docDesdeForm(){
+  const v=id=>$(id)?$(id).value:''; const {mode,ctx}=FORM;
+  let mon='PEN', t='—', r='—', u='—', flujo='egreso';
+  if(mode==='cobro'){const ve=S.ventas.find(x=>x.id===ctx.ventaId); mon=ve.moneda; t=terceroDe(ve.plantaId).nombre; r=razonDe(ve.razonId).nombre; u=UNIDADES[ve.unidad]; flujo='ingreso';}
+  else if(mode==='abono'){const c=S.cuotas.find(x=>x.id===ctx.cuotaId), a=terceroDe(c.accionistaId); mon=c.moneda; t=a.alias; r=razonDe(a.razones[0]).nombre; u=UNIDADES[a.unidad]; flujo='ingreso';}
+  else { mon=v('f-mon'); const tt=terceroDe(v('f-ter')); t=tt?(tt.alias||tt.nombre):'—'; r=razonDe(v('f-rs'))?razonDe(v('f-rs')).nombre:'—'; u=UNIDADES[v('f-unidad')]; flujo=mode==='compra'?'egreso':v('f-tipo'); }
+  const caja=cajaDe(v('f-caja'));
+  docSample({tipo:v('f-doct'), num:v('f-docn'), fecha:v('f-fecha'), tercero:t, razon:r, concepto:(v('f-cat')||'Operación')+(v('f-obs')?' · '+v('f-obs'):''), unidad:u, caja:caja?caja.nombre:'—', monto:money(parseFloat(v('f-monto'))||0,mon), flujo});
+}
+function addMov(o){ const m={id:S.nextId++, obs:'', docTipo:'Recibo', docNum:'', ...o}; S.movs.push(m); LASTNEW=m.id; return m; }
+const cierra=msg=>{ save(); closeModal('modal-form'); renderAll(); paintDrawer(); toast(msg); };
+
+function guardarForm(){
+  const {mode,ctx}=FORM; const g=id=>$(id)?$(id).value.trim():'';
+  const monto=parseFloat(g('f-monto')); const bad=m=>toast(m,'bad');
+  if(mode==='tercero'){
+    const nombre=g('f-tnombre'); if(!nombre) return bad('Escribe el nombre o alias');
+    const tipo=g('f-ttipo'), n=S.nextId++;
+    if(tipo==='accionista'){
+      const rs=[]; if(g('f-trs')){ const rid='r'+n; S.razones.push({id:rid, nombre:g('f-trs'), ruc:'20999'+String(n).padStart(6,'0')}); rs.push(rid); }
+      S.terceros.push({id:'a'+n, tipo, alias:nombre, nombre:'Accionista '+nombre, unidad:g('f-tunidad'), razones:rs});
+    } else S.terceros.push({id:(tipo==='planta'?'pl':'p')+n, tipo, nombre, habitual:'—'});
+    F.tab=tipo==='accionista'?'accionistas':tipo==='proveedor'?'proveedores':'plantas';
+    return cierra('Tercero agregado');
+  }
+  if(!(monto>0)) return bad('Ingresa un monto mayor a cero');
+  if(!g('f-fecha')) return bad('Indica la fecha');
+  if(mode==='mov'||mode==='compra'){
+    const tipo=mode==='compra'?'egreso':g('f-tipo'), mon=g('f-mon'), u=g('f-unidad'), cat=g('f-cat'), caja=cajaDe(g('f-caja'));
+    const sb=saldoCaja(caja), gb=sm(selMovs({unidad:u,moneda:mon,tipo:'egreso',categoria:cat}));
+    addMov({fecha:g('f-fecha'), tipo, unidad:u, categoria:cat, terceroId:g('f-ter')||null, razonId:g('f-rs')||null, moneda:mon, cajaId:caja.id, monto, docTipo:g('f-doct'), docNum:g('f-docn'), obs:g('f-obs'), origen:{tipo:mode==='compra'?'compra':'manual'}});
+    const sa=saldoCaja(caja);
+    let msg=`${tipo==='egreso'?'Gasto':'Ingreso'} guardado · ${caja.nombre}: ${money(sb,mon)} → ${money(sa,mon)}`;
+    if(tipo==='egreso') msg+=` · Gasto ${UNIDADES[u]} / ${cat}: ${money(gb,mon)} → ${money(sm(selMovs({unidad:u,moneda:mon,tipo:'egreso',categoria:cat})),mon)}`;
+    return cierra(msg);
+  }
+  if(mode==='venta'){
+    if(!g('f-acc')) return bad('Selecciona un accionista'); if(!g('f-docn')) return bad('Indica el n.º de liquidación o propuesta');
+    const mon=g('f-mon'), inm=$('f-inm').checked;
+    const v={id:S.nextId++, fecha:g('f-fecha'), unidad:g('f-unidad'), accionistaId:g('f-acc'), razonId:g('f-rs'), plantaId:g('f-pl'), moneda:mon, monto, docTipo:g('f-doct'), docNum:g('f-docn'), carga:g('f-carga'), obs:g('f-obs')};
+    let msg=`Venta registrada (${money(monto,mon)}). La caja no cambia hasta registrar el cobro.`;
+    if(inm){
+      const cm=parseFloat(g('f-cmonto')); if(!(cm>0)||cm>monto) return bad('El monto cobrado debe ser mayor a cero y no superar la venta');
+      if(!g('f-ccaja')) return bad('Elige la caja que recibe el cobro');
+      const caja=cajaDe(g('f-ccaja')), sb=saldoCaja(caja);
+      S.ventas.push(v);
+      addMov({fecha:g('f-cfecha')||v.fecha, tipo:'ingreso', unidad:v.unidad, categoria:'Cobro de venta', terceroId:v.plantaId, razonId:v.razonId, moneda:mon, cajaId:caja.id, monto:cm, docTipo:'Transferencia', docNum:g('f-cdoc'), obs:'Cobro de liquidación '+v.docNum, origen:{tipo:'venta', id:v.id}});
+      msg=`Venta y cobro registrados · ${caja.nombre}: ${money(sb,mon)} → ${money(saldoCaja(caja),mon)} · pendiente de la venta: ${money(pendiente(v),mon)}`;
+    } else S.ventas.push(v);
+    LASTNEW=null; return cierra(msg);
+  }
+  if(mode==='cobro'){
+    const v=S.ventas.find(x=>x.id===ctx.ventaId), p=pendiente(v); if(monto>p) return bad('El cobro no puede superar el pendiente ('+money(p,v.moneda)+')');
+    const caja=cajaDe(g('f-caja')), sb=saldoCaja(caja);
+    addMov({fecha:g('f-fecha'), tipo:'ingreso', unidad:v.unidad, categoria:'Cobro de venta', terceroId:v.plantaId, razonId:v.razonId, moneda:v.moneda, cajaId:caja.id, monto, docTipo:g('f-doct'), docNum:g('f-docn'), obs:g('f-obs')||('Cobro de liquidación '+v.docNum), origen:{tipo:'venta', id:v.id}});
+    return cierra(`Cobro registrado · pendiente de la venta: ${money(p,v.moneda)} → ${money(pendiente(v),v.moneda)} · ${caja.nombre}: ${money(sb,v.moneda)} → ${money(saldoCaja(caja),v.moneda)}`);
+  }
+  if(mode==='abono'){
+    const c=S.cuotas.find(x=>x.id===ctx.cuotaId), a=terceroDe(c.accionistaId), sd=saldoCuota(c); if(monto>sd) return bad('El abono no puede superar el saldo ('+money(sd,c.moneda)+')');
+    const caja=cajaDe(g('f-caja')), sb=saldoCaja(caja);
+    addMov({fecha:g('f-fecha'), tipo:'ingreso', unidad:a.unidad, categoria:'Cuota de accionista', terceroId:a.id, razonId:a.razones[0], moneda:c.moneda, cajaId:caja.id, monto, docTipo:g('f-doct'), docNum:g('f-docn'), obs:g('f-obs')||'Abono de cuota', origen:{tipo:'cuota', id:c.id}});
+    return cierra(`Abono registrado · deuda de ${a.alias}: ${money(sd,c.moneda)} → ${money(saldoCuota(c),c.moneda)} · ${caja.nombre}: ${money(sb,c.moneda)} → ${money(saldoCaja(caja),c.moneda)}`);
+  }
+}
+
+/* ================= navegación, modales, toast ================= */
+const NAV={
+  tablero:['Resumen','Tablero general','Ventas, cobros, egresos y saldo de caja, con la comparación entre Cortada y Nivel 0.'],
+  caja:['Operación','Caja y movimientos','Ingresos y egresos en soles o dólares. Cada registro actualiza el saldo de su caja al instante.'],
+  ventas:['Operación','Ventas de mineral','Una venta se registra desde la liquidación o propuesta de compra; el cobro se registra aparte.'],
+  cuotas:['Operación','Cuotas de accionistas','Cuota asignada, abonos recibidos y saldo pendiente por accionista.'],
+  compras:['Operación','Compras y gastos','Contratistas, ferretería, alimentación, combustible, madera, explosivos y planillas.'],
+  terceros:['Registros','Accionistas y terceros','Accionistas con sus razones sociales, además de proveedores y plantas compradoras.'],
+  reportes:['Análisis','Reportes y resúmenes','Totales por unidad, accionista, categoría y caja, con acceso al detalle de cada importe.'],
+};
+function activateView(v){
+  document.querySelectorAll('.side-item').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active', s.id==='view-'+v));
+  const t=NAV[v]; $('topEyebrow').textContent=t[0]; $('topTitle').textContent=t[1]; $('topDesc').textContent=t[2]; $('crumbTxt').textContent=t[1];
+  if(window.innerWidth<=980) $('sidebar').classList.add('collapsed');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.side-item').forEach(b=>b.addEventListener('click',()=>activateView(b.dataset.view)));
+$('sidebarToggle').addEventListener('click',()=>$('sidebar').classList.toggle('collapsed'));
+if(window.innerWidth<=980) $('sidebar').classList.add('collapsed');
+
+function openModal(id){ $('overlay').classList.add('show'); $(id).classList.add('show'); }
+function closeModal(id){
+  $(id).classList.remove('show');
+  if(!document.querySelector('.modal.show') && !$('drawer').classList.contains('show')) $('overlay').classList.remove('show');
+}
+function closeAll(){
+  $('overlay').classList.remove('show'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));
+  $('drawer').classList.remove('show'); DRAWER_ID=null;
+}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('mousedown',e=>{ if(e.target===m) closeModal(m.id); }));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const open=[...document.querySelectorAll('.modal.show')].pop(); if(open) closeModal(open.id); else closeAll(); } });
+
+function toast(msg,kind='ok'){
+  const el=document.createElement('div'); el.className='toast'; el.style.maxWidth='460px';
+  el.innerHTML=`<svg class="icon tic ${kind==='bad'?'bad':''}" style="width:15px;height:15px"><use href="#${kind==='bad'?'i-alert':'i-check'}"/></svg><span>${esc(msg)}</span>`;
+  $('toastWrap').appendChild(el); requestAnimationFrame(()=>el.classList.add('show'));
+  setTimeout(()=>{ el.classList.remove('show'); setTimeout(()=>el.remove(),300); }, kind==='bad'?3800:6500);
+}
+
+function renderAll(){
+  DR=[];
+  renderTablero(); renderCaja(); renderVentas(); renderCompras(); renderCuotas(); renderTerceros(); renderReportes();
+}
+S=load();
+renderAll();
+activateView('tablero');
+</script>
+</body>
+</html>
