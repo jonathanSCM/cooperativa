@@ -1,4 +1,5 @@
 <meta charset="UTF-8">
+<script>try{var _t=localStorage.getItem("vc-theme"); if(_t) document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Virgen de Copacabana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -403,6 +404,8 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 .side-old:hover{color:var(--ink);}
 .sidebar.collapsed .side-old{display:none;}
 #bellBtn{display:none;}
+#themeBtn{display:flex !important; border:1px solid var(--border); background:var(--surface);}
+#themeBtn:hover{background:var(--surface-2);}
 .search{width:340px; position:relative; margin-left:auto;}
 #tourBtn{flex:none;}
 .sres{display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; min-width:360px; max-height:70vh; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow-lg); z-index:60; padding:6px;}
@@ -509,6 +512,8 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
 <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.3"/></symbol>
 <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol>
 <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="19" r="1.4"/><circle cx="17" cy="19" r="1.4"/><path d="M3.5 4.5h2.3l2 10h9.7l1.7-7H7"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"/></symbol>
 <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15.6 8.4 13.4 13.4 8.4 15.6 10.6 10.6z"/></symbol>
 <symbol id="i-clip" viewBox="0 0 24 24"><path d="M19 11.5 11.5 19a4.5 4.5 0 0 1-6.4-6.4l8-8a3 3 0 0 1 4.2 4.2l-8 8a1.5 1.5 0 0 1-2.1-2.1L14 8.8"/></symbol>
 </defs>
@@ -554,6 +559,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
       <button class="hamburger" id="sidebarToggle"><svg class="icon"><use href="#i-menu"/></svg></button>
       <span class="crumb" id="crumbTxt">Panel general</span>
       <div class="search"><svg class="icon"><use href="#i-search"/></svg><input id="searchInput" placeholder="Buscar movimientos, ventas, accionistas, documentos…" autocomplete="off"></div>
+      <button class="iconbtn" id="themeBtn" title="Cambiar tema claro / oscuro" aria-label="Cambiar tema" onclick="toggleTheme()"><svg class="icon"><use href="#i-moon"/></svg></button>
       <button class="btn btn-sm" id="tourBtn" onclick="startTour()"><svg class="icon" style="width:14px;height:14px"><use href="#i-compass"/></svg><span>Recorrido guiado</span></button>
       <button class="iconbtn" id="bellBtn"><svg class="icon"><use href="#i-bell"/></svg><span class="dot-badge"></span></button>
     </header>
@@ -562,7 +568,7 @@ section[id^="view-vm_"] .btn-sm{white-space:nowrap;}
       <div class="banner" id="demoBanner">
         <svg class="icon" style="width:14px;height:14px"><use href="#i-eye"/></svg>
         <span><b>Demo de gestión administrativa y tesorería</b> · Sociedad Minera Virgen de Copacabana S.A. · RUC 20455717427 · Responsable de la propuesta: ProShop · datos ficticios</span>
-        <button class="btn btn-sm" style="margin-left:auto; background:rgba(255,255,255,.16); color:#fff; border-color:rgba(255,255,255,.4);" onclick="startTour()">Hacer el recorrido</button>
+        <button class="btn btn-sm" style="margin-left:auto; background:transparent; color:inherit; border-color:currentColor;" onclick="startTour()">Hacer el recorrido</button>
         <button class="x" onclick="document.getElementById('demoBanner').style.display='none'"><svg class="icon" style="width:14px;height:14px"><use href="#i-x"/></svg></button>
       </div>
 
@@ -3345,3 +3351,12 @@ const _av=window.activateView; window.activateView=function(v){ _av(v); const g=
 activateView('vm_tablero');
 })();
 </script>
+<script>
+/* ===== Tema claro / oscuro ===== */
+function temaActual(){ var a=document.documentElement.getAttribute('data-theme'); if(a) return a; return (window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'; }
+function pintarIconoTema(){ var u=document.querySelector('#themeBtn use'); if(u) u.setAttribute('href', temaActual()==='dark'?'#i-sun':'#i-moon'); var b=document.getElementById('themeBtn'); if(b) b.title=temaActual()==='dark'?'Cambiar a tema claro':'Cambiar a tema oscuro'; }
+function toggleTheme(){ var n=temaActual()==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',n); try{localStorage.setItem('vc-theme',n);}catch(e){} pintarIconoTema(); }
+pintarIconoTema();
+if(window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change',pintarIconoTema);
+</script>
+
